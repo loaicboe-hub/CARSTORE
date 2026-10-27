@@ -1,0 +1,17 @@
+/**
+ * Master CSS Entry
+ * Imports design tokens, base typography, component modules, and section layouts.
+ */
+
+@import './styles/tokens.css';
+@import './styles/base.css';
+@import './styles/components.css';
+@import './styles/layout.css';
+
+/* Root container reset for Vite */
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}

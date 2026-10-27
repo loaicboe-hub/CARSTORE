@@ -1,0 +1,359 @@
+/**
+ * Component Styles (Luxury Light Scheme)
+ * Reusable buttons, badges, section headers, cards, and modal dialogs.
+ */
+
+/* =========================================
+   BUTTONS
+   ========================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.btn-sm {
+  padding: 8px 14px;
+  font-size: 0.875rem;
+}
+
+.btn-md {
+  padding: 12px 22px;
+  font-size: 0.95rem;
+}
+
+.btn-lg {
+  padding: 15px 30px;
+  font-size: 1.05rem;
+}
+
+/* Primary Button: Polished Luxury Gold */
+.btn-primary {
+  background: linear-gradient(135deg, #ECC880 0%, #D8A54B 50%, #C49137 100%);
+  color: #0F172A;
+  box-shadow: 0 4px 18px rgba(194, 139, 20, 0.28);
+  border: 1px solid rgba(255, 230, 168, 0.6);
+  font-weight: 700;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #F5D696 0%, #E5B258 50%, #D09D43 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(194, 139, 20, 0.38);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Secondary Button: Clean Light Pearl with Subtle Border */
+.btn-secondary {
+  background: #F1F5F9;
+  color: var(--text-primary);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+}
+
+.btn-secondary:hover {
+  background: #E2E8F0;
+  border-color: var(--accent-gold);
+  color: var(--accent-gold-light);
+  transform: translateY(-2px);
+}
+
+/* Outline Button */
+.btn-outline-gold {
+  background: transparent;
+  color: var(--accent-gold);
+  border: 1px solid var(--accent-gold-border);
+}
+
+.btn-outline-gold:hover {
+  background: var(--accent-gold-subtle);
+  border-color: var(--accent-gold);
+  transform: translateY(-2px);
+}
+
+/* Ghost Button */
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.btn-ghost:hover {
+  color: var(--text-primary);
+  background: rgba(15, 23, 42, 0.05);
+}
+
+/* Icon Button */
+.btn-icon {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Language Switcher Pill Button */
+.lang-switch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: var(--radius-full);
+  background: #F1F5F9;
+  border: 1px solid rgba(194, 139, 20, 0.3);
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.lang-switch-btn:hover {
+  background: var(--accent-gold-subtle);
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  transform: translateY(-1px);
+}
+
+.lang-switch-btn svg {
+  color: var(--accent-gold);
+}
+
+/* =========================================
+   BADGES & PILLS
+   ========================================= */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.775rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  width: fit-content;
+}
+
+.badge-gold {
+  background: rgba(194, 139, 20, 0.1);
+  color: #8A6405;
+  border: 1px solid rgba(194, 139, 20, 0.28);
+}
+
+.badge-cyan {
+  background: rgba(2, 132, 199, 0.1);
+  color: #0284C7;
+  border: 1px solid rgba(2, 132, 199, 0.28);
+}
+
+.badge-emerald {
+  background: rgba(5, 150, 105, 0.1);
+  color: #047857;
+  border: 1px solid rgba(5, 150, 105, 0.28);
+}
+
+.badge-amber {
+  background: rgba(217, 119, 6, 0.1);
+  color: #B45309;
+  border: 1px solid rgba(217, 119, 6, 0.28);
+}
+
+.badge-muted {
+  background: rgba(15, 23, 42, 0.06);
+  color: var(--text-secondary);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+}
+
+/* =========================================
+   SECTION HEADERS
+   ========================================= */
+.section-header {
+  margin-bottom: var(--space-3xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.section-header.center {
+  text-align: center;
+  align-items: center;
+}
+
+.section-header.left {
+  text-align: left;
+  align-items: flex-start;
+}
+
+[dir="rtl"] .section-header.left {
+  text-align: right;
+  align-items: flex-start;
+}
+
+.section-header .section-eyebrow {
+  margin-bottom: 4px;
+}
+
+.section-header .section-title {
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.section-header .section-title .text-gradient-gold {
+  background: linear-gradient(135deg, #0F172A 0%, #C28B14 60%, #996B07 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.section-header .section-subtitle {
+  max-width: 680px;
+  font-size: 1.075rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* Directional Arrow Flip Utility for RTL */
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+  display: inline-block;
+}
+
+/* =========================================
+   MODAL DIALOG
+   ========================================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.modal-dialog {
+  background: #FFFFFF;
+  border: 1px solid rgba(194, 139, 20, 0.35);
+  box-shadow: 0 30px 80px -15px rgba(15, 23, 42, 0.25), 0 0 30px rgba(194, 139, 20, 0.1);
+  border-radius: var(--radius-xl);
+  width: 100%;
+  max-width: 620px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  padding: var(--space-xl);
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  color: var(--text-primary);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F1F5F9;
+  color: var(--text-secondary);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  transition: all var(--transition-fast);
+}
+
+[dir="rtl"] .modal-close-btn {
+  right: auto;
+  left: 18px;
+}
+
+.modal-close-btn:hover {
+  background: #E2E8F0;
+  color: var(--text-primary);
+}
+
+.form-group {
+  margin-bottom: var(--space-md);
+}
+
+.form-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 14px;
+  background: #F8FAFC;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: all var(--transition-fast);
+}
+
+[dir="rtl"] .form-control {
+  text-align: right;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 3px rgba(194, 139, 20, 0.15);
+  background: #FFFFFF;
+}
+
+.form-control::placeholder {
+  color: var(--text-muted);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+
+@media (max-width: 580px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
