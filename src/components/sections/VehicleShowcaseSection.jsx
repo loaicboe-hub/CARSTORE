@@ -11,6 +11,7 @@ export const VehicleShowcaseSection = ({ onInquireVehicle }) => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('featured');
+  const [visibleCount, setVisibleCount] = useState(12);
   const [selectedDetailVehicle, setSelectedDetailVehicle] = useState(null);
 
   const { vehicles: storeVehicles } = useStore();
@@ -193,7 +194,10 @@ export const VehicleShowcaseSection = ({ onInquireVehicle }) => {
                 role="tab"
                 aria-selected={activeCategory === category.id}
                 className={`filter-tab ${activeCategory === category.id ? 'active' : ''}`}
-                onClick={() => setActiveCategory(category.id)}
+                onClick={() => {
+                  setActiveCategory(category.id);
+                  setVisibleCount(12);
+                }}
               >
                 {isArabic && category.labelAr ? category.labelAr : category.label}
               </button>
@@ -221,7 +225,7 @@ export const VehicleShowcaseSection = ({ onInquireVehicle }) => {
 
         {/* Vehicles Grid */}
         <div className="vehicles-grid">
-          {filteredAndSortedVehicles.map((vehicle) => (
+          {filteredAndSortedVehicles.slice(0, visibleCount).map((vehicle) => (
             <VehicleCard
               key={vehicle.id}
               vehicle={vehicle}
@@ -230,6 +234,51 @@ export const VehicleShowcaseSection = ({ onInquireVehicle }) => {
             />
           ))}
         </div>
+
+        {/* Load More Action Bar */}
+        {visibleCount < filteredAndSortedVehicles.length && (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '36px', gap: '12px', flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              className="btn btn-secondary btn-lg"
+              onClick={() => setVisibleCount((prev) => prev + 12)}
+              style={{
+                padding: '12px 28px',
+                borderRadius: '50px',
+                border: '1px solid var(--accent-gold, #C28B14)',
+                background: 'rgba(194, 139, 20, 0.08)',
+                color: 'var(--text-primary)',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+            >
+              <span>
+                {isArabic
+                  ? `عرض المزيد من السيارات (${filteredAndSortedVehicles.length - visibleCount} متبقية)`
+                  : `Load More Cars (${filteredAndSortedVehicles.length - visibleCount} remaining)`}
+              </span>
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline btn-lg"
+              onClick={() => setVisibleCount(filteredAndSortedVehicles.length)}
+              style={{
+                padding: '12px 24px',
+                borderRadius: '50px',
+                border: '1px solid var(--border-subtle, #E2E8F0)',
+                background: 'transparent',
+                color: 'var(--text-secondary)',
+                fontWeight: 500,
+                cursor: 'pointer'
+              }}
+            >
+              <span>{isArabic ? `عرض كل السيارات (${filteredAndSortedVehicles.length})` : `Show All (${filteredAndSortedVehicles.length})`}</span>
+            </button>
+          </div>
+        )}
 
         {/* Empty State */}
         {filteredAndSortedVehicles.length === 0 && (

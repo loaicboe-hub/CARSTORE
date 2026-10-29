@@ -323,11 +323,12 @@ export const StoreProvider = ({ children }) => {
   // 1. Vehicles Store
   const [vehicles, setVehicles] = useState(() => {
     try {
-      const saved = localStorage.getItem('autohaus_vehicles');
+      localStorage.removeItem('autohaus_vehicles'); // Purge legacy 6-car cache
+      const saved = localStorage.getItem('carin_vehicles_v2');
       if (saved) {
         const parsed = JSON.parse(saved);
-        // Ensure data is up to date with Egyptian market EGP inventory
-        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].currency === 'EGP') {
+        // Ensure data is up to date with full ContactCars Egyptian market inventory
+        if (Array.isArray(parsed) && parsed.length >= vehiclesData.length && parsed[0].currency === 'EGP') {
           return parsed;
         }
       }
@@ -445,7 +446,7 @@ export const StoreProvider = ({ children }) => {
   // Persistence Effects
   useEffect(() => {
     try {
-      localStorage.setItem('autohaus_vehicles', JSON.stringify(vehicles));
+      localStorage.setItem('carin_vehicles_v2', JSON.stringify(vehicles));
     } catch (e) {
       console.warn('Storage quota note:', e);
     }
