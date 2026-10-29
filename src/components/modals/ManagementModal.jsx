@@ -5,7 +5,7 @@ import Badge from '../common/Badge';
 import { verifyManagementPin } from '../../services/api';
 import { X, ShieldCheck, Lock, CheckCircle2, KeyRound, Building2 } from 'lucide-react';
 
-export const ManagementModal = ({ isOpen, onClose }) => {
+export const ManagementModal = ({ isOpen, onClose, onOpenAdmin }) => {
   const { t, isArabic } = useLanguage();
   const [selectedRole, setSelectedRole] = useState('gm');
   const [accessCode, setAccessCode] = useState('');
@@ -158,8 +158,18 @@ export const ManagementModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
-                <Button variant="primary" size="md" onClick={handleReset}>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={() => {
+                    handleReset();
+                    if (onOpenAdmin) onOpenAdmin();
+                  }}
+                >
+                  {isArabic ? 'فتح لوحة تحكم AUTOHAUS الإدارية (/admin)' : 'Launch AUTOHAUS Admin Suite (/admin)'}
+                </Button>
+                <Button variant="secondary" size="md" onClick={handleReset}>
                   {m.closeBtn}
                 </Button>
               </div>

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LanguageProvider } from './context/LanguageContext';
+import { StoreProvider } from './context/StoreContext';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import HeroSection from './components/sections/HeroSection';
@@ -11,8 +12,9 @@ import TestimonialsSection from './components/sections/TestimonialsSection';
 import CtaSection from './components/sections/CtaSection';
 import VehicleInquiryModal from './components/modals/VehicleInquiryModal';
 import ManagementModal from './components/modals/ManagementModal';
+import AdminLayout from './admin/AdminLayout';
 
-const LandingPageContent = () => {
+const LandingPageContent = ({ onOpenAdmin }) => {
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
   const [isManagementModalOpen, setIsManagementModalOpen] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
@@ -67,7 +69,7 @@ const LandingPageContent = () => {
   return (
     <div className="app-container">
       {/* Fixed Sticky Luxury Navigation with Language Toggle */}
-      <Navbar onOpenInquiry={handleOpenConsultation} />
+      <Navbar onOpenInquiry={handleOpenConsultation} onOpenAdmin={onOpenAdmin} />
 
       {/* Main Landing Page Content */}
       <main id="main-content">
@@ -87,7 +89,7 @@ const LandingPageContent = () => {
       </main>
 
       {/* Footer with Bilingual Links & Copyright */}
-      <Footer />
+      <Footer onOpenAdmin={onOpenAdmin} />
 
       {/* Interactive Concierge & Vehicle Reservation Modal */}
       <VehicleInquiryModal
@@ -101,16 +103,58 @@ const LandingPageContent = () => {
       <ManagementModal
         isOpen={isManagementModalOpen}
         onClose={() => setIsManagementModalOpen(false)}
+        onOpenAdmin={onOpenAdmin}
       />
     </div>
   );
 };
 
 export const App = () => {
+  const checkIsAdmin = () => {
+    if (typeof window === 'undefined') return false;
+    const path = window.location.pathname.toLowerCase();
+    const hash = window.location.hash.toLowerCase();
+    return path.startsWith('/admin') || hash.startsWith('#/admin') || hash === '#admin';
+  };
+
+  const [isAdminView, setIsAdminView] = useState(checkIsAdmin);
+
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setIsAdminView(checkIsAdmin());
+    };
+
+    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener('hashchange', handleLocationChange);
+
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('hashchange', handleLocationChange);
+    };
+  }, []);
+
+  const navigateToAdmin = () => {
+    window.history.pushState({}, '', '/admin');
+    setIsAdminView(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const navigateToPublic = () => {
+    window.history.pushState({}, '', '/');
+    setIsAdminView(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <LanguageProvider>
-      <LandingPageContent />
-    </LanguageProvider>
+    <StoreProvider>
+      <LanguageProvider>
+        {isAdminView ? (
+          <AdminLayout onNavigatePublic={navigateToPublic} />
+        ) : (
+          <LandingPageContent onOpenAdmin={navigateToAdmin} />
+        )}
+      </LanguageProvider>
+    </StoreProvider>
   );
 };
 

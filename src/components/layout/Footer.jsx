@@ -1,7 +1,8 @@
 import React from 'react';
 import { brandConfig } from '../../config/brandConfig';
 import { useLanguage } from '../../context/LanguageContext';
-import { Phone, Mail, MapPin, Clock, ArrowUp } from 'lucide-react';
+import { useStore } from '../../context/StoreContext';
+import { Phone, Mail, MapPin, Clock, ArrowUp, Lock } from 'lucide-react';
 
 // Crisp SVG social icons for automotive brand footer
 const InstagramIcon = () => (
@@ -34,8 +35,9 @@ const TwitterIcon = () => (
   </svg>
 );
 
-export const Footer = () => {
+export const Footer = ({ onOpenAdmin }) => {
   const { t, isArabic } = useLanguage();
+  const { cmsContent } = useStore();
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -97,13 +99,13 @@ export const Footer = () => {
             { label: 'فحص فني شامل 180 نقطة', href: '#why-us' },
             { label: 'نقل وشحن مغلق VIP', href: '#why-us' },
             { label: 'استفسار عن حجز سيارة', href: '#contact' },
-            { label: 'تحديد موعد زيارة الصالة', href: '#contact' },
+            { label: 'لوحة تحكم AUTOHAUS الإدارية (/admin)', href: '/admin', onClick: onOpenAdmin },
           ]
         : [
             { label: '180-Point Inspection', href: '#why-us' },
             { label: 'Enclosed Delivery', href: '#why-us' },
             { label: 'Inquire on a Vehicle', href: '#contact' },
-            { label: 'Schedule Showroom Visit', href: '#contact' },
+            { label: 'AUTOHAUS Admin Suite (/admin)', href: '/admin', onClick: onOpenAdmin },
           ],
     },
   ];
@@ -174,7 +176,16 @@ export const Footer = () => {
               <ul className="footer-links-list">
                 {section.links.map((link) => (
                   <li key={link.label}>
-                    <a href={link.href} className="footer-link">
+                    <a
+                      href={link.href}
+                      className="footer-link"
+                      onClick={(e) => {
+                        if (link.onClick) {
+                          e.preventDefault();
+                          link.onClick();
+                        }
+                      }}
+                    >
                       {link.label}
                     </a>
                   </li>

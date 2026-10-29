@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { brandConfig } from '../../config/brandConfig';
 import { navigationConfig } from '../../config/navigationConfig';
 import { useLanguage } from '../../context/LanguageContext';
+import { useStore } from '../../context/StoreContext';
 import Button from '../common/Button';
-import { Phone, Menu, X, ArrowUpRight, Globe } from 'lucide-react';
+import { Phone, Menu, X, ArrowUpRight, Globe, Lock } from 'lucide-react';
 
-export const Navbar = ({ onOpenInquiry }) => {
+export const Navbar = ({ onOpenInquiry, onOpenAdmin }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   const { t, isArabic, toggleLanguage } = useLanguage();
+  const { cmsContent } = useStore();
 
   // Handle scroll detection for glass navbar effect
   useEffect(() => {
@@ -113,6 +115,31 @@ export const Navbar = ({ onOpenInquiry }) => {
             {t.nav.exploreShowroom}
           </Button>
 
+          {onOpenAdmin && (
+            <button
+              type="button"
+              className="admin-suite-pill-btn"
+              onClick={onOpenAdmin}
+              title={isArabic ? 'لوحة تحكم AUTOHAUS الإدارية' : 'AUTOHAUS Admin Suite'}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                padding: '6px 12px',
+                borderRadius: '20px',
+                background: 'rgba(194, 139, 20, 0.12)',
+                border: '1px solid rgba(194, 139, 20, 0.3)',
+                color: 'var(--accent-gold)',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+              }}
+            >
+              <Lock size={12} />
+              <span>Admin</span>
+            </button>
+          )}
+
           {/* Mobile Menu Hamburger Toggle */}
           <button
             type="button"
@@ -178,6 +205,21 @@ export const Navbar = ({ onOpenInquiry }) => {
               }}
             >
               {t.nav.concierge}
+            </Button>
+          )}
+
+          {onOpenAdmin && (
+            <Button
+              variant="outline"
+              size="md"
+              style={{ width: '100%', borderColor: 'var(--accent-gold)', color: 'var(--accent-gold)' }}
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onOpenAdmin();
+              }}
+            >
+              <Lock size={14} style={{ display: 'inline', marginInlineEnd: '6px' }} />
+              <span>{isArabic ? 'لوحة تحكم AUTOHAUS الإدارية' : 'AUTOHAUS Admin Suite (/admin)'}</span>
             </Button>
           )}
         </div>
