@@ -13,6 +13,7 @@ import CtaSection from './components/sections/CtaSection';
 import VehicleInquiryModal from './components/modals/VehicleInquiryModal';
 import ManagementModal from './components/modals/ManagementModal';
 import AdminLayout from './admin/AdminLayout';
+import AdminLogin from './admin/AdminLogin';
 
 const LandingPageContent = ({ onOpenAdmin }) => {
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
@@ -118,6 +119,13 @@ export const App = () => {
   };
 
   const [isAdminView, setIsAdminView] = useState(checkIsAdmin);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return (
+      localStorage.getItem('autohaus_admin_auth') === 'true' ||
+      sessionStorage.getItem('autohaus_admin_auth') === 'true'
+    );
+  });
 
   useEffect(() => {
     const handleLocationChange = () => {
@@ -145,11 +153,24 @@ export const App = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('autohaus_admin_auth');
+    sessionStorage.removeItem('autohaus_admin_auth');
+    setIsAuthenticated(false);
+  };
+
   return (
     <StoreProvider>
       <LanguageProvider>
         {isAdminView ? (
-          <AdminLayout onNavigatePublic={navigateToPublic} />
+          isAuthenticated ? (
+            <AdminLayout onNavigatePublic={navigateToPublic} onLogout={handleLogout} />
+          ) : (
+            <AdminLogin
+              onLoginSuccess={() => setIsAuthenticated(true)}
+              onNavigatePublic={navigateToPublic}
+            />
+          )
         ) : (
           <LandingPageContent onOpenAdmin={navigateToAdmin} />
         )}

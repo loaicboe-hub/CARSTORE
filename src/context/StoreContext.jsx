@@ -316,6 +316,8 @@ export const StoreProvider = ({ children }) => {
       return saved
         ? JSON.parse(saved)
         : {
+            adminUsername: 'admin',
+            adminPassword: 'admin123',
             portalPin: '123456',
             autoApproveInquiries: false,
             emailNotifications: true,
@@ -324,6 +326,8 @@ export const StoreProvider = ({ children }) => {
           };
     } catch {
       return {
+        adminUsername: 'admin',
+        adminPassword: 'admin123',
         portalPin: '123456',
         autoApproveInquiries: false,
         emailNotifications: true,

@@ -27,13 +27,20 @@ export const SettingsView = () => {
   } = useStore();
 
   const [pin, setPin] = useState(settings.portalPin || '123456');
+  const [adminUser, setAdminUser] = useState(settings.adminUsername || 'admin');
+  const [adminPass, setAdminPass] = useState(settings.adminPassword || 'admin123');
+  const [showAdminPass, setShowAdminPass] = useState(false);
   const [currency, setCurrency] = useState(cmsContent.currency || 'USD');
   const [savedMsg, setSavedMsg] = useState('');
 
   const handleSaveSecurity = (e) => {
     e.preventDefault();
-    updateSettings({ portalPin: pin });
-    setSavedMsg('Security & access code updated successfully.');
+    updateSettings({
+      portalPin: pin,
+      adminUsername: adminUser.trim() || 'admin',
+      adminPassword: adminPass.trim() || 'admin123',
+    });
+    setSavedMsg('Security credentials & access PIN updated successfully.');
     setTimeout(() => setSavedMsg(''), 3000);
   };
 
@@ -92,18 +99,73 @@ export const SettingsView = () => {
         </div>
       )}
 
-      {/* Security & Access Code Panel */}
+      {/* Security & Access Credentials Panel */}
       <div className="admin-card" style={{ marginBottom: '20px' }}>
         <div className="admin-card-header">
           <h4 className="admin-card-title">
             <Lock size={18} style={{ color: 'var(--admin-accent-gold)' }} />
-            <span>Portal Security & Authorization Code</span>
+            <span>Executive Portal Security & Admin Credentials</span>
           </h4>
         </div>
 
         <div className="admin-card-body">
-          <form onSubmit={handleSaveSecurity} style={{ maxWidth: '420px' }}>
+          <form onSubmit={handleSaveSecurity} style={{ maxWidth: '520px' }}>
+            {/* Admin Username */}
             <div className="admin-form-group" style={{ marginBottom: '16px' }}>
+              <label className="admin-label">Admin Login Username</label>
+              <input
+                type="text"
+                className="admin-input"
+                value={adminUser}
+                onChange={(e) => setAdminUser(e.target.value)}
+                required
+                style={{ maxWidth: '320px' }}
+                placeholder="e.g. admin"
+              />
+              <p style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)', margin: '4px 0 0 0' }}>
+                Used to log into the Executive Dashboard at <code>/admin</code>.
+              </p>
+            </div>
+
+            {/* Admin Password */}
+            <div className="admin-form-group" style={{ marginBottom: '16px' }}>
+              <label className="admin-label">Admin Login Password</label>
+              <div style={{ position: 'relative', maxWidth: '320px' }}>
+                <input
+                  type={showAdminPass ? 'text' : 'password'}
+                  className="admin-input"
+                  value={adminPass}
+                  onChange={(e) => setAdminPass(e.target.value)}
+                  required
+                  style={{ paddingRight: '40px', width: '100%', boxSizing: 'border-box' }}
+                  placeholder="e.g. admin123"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowAdminPass(!showAdminPass)}
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    right: '10px',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--admin-text-muted)',
+                    cursor: 'pointer',
+                    fontSize: '0.75rem',
+                    padding: '4px',
+                  }}
+                >
+                  {showAdminPass ? 'Hide' : 'Show'}
+                </button>
+              </div>
+              <p style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)', margin: '4px 0 0 0' }}>
+                Keep your administrative credentials confidential.
+              </p>
+            </div>
+
+            {/* Authorization PIN */}
+            <div className="admin-form-group" style={{ marginBottom: '20px' }}>
               <label className="admin-label">Dealer Management Authorization PIN</label>
               <input
                 type="password"
@@ -114,12 +176,12 @@ export const SettingsView = () => {
                 style={{ letterSpacing: '0.2em', fontSize: '1.2rem', maxWidth: '240px' }}
               />
               <p style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)', margin: '4px 0 0 0' }}>
-                Used by executive personnel to access the operations portal on the public site and admin tools.
+                Used by executive personnel to verify operations in the dealership management modal.
               </p>
             </div>
 
             <button type="submit" className="admin-btn admin-btn-primary">
-              Update PIN Code
+              Save Security Credentials
             </button>
           </form>
         </div>

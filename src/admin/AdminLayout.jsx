@@ -30,7 +30,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 
-export const AdminLayout = ({ onNavigatePublic }) => {
+export const AdminLayout = ({ onNavigatePublic, onLogout }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -139,6 +139,18 @@ export const AdminLayout = ({ onNavigatePublic }) => {
             <ExternalLink size={15} />
             <span>View Public Showroom</span>
           </button>
+
+          {onLogout && (
+            <button
+              type="button"
+              className="admin-btn admin-btn-danger admin-btn-sm"
+              onClick={onLogout}
+              style={{ width: '100%', justifyContent: 'center' }}
+            >
+              <LogOut size={14} />
+              <span>{isArabic ? 'تسجيل الخروج' : 'Sign Out'}</span>
+            </button>
+          )}
         </div>
       </aside>
 
@@ -179,6 +191,19 @@ export const AdminLayout = ({ onNavigatePublic }) => {
               <ExternalLink size={14} />
               <span>Showroom</span>
             </button>
+
+            {/* Logout Button */}
+            {onLogout && (
+              <button
+                type="button"
+                className="admin-btn admin-btn-danger admin-btn-sm"
+                onClick={onLogout}
+                title={isArabic ? 'تسجيل الخروج' : 'Sign Out'}
+              >
+                <LogOut size={14} />
+                <span>{isArabic ? 'خروج' : 'Logout'}</span>
+              </button>
+            )}
           </div>
         </header>
 
