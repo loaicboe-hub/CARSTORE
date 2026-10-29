@@ -14,6 +14,15 @@ import VehicleInquiryModal from './components/modals/VehicleInquiryModal';
 import ManagementModal from './components/modals/ManagementModal';
 import AdminLayout from './admin/AdminLayout';
 import AdminLogin from './admin/AdminLogin';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import LoginView from './customer/auth/LoginView';
+import SignupView from './customer/auth/SignupView';
+import ForgotPasswordView from './customer/auth/ForgotPasswordView';
+import CustomerLayout from './customer/CustomerLayout';
+import DashboardOverview from './customer/views/DashboardOverview';
+import MyListingsView from './customer/views/MyListingsView';
+import SubmitListingView from './customer/views/SubmitListingView';
+import ProfileView from './customer/views/ProfileView';
 
 const LandingPageContent = ({ onOpenAdmin }) => {
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
@@ -110,16 +119,14 @@ const LandingPageContent = ({ onOpenAdmin }) => {
   );
 };
 
-export const App = () => {
-  const checkIsAdmin = () => {
-    if (typeof window === 'undefined') return false;
-    const path = window.location.pathname.toLowerCase();
-    const hash = window.location.hash.toLowerCase();
-    return path.startsWith('/admin') || hash.startsWith('#/admin') || hash === '#admin';
-  };
+const AppRouter = () => {
+  const { isAuthenticated: isCustomerAuth, isLoading: isAuthLoading } = useAuth();
+  const [currentPath, setCurrentPath] = useState(() => {
+    if (typeof window === 'undefined') return '/';
+    return window.location.pathname.toLowerCase();
+  });
 
-  const [isAdminView, setIsAdminView] = useState(checkIsAdmin);
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
     if (typeof window === 'undefined') return false;
     return (
       localStorage.getItem('autohaus_admin_auth') === 'true' ||
@@ -127,9 +134,17 @@ export const App = () => {
     );
   });
 
+  const [editingListing, setEditingListing] = useState(null);
+
   useEffect(() => {
     const handleLocationChange = () => {
-      setIsAdminView(checkIsAdmin());
+      const p = window.location.pathname.toLowerCase();
+      const h = window.location.hash.toLowerCase();
+      if (p.startsWith('/admin') || h.startsWith('#/admin') || h === '#admin') {
+        setCurrentPath('/admin');
+      } else {
+        setCurrentPath(p || '/');
+      }
     };
 
     window.addEventListener('popstate', handleLocationChange);
@@ -141,39 +156,140 @@ export const App = () => {
     };
   }, []);
 
-  const navigateToAdmin = () => {
-    window.history.pushState({}, '', '/admin');
-    setIsAdminView(true);
+  const navigateTo = (path) => {
+    window.history.pushState({}, '', path);
+    setCurrentPath(path.toLowerCase());
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const navigateToAdmin = () => {
+    navigateTo('/admin');
   };
 
   const navigateToPublic = () => {
-    window.history.pushState({}, '', '/');
-    setIsAdminView(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigateTo('/');
   };
 
-  const handleLogout = () => {
+  const handleAdminLogout = () => {
     localStorage.removeItem('autohaus_admin_auth');
     sessionStorage.removeItem('autohaus_admin_auth');
-    setIsAuthenticated(false);
+    setIsAdminAuthenticated(false);
   };
 
+  // 1. Admin Dashboard Route (/admin)
+  if (currentPath.startsWith('/admin')) {
+    if (isAdminAuthenticated) {
+      return <AdminLayout onNavigatePublic={navigateToPublic} onLogout={handleAdminLogout} />;
+    }
+    return (
+      <AdminLogin
+        onLoginSuccess={() => setIsAdminAuthenticated(true)}
+        onNavigatePublic={navigateToPublic}
+      />
+    );
+  }
+
+  // 2. Customer Authentication Pages
+  if (currentPath === '/login') {
+    if (isCustomerAuth) {
+      return (
+        <CustomerLayout activeTab="overview" onNavigate={navigateTo}>
+          <DashboardOverview onNavigate={navigateTo} />
+        </CustomerLayout>
+      );
+    }
+    return <LoginView onNavigate={navigateTo} />;
+  }
+
+  if (currentPath === '/signup') {
+    if (isCustomerAuth) {
+      return (
+        <CustomerLayout activeTab="overview" onNavigate={navigateTo}>
+          <DashboardOverview onNavigate={navigateTo} />
+        </CustomerLayout>
+      );
+    }
+    return <SignupView onNavigate={navigateTo} />;
+  }
+
+  if (currentPath === '/forgot-password') {
+    return <ForgotPasswordView onNavigate={navigateTo} />;
+  }
+
+  // 3. Protected Customer Dashboard Routes (/account/*)
+  if (currentPath.startsWith('/account')) {
+    if (!isCustomerAuth) {
+      // Unauthorized: redirect to login
+      return <LoginView onNavigate={navigateTo} />;
+    }
+
+    if (currentPath === '/account/listings/new') {
+      return (
+        <CustomerLayout activeTab="new" onNavigate={navigateTo}>
+          <SubmitListingView
+            onNavigate={navigateTo}
+            onSaveSuccess={() => navigateTo('/account/listings')}
+          />
+        </CustomerLayout>
+      );
+    }
+
+    if (currentPath === '/account/listings/edit') {
+      return (
+        <CustomerLayout activeTab="listings" onNavigate={navigateTo}>
+          <SubmitListingView
+            onNavigate={navigateTo}
+            editingListing={editingListing}
+            onSaveSuccess={() => {
+              setEditingListing(null);
+              navigateTo('/account/listings');
+            }}
+          />
+        </CustomerLayout>
+      );
+    }
+
+    if (currentPath === '/account/listings') {
+      return (
+        <CustomerLayout activeTab="listings" onNavigate={navigateTo}>
+          <MyListingsView
+            onNavigate={navigateTo}
+            onEditListing={(listing) => {
+              setEditingListing(listing);
+              navigateTo('/account/listings/edit');
+            }}
+          />
+        </CustomerLayout>
+      );
+    }
+
+    if (currentPath === '/account/profile') {
+      return (
+        <CustomerLayout activeTab="profile" onNavigate={navigateTo}>
+          <ProfileView onNavigate={navigateTo} />
+        </CustomerLayout>
+      );
+    }
+
+    // Default Customer Dashboard (/account)
+    return (
+      <CustomerLayout activeTab="overview" onNavigate={navigateTo}>
+        <DashboardOverview onNavigate={navigateTo} />
+      </CustomerLayout>
+    );
+  }
+
+  // 4. Default: Public Showroom Landing Page
+  return <LandingPageContent onOpenAdmin={navigateToAdmin} />;
+};
+
+export const App = () => {
   return (
     <StoreProvider>
       <LanguageProvider>
-        {isAdminView ? (
-          isAuthenticated ? (
-            <AdminLayout onNavigatePublic={navigateToPublic} onLogout={handleLogout} />
-          ) : (
-            <AdminLogin
-              onLoginSuccess={() => setIsAuthenticated(true)}
-              onNavigatePublic={navigateToPublic}
-            />
-          )
-        ) : (
-          <LandingPageContent onOpenAdmin={navigateToAdmin} />
-        )}
+        <AuthProvider>
+          <AppRouter />
+        </AuthProvider>
       </LanguageProvider>
     </StoreProvider>
   );

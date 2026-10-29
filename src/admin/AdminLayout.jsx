@@ -10,6 +10,7 @@ import ExchangeView from './views/ExchangeView';
 import CustomersInquiriesView from './views/CustomersInquiriesView';
 import ContentCMSView from './views/ContentCMSView';
 import SettingsView from './views/SettingsView';
+import UserManagementView from './views/UserManagementView';
 import './styles/admin.css';
 
 import {
@@ -19,6 +20,7 @@ import {
   ArrowLeftRight,
   Key,
   Users,
+  UserCheck,
   FileText,
   Settings,
   Menu,
@@ -56,6 +58,7 @@ export const AdminLayout = ({ onNavigatePublic, onLogout }) => {
     { id: 'rentals', label: 'Rental Fleet', icon: Key, badge: rentalFleet.length },
     { id: 'exchanges', label: 'Exchange / Trade-In', icon: ArrowLeftRight },
     { id: 'inquiries', label: 'Customers & Leads', icon: Users, badge: newInquiriesCount, alert: newInquiriesCount > 0 },
+    { id: 'users', label: 'User Management', icon: UserCheck },
     { id: 'cms', label: 'Website CMS', icon: FileText },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
@@ -216,6 +219,7 @@ export const AdminLayout = ({ onNavigatePublic, onLogout }) => {
           {activeTab === 'rentals' && <RentalFleetView />}
           {activeTab === 'exchanges' && <ExchangeView />}
           {activeTab === 'inquiries' && <CustomersInquiriesView />}
+          {activeTab === 'users' && <UserManagementView />}
           {activeTab === 'cms' && <ContentCMSView onNavigatePublic={onNavigatePublic} />}
           {activeTab === 'settings' && <SettingsView />}
         </main>

@@ -3,8 +3,9 @@ import { brandConfig } from '../../config/brandConfig';
 import { navigationConfig } from '../../config/navigationConfig';
 import { useLanguage } from '../../context/LanguageContext';
 import { useStore } from '../../context/StoreContext';
+import { useAuth } from '../../context/AuthContext';
 import Button from '../common/Button';
-import { Phone, Menu, X, ArrowUpRight, Globe } from 'lucide-react';
+import { Phone, Menu, X, ArrowUpRight, Globe, User } from 'lucide-react';
 
 export const Navbar = ({ onOpenInquiry, onOpenAdmin }) => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -12,6 +13,7 @@ export const Navbar = ({ onOpenInquiry, onOpenAdmin }) => {
   const [activeSection, setActiveSection] = useState('hero');
   const { t, isArabic, toggleLanguage } = useLanguage();
   const { cmsContent } = useStore();
+  const { user } = useAuth();
 
   // Handle scroll detection for glass navbar effect
   useEffect(() => {
@@ -34,6 +36,12 @@ export const Navbar = ({ onOpenInquiry, onOpenAdmin }) => {
       }
       setMobileMenuOpen(false);
     }
+  };
+
+  const navigateTo = (path) => {
+    window.history.pushState({}, '', path);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    setMobileMenuOpen(false);
   };
 
   const navItems = [
@@ -95,6 +103,26 @@ export const Navbar = ({ onOpenInquiry, onOpenAdmin }) => {
             <span>{t.switchLabel}</span>
           </button>
 
+          {/* Customer Portal Link (Sign In or My Account) */}
+          <button
+            type="button"
+            className="lang-switch-btn"
+            onClick={() => navigateTo(user ? '/account' : '/login')}
+            style={
+              user
+                ? {
+                    background: 'rgba(194, 139, 20, 0.15)',
+                    border: '1px solid rgba(194, 139, 20, 0.35)',
+                    color: 'var(--accent-gold, #C28B14)',
+                  }
+                : {}
+            }
+            title={user ? (isArabic ? 'لوحة تحكم حسابك' : 'My Account Dashboard') : (isArabic ? 'تسجيل دخول العملاء' : 'Customer Sign In')}
+          >
+            <User size={15} />
+            <span>{user ? user.name.split(' ')[0] : isArabic ? 'دخول' : 'Sign In'}</span>
+          </button>
+
           <a
             href={`tel:${brandConfig.contact.phone.replace(/[^0-9+]/g, '')}`}
             className="nav-phone-link"
@@ -145,6 +173,24 @@ export const Navbar = ({ onOpenInquiry, onOpenAdmin }) => {
         </ul>
 
         <div className="mobile-nav-cta">
+          {/* Customer Portal Link Mobile */}
+          <button
+            type="button"
+            className="lang-switch-btn"
+            style={{
+              width: '100%',
+              justifyContent: 'center',
+              padding: '10px',
+              background: user ? 'rgba(194, 139, 20, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+              color: user ? 'var(--accent-gold, #C28B14)' : '#FFFFFF',
+              border: user ? '1px solid rgba(194, 139, 20, 0.35)' : '1px solid rgba(255, 255, 255, 0.12)',
+            }}
+            onClick={() => navigateTo(user ? '/account' : '/login')}
+          >
+            <User size={16} />
+            <span>{user ? `${isArabic ? 'حسابي:' : 'My Account:'} ${user.name}` : isArabic ? 'تسجيل دخول العملاء' : 'Customer Sign In'}</span>
+          </button>
+
           {/* Mobile Language Switcher */}
           <button
             type="button"

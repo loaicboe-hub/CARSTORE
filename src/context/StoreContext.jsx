@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { vehiclesData } from '../data/vehiclesData';
 import { brandConfig } from '../config/brandConfig';
+import { getVehicles } from '../services/api';
 
 const StoreContext = createContext(null);
 
@@ -401,6 +402,27 @@ export const StoreProvider = ({ children }) => {
       console.warn('Storage quota note:', e);
     }
   }, [settings]);
+
+  // Synchronize Live Catalog (including approved customer vehicles)
+  useEffect(() => {
+    async function syncCatalog() {
+      try {
+        const liveCatalog = await getVehicles();
+        if (liveCatalog && Array.isArray(liveCatalog) && liveCatalog.length > 0) {
+          setVehicles((prev) => {
+            const customerVehicles = liveCatalog.filter((v) => v.owner_type === 'customer');
+            if (customerVehicles.length === 0) return prev;
+            const prevIds = new Set(prev.map((p) => p.id));
+            const newVehicles = customerVehicles.filter((c) => !prevIds.has(c.id));
+            return newVehicles.length > 0 ? [...prev, ...newVehicles] : prev;
+          });
+        }
+      } catch (err) {
+        // Fallback to local catalog
+      }
+    }
+    syncCatalog();
+  }, []);
 
   // ==========================================
   // Vehicle Actions (CRUD)

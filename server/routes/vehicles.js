@@ -1,35 +1,88 @@
 import { Router } from 'express';
 import { query } from '../config/db.js';
+import { loadStore } from '../data/store.js';
 
 const router = Router();
+
+// Helper to convert approved customer listing to vehicle catalog schema
+function formatCustomerListingAsVehicle(listing) {
+  return {
+    id: listing.id,
+    name_en: listing.makeModel,
+    name_ar: listing.makeModel,
+    brand: listing.brand || listing.makeModel.split(' ')[0],
+    category: listing.bodyType || 'coupe',
+    year: listing.year,
+    price: listing.price,
+    currency: listing.currency || 'USD',
+    mileage: listing.mileage,
+    transmission_en: listing.transmission || 'Automatic',
+    transmission_ar: listing.transmission || 'أوتوماتيك',
+    engine_en: listing.fuelType || 'High Performance',
+    engine_ar: listing.fuelType || 'أداء عالي',
+    acceleration: '3.4s',
+    top_speed: '310 km/h',
+    image_url: listing.photos && listing.photos[0] ? listing.photos[0] : '/images/hero_car.jpg',
+    badge_en: 'Verified Private Client',
+    badge_ar: 'مالك خاص موثق',
+    status: 'available',
+    featured: false,
+    owner_type: 'customer',
+    owner_id: listing.userId,
+    owner_name: listing.ownerName,
+    owner_phone: listing.contactPhone,
+    owner_whatsapp: listing.contactWhatsapp,
+    created_at: listing.publishedAt || listing.createdAt,
+  };
+}
 
 // GET all vehicles with optional category filter
 router.get('/', async (req, res) => {
   try {
     const { category, status } = req.query;
-    let sql = 'SELECT * FROM vehicles WHERE 1=1';
-    const params = [];
+    let dbRows = [];
+
+    try {
+      let sql = 'SELECT * FROM vehicles WHERE 1=1';
+      const params = [];
+
+      if (category && category !== 'all') {
+        params.push(category);
+        sql += ` AND category = $${params.length}`;
+      }
+
+      if (status) {
+        params.push(status);
+        sql += ` AND status = $${params.length}`;
+      }
+
+      sql += ' ORDER BY created_at ASC';
+
+      const result = await query(sql, params);
+      dbRows = result.rows || [];
+    } catch (dbErr) {
+      // PostgreSQL might be offline, fallback will use catalog
+    }
+
+    // Include approved customer listings (only status === 'approved'!)
+    const store = loadStore();
+    let approvedCustomerCars = (store.customerListings || [])
+      .filter((l) => l.status === 'approved')
+      .map(formatCustomerListingAsVehicle);
 
     if (category && category !== 'all') {
-      params.push(category);
-      sql += ` AND category = $${params.length}`;
+      approvedCustomerCars = approvedCustomerCars.filter((c) => c.category === category);
     }
 
-    if (status) {
-      params.push(status);
-      sql += ` AND status = $${params.length}`;
-    }
+    const allVehicles = [...dbRows, ...approvedCustomerCars];
 
-    sql += ' ORDER BY created_at ASC';
-
-    const result = await query(sql, params);
     res.json({
       success: true,
-      count: result.rows.length,
-      data: result.rows,
+      count: allVehicles.length,
+      data: allVehicles,
     });
   } catch (err) {
-    console.error('Error fetching vehicles from PostgreSQL:', err);
+    console.error('Error fetching vehicles:', err);
     res.status(500).json({ success: false, error: 'Database query failed' });
   }
 });
