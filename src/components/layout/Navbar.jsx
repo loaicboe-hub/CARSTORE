@@ -5,7 +5,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useStore } from '../../context/StoreContext';
 import { useAuth } from '../../context/AuthContext';
 import Button from '../common/Button';
-import { Phone, Menu, X, ArrowUpRight, Globe, User } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Globe, User } from 'lucide-react';
 
 export const Navbar = ({ onOpenInquiry, onOpenAdmin }) => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -123,26 +123,6 @@ export const Navbar = ({ onOpenInquiry, onOpenAdmin }) => {
             <span>{user ? user.name.split(' ')[0] : isArabic ? 'دخول' : 'Sign In'}</span>
           </button>
 
-          <a
-            href={`tel:${brandConfig.contact.phone.replace(/[^0-9+]/g, '')}`}
-            className="nav-phone-link"
-            title={t.nav.concierge}
-          >
-            <Phone size={15} />
-            <span dir="ltr">{brandConfig.contact.phoneDisplay}</span>
-          </a>
-
-          <Button
-            as="a"
-            href="#inventory"
-            variant="primary"
-            size="sm"
-            onClick={(e) => handleLinkClick(e, '#inventory')}
-            iconRight={<ArrowUpRight size={16} className="rtl-flip" />}
-          >
-            {t.nav.exploreShowroom}
-          </Button>
-
           {/* Mobile Menu Hamburger Toggle */}
           <button
             type="button"
@@ -205,20 +185,9 @@ export const Navbar = ({ onOpenInquiry, onOpenAdmin }) => {
             <span>{t.switchLabel}</span>
           </button>
 
-          <Button
-            variant="primary"
-            size="md"
-            as="a"
-            href="#inventory"
-            onClick={(e) => handleLinkClick(e, '#inventory')}
-            iconRight={<ArrowUpRight size={18} className="rtl-flip" />}
-          >
-            {t.nav.exploreShowroom}
-          </Button>
-
           {onOpenInquiry && (
             <Button
-              variant="secondary"
+              variant="primary"
               size="md"
               onClick={() => {
                 setMobileMenuOpen(false);
