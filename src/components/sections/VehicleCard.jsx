@@ -10,14 +10,29 @@ export const VehicleCard = ({ vehicle, onInquire, onViewDetails }) => {
   const title = isArabic && vehicle.titleAr ? vehicle.titleAr : vehicle.title;
   const subtitle = isArabic && vehicle.subtitleAr ? vehicle.subtitleAr : vehicle.subtitle;
   const categoryLabel = isArabic && vehicle.categoryLabelAr ? vehicle.categoryLabelAr : vehicle.categoryLabel;
-  const badge = isArabic && vehicle.badgeAr ? vehicle.badgeAr : vehicle.badge;
-  const status = isArabic && vehicle.statusAr ? vehicle.statusAr : vehicle.status;
-  const power = isArabic && vehicle.powerAr ? vehicle.powerAr : vehicle.power;
-  const accel = isArabic && vehicle.accelerationAr ? vehicle.accelerationAr : vehicle.acceleration;
-  const fuel = isArabic && vehicle.fuelAr ? vehicle.fuelAr : vehicle.fuel.split(' ')[0];
-  const mileage = isArabic && vehicle.mileageAr ? vehicle.mileageAr : vehicle.mileage;
-  const monthly = isArabic && vehicle.monthlyEstimateAr ? vehicle.monthlyEstimateAr : `قسط: ${vehicle.monthlyEstimate}`;
-  const trafficDept = isArabic ? (vehicle.trafficDept || 'مرور التجمع') : (vehicle.trafficDeptEn || 'Cairo Traffic');
+  const badge = isArabic
+    ? (vehicle.badgeAr || vehicle.badge || 'فابريكا شركة')
+    : (vehicle.badgeEn || (!/[\u0600-\u06FF]/.test(vehicle.badge || '') ? vehicle.badge : 'Factory Certified'));
+  const status = isArabic
+    ? (vehicle.statusAr || vehicle.status || 'استلام فوري')
+    : (vehicle.statusEn || (!/[\u0600-\u06FF]/.test(vehicle.status || '') ? vehicle.status : 'Immediate Delivery'));
+  const power = isArabic && vehicle.powerAr ? vehicle.powerAr : (vehicle.powerEn || vehicle.power);
+  const accel = isArabic && vehicle.accelerationAr
+    ? vehicle.accelerationAr
+    : (vehicle.accelerationEn || (vehicle.acceleration ? vehicle.acceleration.replace(/في/, 'in').replace(/ثانية|ثوانٍ/, 's') : vehicle.acceleration));
+  const fuel = isArabic
+    ? (vehicle.fuelAr ? vehicle.fuelAr : vehicle.fuel)
+    : (vehicle.fuelEn ? vehicle.fuelEn : (vehicle.fuel ? vehicle.fuel.replace(/بنزين/, 'Gasoline').split(' ')[0] : 'Gasoline'));
+  const mileage = isArabic
+    ? (vehicle.mileageAr || vehicle.mileage)
+    : (vehicle.mileageEn || (vehicle.mileage ? vehicle.mileage.replace(/كم/, 'KM') : vehicle.mileage));
+  const priceDisplay = isArabic
+    ? (vehicle.priceFormatted || `${vehicle.price?.toLocaleString()} ج.م`)
+    : (vehicle.priceFormattedEn || (vehicle.priceFormatted ? vehicle.priceFormatted.replace(/ج\.م/, 'EGP') : `${vehicle.price?.toLocaleString()} EGP`));
+  const monthly = isArabic
+    ? (vehicle.monthlyEstimateAr || `قسط: ${vehicle.monthlyEstimate || ''}`)
+    : (vehicle.monthlyEstimateEn || (vehicle.monthlyEstimate ? `Est. ${vehicle.monthlyEstimate.replace(/ج\.م/, 'EGP').replace(/\/ شهرياً/, '/ mo')}` : ''));
+  const trafficDept = isArabic ? (vehicle.trafficDept || 'مرور التجمع') : (vehicle.trafficDeptEn || 'New Cairo Traffic');
   const licenseVal = isArabic ? (vehicle.licenseValidity || 'رخصة سارية') : (vehicle.licenseValidityEn || 'Valid License');
 
   const handleOpenDetails = () => {
@@ -124,7 +139,7 @@ export const VehicleCard = ({ vehicle, onInquire, onViewDetails }) => {
         {/* Pricing and Action Footer */}
         <div className="vehicle-card-footer">
           <div className="vehicle-pricing">
-            <span className="vehicle-price" dir="ltr">{vehicle.priceFormatted}</span>
+            <span className="vehicle-price" dir="ltr">{priceDisplay}</span>
             <span className="vehicle-monthly">{monthly}</span>
           </div>
 

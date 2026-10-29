@@ -1,5 +1,6 @@
 import React from 'react';
 import { useStore } from '../../context/StoreContext';
+import { useLanguage } from '../../context/LanguageContext';
 import {
   Car,
   ShoppingBag,
@@ -22,11 +23,37 @@ export const OverviewView = ({ onNavigate }) => {
     inquiries,
     cmsContent,
   } = useStore();
+  const { isArabic } = useLanguage();
 
   const totalInventoryValue = vehicles.reduce((sum, v) => sum + (Number(v.price) || 0), 0);
   const pendingSellCount = sellRequests.filter((r) => r.status === 'new' || r.status === 'under_review').length;
   const pendingExchangeCount = exchangeRequests.filter((r) => r.status === 'pending' || r.status === 'inspection_scheduled').length;
   const newInquiriesCount = inquiries.filter((i) => i.status === 'new').length;
+
+  const getStatusLabel = (status) => {
+    if (!isArabic) return status;
+    const map = {
+      new: 'جديد',
+      contacted: 'تم التواصل',
+      resolved: 'مكتمل',
+      pending: 'قيد الانتظار',
+      closed: 'مغلق',
+      in_progress: 'جاري المعالجة',
+    };
+    return map[status] || status;
+  };
+
+  const getTypeLabel = (type) => {
+    if (!isArabic) return type;
+    const map = {
+      purchase: 'شراء',
+      tradein: 'استبدال',
+      rental: 'إيجار',
+      testdrive: 'تجربة قيادة',
+      sell: 'بيع',
+    };
+    return map[type] || type;
+  };
 
   return (
     <div className="admin-overview-view">
@@ -47,16 +74,22 @@ export const OverviewView = ({ onNavigate }) => {
       >
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-            <span className="admin-role-pill">AUTOHAUS EXECUTIVE SUITE</span>
+            <span className="admin-role-pill">
+              {isArabic ? 'جناح إدارة كار إن التنفيذي' : 'CAR IN EXECUTIVE SUITE'}
+            </span>
             <span style={{ fontSize: '0.8rem', color: 'var(--admin-text-muted)' }}>
-              Operational Telematics
+              {isArabic ? 'المؤشرات التشغيلية المباشرة' : 'Operational Telematics'}
             </span>
           </div>
           <h2 style={{ fontSize: '1.4rem', margin: 0, fontWeight: 800 }}>
-            Welcome to {cmsContent.brandName} Executive Portal
+            {isArabic
+              ? `مرحباً بك في لوحة تحكم ${cmsContent.brandNameAr || 'كار إن'}`
+              : `Welcome to ${cmsContent.brandName || 'CAR IN'} Executive Portal`}
           </h2>
           <p style={{ margin: '4px 0 0 0', color: 'var(--admin-text-muted)', fontSize: '0.9rem' }}>
-            Live dealership control center. Real-time fleet synchronization, inbound client appraisals, and CMS publishing.
+            {isArabic
+              ? 'مركز إدارة المعرض والأسطول المباشر، مزامنة فورية، وطلبات العملاء وإدارة المحتوى.'
+              : 'Live dealership control center. Real-time fleet synchronization, inbound client appraisals, and CMS publishing.'}
           </p>
         </div>
 
@@ -67,7 +100,7 @@ export const OverviewView = ({ onNavigate }) => {
             onClick={() => onNavigate('vehicles')}
           >
             <Car size={16} />
-            <span>Manage Vehicles</span>
+            <span>{isArabic ? 'إدارة المعرض' : 'Manage Vehicles'}</span>
           </button>
           <button
             type="button"
@@ -75,7 +108,9 @@ export const OverviewView = ({ onNavigate }) => {
             onClick={() => onNavigate('inquiries')}
           >
             <Users size={16} />
-            <span>Review Leads ({newInquiriesCount})</span>
+            <span>
+              {isArabic ? `مراجعة الطلبات (${newInquiriesCount})` : `Review Leads (${newInquiriesCount})`}
+            </span>
           </button>
         </div>
       </div>
@@ -85,10 +120,12 @@ export const OverviewView = ({ onNavigate }) => {
         {/* Total Showroom Inventory */}
         <div className="admin-stat-card" onClick={() => onNavigate('vehicles')} style={{ cursor: 'pointer' }}>
           <div className="admin-stat-info">
-            <span className="admin-stat-label">Showroom Fleet</span>
+            <span className="admin-stat-label">{isArabic ? 'أسطول المعرض' : 'Showroom Fleet'}</span>
             <span className="admin-stat-val">{vehicles.length}</span>
             <span className="admin-stat-hint">
-              Valuation: {(totalInventoryValue / 1000000).toFixed(1)}M EGP
+              {isArabic
+                ? `القيمة: ${(totalInventoryValue / 1000000).toFixed(1)} مليون ج.م`
+                : `Valuation: ${(totalInventoryValue / 1000000).toFixed(1)}M EGP`}
             </span>
           </div>
           <div className="admin-stat-icon-wrap gold">
@@ -99,10 +136,10 @@ export const OverviewView = ({ onNavigate }) => {
         {/* Sell / Consignment Inquiries */}
         <div className="admin-stat-card" onClick={() => onNavigate('sell')} style={{ cursor: 'pointer' }}>
           <div className="admin-stat-info">
-            <span className="admin-stat-label">Sell Requests</span>
+            <span className="admin-stat-label">{isArabic ? 'طلبات البيع' : 'Sell Requests'}</span>
             <span className="admin-stat-val">{sellRequests.length}</span>
             <span className="admin-stat-hint" style={{ color: pendingSellCount > 0 ? 'var(--admin-amber)' : 'inherit' }}>
-              {pendingSellCount} pending appraisal
+              {isArabic ? `${pendingSellCount} بانتظار التقييم` : `${pendingSellCount} pending appraisal`}
             </span>
           </div>
           <div className="admin-stat-icon-wrap amber">
@@ -113,10 +150,12 @@ export const OverviewView = ({ onNavigate }) => {
         {/* Rental Fleet */}
         <div className="admin-stat-card" onClick={() => onNavigate('rentals')} style={{ cursor: 'pointer' }}>
           <div className="admin-stat-info">
-            <span className="admin-stat-label">Rental Fleet</span>
+            <span className="admin-stat-label">{isArabic ? 'أسطول التأجير' : 'Rental Fleet'}</span>
             <span className="admin-stat-val">{rentalFleet.length}</span>
             <span className="admin-stat-hint">
-              {rentalFleet.filter((c) => c.status === 'available').length} available today
+              {isArabic
+                ? `${rentalFleet.filter((c) => c.status === 'available').length} متاح اليوم`
+                : `${rentalFleet.filter((c) => c.status === 'available').length} available today`}
             </span>
           </div>
           <div className="admin-stat-icon-wrap emerald">
@@ -127,10 +166,10 @@ export const OverviewView = ({ onNavigate }) => {
         {/* Trade-In Exchange Requests */}
         <div className="admin-stat-card" onClick={() => onNavigate('exchanges')} style={{ cursor: 'pointer' }}>
           <div className="admin-stat-info">
-            <span className="admin-stat-label">Trade-In Exchanges</span>
+            <span className="admin-stat-label">{isArabic ? 'طلبات الاستبدال' : 'Trade-In Exchanges'}</span>
             <span className="admin-stat-val">{exchangeRequests.length}</span>
             <span className="admin-stat-hint" style={{ color: pendingExchangeCount > 0 ? 'var(--admin-blue)' : 'inherit' }}>
-              {pendingExchangeCount} evaluation pipeline
+              {isArabic ? `${pendingExchangeCount} في مرحلة الفحص` : `${pendingExchangeCount} evaluation pipeline`}
             </span>
           </div>
           <div className="admin-stat-icon-wrap blue">
@@ -141,10 +180,10 @@ export const OverviewView = ({ onNavigate }) => {
         {/* Customer Leads */}
         <div className="admin-stat-card" onClick={() => onNavigate('inquiries')} style={{ cursor: 'pointer' }}>
           <div className="admin-stat-info">
-            <span className="admin-stat-label">VIP Client Leads</span>
+            <span className="admin-stat-label">{isArabic ? 'طلبات العملاء VIP' : 'VIP Client Leads'}</span>
             <span className="admin-stat-val">{inquiries.length}</span>
             <span className="admin-stat-hint" style={{ color: newInquiriesCount > 0 ? 'var(--admin-rose)' : 'inherit' }}>
-              {newInquiriesCount} new messages
+              {isArabic ? `${newInquiriesCount} رسائل جديدة` : `${newInquiriesCount} new messages`}
             </span>
           </div>
           <div className="admin-stat-icon-wrap gold">
@@ -168,16 +207,18 @@ export const OverviewView = ({ onNavigate }) => {
             <div>
               <h3 className="admin-card-title">
                 <Clock size={18} style={{ color: 'var(--admin-accent-gold)' }} />
-                <span>Recent Client Inquiries</span>
+                <span>{isArabic ? 'أحدث استفسارات العملاء' : 'Recent Client Inquiries'}</span>
               </h3>
-              <p className="admin-card-desc">Latest incoming leads from website concierge</p>
+              <p className="admin-card-desc">
+                {isArabic ? 'أحدث الطلبات الواردة عبر كونسيرج الموقع' : 'Latest incoming leads from website concierge'}
+              </p>
             </div>
             <button
               type="button"
               className="admin-btn admin-btn-secondary admin-btn-sm"
               onClick={() => onNavigate('inquiries')}
             >
-              <span>View All</span>
+              <span>{isArabic ? 'عرض الكل' : 'View All'}</span>
               <ArrowUpRight size={14} />
             </button>
           </div>
@@ -187,10 +228,10 @@ export const OverviewView = ({ onNavigate }) => {
               <table className="admin-table">
                 <thead>
                   <tr>
-                    <th>Customer</th>
-                    <th>Type</th>
-                    <th>Vehicle</th>
-                    <th>Status</th>
+                    <th>{isArabic ? 'العميل' : 'Customer'}</th>
+                    <th>{isArabic ? 'النوع' : 'Type'}</th>
+                    <th>{isArabic ? 'السيارة' : 'Vehicle'}</th>
+                    <th>{isArabic ? 'الحالة' : 'Status'}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -204,15 +245,15 @@ export const OverviewView = ({ onNavigate }) => {
                       </td>
                       <td>
                         <span style={{ textTransform: 'capitalize', fontWeight: 500 }}>
-                          {inq.type}
+                          {getTypeLabel(inq.type)}
                         </span>
                       </td>
                       <td style={{ maxWidth: '160px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {inq.vehicleTitle || 'General'}
+                        {inq.vehicleTitle || (isArabic ? 'استفسار عام' : 'General')}
                       </td>
                       <td>
                         <span className={`admin-badge ${inq.status}`}>
-                          {inq.status}
+                          {getStatusLabel(inq.status)}
                         </span>
                       </td>
                     </tr>
@@ -229,26 +270,28 @@ export const OverviewView = ({ onNavigate }) => {
             <div>
               <h3 className="admin-card-title">
                 <TrendingUp size={18} style={{ color: 'var(--admin-accent-gold)' }} />
-                <span>Inventory Distribution</span>
+                <span>{isArabic ? 'توزيع المخزون' : 'Inventory Distribution'}</span>
               </h3>
-              <p className="admin-card-desc">Vehicle categories represented in showroom</p>
+              <p className="admin-card-desc">
+                {isArabic ? 'فئات السيارات المعروضة بصالة العرض' : 'Vehicle categories represented in showroom'}
+              </p>
             </div>
             <button
               type="button"
               className="admin-btn admin-btn-secondary admin-btn-sm"
               onClick={() => onNavigate('vehicles')}
             >
-              <span>Add Vehicle</span>
+              <span>{isArabic ? 'إضافة سيارة' : 'Add Vehicle'}</span>
             </button>
           </div>
 
           <div className="admin-card-body">
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {[
-                { cat: 'coupe', label: 'Supercars & Coupes', color: 'var(--admin-accent-gold)' },
-                { cat: 'suv', label: 'Luxury SUVs', color: 'var(--admin-emerald)' },
-                { cat: 'sedan', label: 'Executive Sedans', color: 'var(--admin-blue)' },
-                { cat: 'electric', label: 'Electric & Hybrid GT', color: 'var(--admin-amber)' },
+                { cat: 'coupe', label: isArabic ? 'سيارات رياضية وسوبركار' : 'Supercars & Coupes', color: 'var(--admin-accent-gold)' },
+                { cat: 'suv', label: isArabic ? 'دفع رباعي فاخر' : 'Luxury SUVs', color: 'var(--admin-emerald)' },
+                { cat: 'sedan', label: isArabic ? 'سيدان تنفيذي' : 'Executive Sedans', color: 'var(--admin-blue)' },
+                { cat: 'electric', label: isArabic ? 'كهربائية وهيبرد GT' : 'Electric & Hybrid GT', color: 'var(--admin-amber)' },
               ].map(({ cat, label, color }) => {
                 const count = vehicles.filter((v) => v.category === cat).length;
                 const percent = vehicles.length > 0 ? Math.round((count / vehicles.length) * 100) : 0;
@@ -257,7 +300,7 @@ export const OverviewView = ({ onNavigate }) => {
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '0.88rem' }}>
                       <span style={{ fontWeight: 600 }}>{label}</span>
                       <span style={{ color: 'var(--admin-text-muted)' }}>
-                        {count} cars ({percent}%)
+                        {isArabic ? `${count} سيارة (${percent}%)` : `${count} cars (${percent}%)`}
                       </span>
                     </div>
                     <div
@@ -297,7 +340,11 @@ export const OverviewView = ({ onNavigate }) => {
             >
               <CheckCircle size={20} style={{ color: 'var(--admin-emerald)' }} />
               <div style={{ fontSize: '0.82rem', color: 'var(--admin-text-muted)' }}>
-                <strong>All 180-Point Master Inspections</strong> certified & synchronized with public website.
+                {isArabic ? (
+                  <>شهادة فحص معتمدة <strong>180 نقطة فحص شامل</strong> ومتزامنة مع الموقع العام.</>
+                ) : (
+                  <><strong>All 180-Point Master Inspections</strong> certified & synchronized with public website.</>
+                )}
               </div>
             </div>
           </div>

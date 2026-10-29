@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useStore } from '../../context/StoreContext';
+import { useLanguage } from '../../context/LanguageContext';
 import {
   Car,
   Plus,
@@ -19,6 +20,7 @@ import {
 
 export const VehiclesView = () => {
   const { vehicles, addVehicle, updateVehicle, deleteVehicle, updateVehicleStatus } = useStore();
+  const { isArabic } = useLanguage();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
@@ -120,9 +122,30 @@ export const VehiclesView = () => {
   };
 
   const handleDelete = (id, title) => {
-    if (window.confirm(`Are you sure you want to delete "${title}" from inventory?`)) {
+    if (window.confirm(isArabic ? `هل أنت متأكد من حذف "${title}" من المخزون؟` : `Are you sure you want to delete "${title}" from inventory?`)) {
       deleteVehicle(id);
     }
+  };
+
+  const getCategoryLabel = (cat) => {
+    if (!isArabic) return cat;
+    const map = {
+      coupe: 'سيارات رياضية وسوبركار',
+      suv: 'دفع رباعي فاخر',
+      sedan: 'سيدان تنفيذي',
+      electric: 'كهربائية وهيبرد GT',
+    };
+    return map[cat] || cat;
+  };
+
+  const getVehicleStatusLabel = (status) => {
+    if (!isArabic) return status;
+    const map = {
+      Available: 'متوفر',
+      Reserved: 'محجوز',
+      Sold: 'تم البيع',
+    };
+    return map[status] || status;
   };
 
   return (
@@ -136,7 +159,7 @@ export const VehiclesView = () => {
             <input
               type="text"
               className="admin-search-input"
-              placeholder="Search by title, brand, year..."
+              placeholder={isArabic ? 'البحث بالاسم، الماركة، سنة الصنع...' : 'Search by title, brand, year...'}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -148,11 +171,11 @@ export const VehiclesView = () => {
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
           >
-            <option value="all">All Categories</option>
-            <option value="coupe">Supercars & Coupes</option>
-            <option value="suv">Luxury SUVs</option>
-            <option value="sedan">Executive Sedans</option>
-            <option value="electric">Electric GT</option>
+            <option value="all">{isArabic ? 'جميع الفئات' : 'All Categories'}</option>
+            <option value="coupe">{isArabic ? 'سيارات رياضية وسوبركار' : 'Supercars & Coupes'}</option>
+            <option value="suv">{isArabic ? 'دفع رباعي فاخر' : 'Luxury SUVs'}</option>
+            <option value="sedan">{isArabic ? 'سيدان تنفيذي' : 'Executive Sedans'}</option>
+            <option value="electric">{isArabic ? 'كهربائية GT' : 'Electric GT'}</option>
           </select>
 
           {/* Status Filter */}
@@ -161,10 +184,10 @@ export const VehiclesView = () => {
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
-            <option value="all">All Statuses</option>
-            <option value="available">Available</option>
-            <option value="reserved">Reserved</option>
-            <option value="sold">Sold</option>
+            <option value="all">{isArabic ? 'جميع الحالات' : 'All Statuses'}</option>
+            <option value="available">{isArabic ? 'متوفر' : 'Available'}</option>
+            <option value="reserved">{isArabic ? 'محجوز' : 'Reserved'}</option>
+            <option value="sold">{isArabic ? 'تم البيع' : 'Sold'}</option>
           </select>
         </div>
 
@@ -174,7 +197,7 @@ export const VehiclesView = () => {
           onClick={handleOpenAddModal}
         >
           <Plus size={16} />
-          <span>Add New Vehicle</span>
+          <span>{isArabic ? 'إضافة سيارة جديدة' : 'Add New Vehicle'}</span>
         </button>
       </div>
 
@@ -184,11 +207,15 @@ export const VehiclesView = () => {
           <div>
             <h3 className="admin-card-title">
               <Car size={18} style={{ color: 'var(--admin-accent-gold)' }} />
-              <span>Inventory Catalog</span>
-              <span className="admin-counter-badge">{filteredVehicles.length} Listed</span>
+              <span>{isArabic ? 'كتالوج المخزون' : 'Inventory Catalog'}</span>
+              <span className="admin-counter-badge">
+                {isArabic ? `${filteredVehicles.length} مسجلة` : `${filteredVehicles.length} Listed`}
+              </span>
             </h3>
             <p className="admin-card-desc">
-              Manage vehicles, pricing, availability, and bilingual descriptions.
+              {isArabic
+                ? 'إدارة السيارات، الأسعار، الحالات، والأوصاف ثنائية اللغة.'
+                : 'Manage vehicles, pricing, availability, and bilingual descriptions.'}
             </p>
           </div>
         </div>
@@ -198,13 +225,13 @@ export const VehiclesView = () => {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Vehicle</th>
-                  <th>Category</th>
-                  <th>Year</th>
-                  <th>Price</th>
-                  <th>Mileage</th>
-                  <th>Status</th>
-                  <th style={{ textAlign: 'right' }}>Actions</th>
+                  <th>{isArabic ? 'السيارة' : 'Vehicle'}</th>
+                  <th>{isArabic ? 'الفئة' : 'Category'}</th>
+                  <th>{isArabic ? 'السنة' : 'Year'}</th>
+                  <th>{isArabic ? 'السعر' : 'Price'}</th>
+                  <th>{isArabic ? 'المسافة' : 'Mileage'}</th>
+                  <th>{isArabic ? 'الحالة' : 'Status'}</th>
+                  <th style={{ textAlign: isArabic ? 'left' : 'right' }}>{isArabic ? 'الإجراءات' : 'Actions'}</th>
                 </tr>
               </thead>
               <tbody>
@@ -221,10 +248,12 @@ export const VehiclesView = () => {
                           }}
                         />
                         <div>
-                          <div style={{ fontWeight: 600 }}>{vehicle.title}</div>
-                          {vehicle.titleAr && (
+                          <div style={{ fontWeight: 600 }}>
+                            {isArabic && vehicle.titleAr ? vehicle.titleAr : vehicle.title}
+                          </div>
+                          {(isArabic ? vehicle.title : vehicle.titleAr) && (
                             <div style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)' }}>
-                              {vehicle.titleAr}
+                              {isArabic ? vehicle.title : vehicle.titleAr}
                             </div>
                           )}
                         </div>
@@ -232,16 +261,18 @@ export const VehiclesView = () => {
                     </td>
                     <td>
                       <span style={{ textTransform: 'capitalize' }}>
-                        {vehicle.category}
+                        {getCategoryLabel(vehicle.category)}
                       </span>
                     </td>
                     <td>{vehicle.year}</td>
                     <td>
                       <strong style={{ color: 'var(--admin-accent-gold)' }}>
-                        {vehicle.priceFormatted || `${Number(vehicle.price).toLocaleString()} ج.م`}
+                        {vehicle.priceFormatted
+                          ? vehicle.priceFormatted
+                          : `${Number(vehicle.price).toLocaleString()} ${isArabic ? 'ج.م' : 'EGP'}`}
                       </strong>
                     </td>
-                    <td>{vehicle.mileage}</td>
+                    <td>{isArabic && vehicle.mileageAr ? vehicle.mileageAr : vehicle.mileage}</td>
                     <td>
                       <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
                         <button
@@ -253,9 +284,9 @@ export const VehiclesView = () => {
                             opacity: vehicle.status === 'Available' ? 1 : 0.4,
                           }}
                           onClick={() => updateVehicleStatus(vehicle.id, 'Available', 'متوفرة للتسليم')}
-                          title="Mark Available"
+                          title={isArabic ? 'تعيين كمتوفر' : 'Mark Available'}
                         >
-                          Available
+                          {isArabic ? 'متوفر' : 'Available'}
                         </button>
                         <button
                           type="button"
@@ -266,9 +297,9 @@ export const VehiclesView = () => {
                             opacity: vehicle.status === 'Reserved' ? 1 : 0.4,
                           }}
                           onClick={() => updateVehicleStatus(vehicle.id, 'Reserved', 'محجوزة')}
-                          title="Mark Reserved"
+                          title={isArabic ? 'تعيين كمحجوز' : 'Mark Reserved'}
                         >
-                          Reserved
+                          {isArabic ? 'محجوز' : 'Reserved'}
                         </button>
                         <button
                           type="button"
@@ -279,19 +310,19 @@ export const VehiclesView = () => {
                             opacity: vehicle.status === 'Sold' ? 1 : 0.4,
                           }}
                           onClick={() => updateVehicleStatus(vehicle.id, 'Sold', 'تم البيع')}
-                          title="Mark Sold"
+                          title={isArabic ? 'تعيين كتم البيع' : 'Mark Sold'}
                         >
-                          Sold
+                          {isArabic ? 'تم البيع' : 'Sold'}
                         </button>
                       </div>
                     </td>
-                    <td style={{ textAlign: 'right' }}>
-                      <div className="admin-table-actions" style={{ justifyContent: 'flex-end' }}>
+                    <td style={{ textAlign: isArabic ? 'left' : 'right' }}>
+                      <div className="admin-table-actions" style={{ justifyContent: isArabic ? 'flex-start' : 'flex-end' }}>
                         <button
                           type="button"
                           className="admin-btn admin-btn-secondary admin-btn-sm"
                           onClick={() => handleOpenEditModal(vehicle)}
-                          title="Edit Vehicle"
+                          title={isArabic ? 'تعديل السيارة' : 'Edit Vehicle'}
                         >
                           <Edit2 size={14} />
                         </button>
@@ -299,7 +330,7 @@ export const VehiclesView = () => {
                           type="button"
                           className="admin-btn admin-btn-danger admin-btn-sm"
                           onClick={() => handleDelete(vehicle.id, vehicle.title)}
-                          title="Delete Vehicle"
+                          title={isArabic ? 'حذف السيارة' : 'Delete Vehicle'}
                         >
                           <Trash2 size={14} />
                         </button>
@@ -312,7 +343,9 @@ export const VehiclesView = () => {
                   <tr>
                     <td colSpan={7} style={{ textAlign: 'center', padding: '36px' }}>
                       <Car size={36} style={{ color: 'var(--admin-text-light)', margin: '0 auto 8px auto' }} />
-                      <div style={{ color: 'var(--admin-text-muted)' }}>No vehicles matching your query.</div>
+                      <div style={{ color: 'var(--admin-text-muted)' }}>
+                        {isArabic ? 'لا توجد سيارات مطابقة لبحثك.' : 'No vehicles matching your query.'}
+                      </div>
                     </td>
                   </tr>
                 )}
@@ -328,7 +361,9 @@ export const VehiclesView = () => {
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal-header">
               <h3 className="admin-modal-title">
-                {editingVehicleId ? 'Edit Vehicle Details' : 'Add New Luxury Vehicle'}
+                {editingVehicleId
+                  ? (isArabic ? 'تعديل بيانات السيارة' : 'Edit Vehicle Details')
+                  : (isArabic ? 'إضافة سيارة فاخرة جديدة' : 'Add New Luxury Vehicle')}
               </h3>
               <button
                 type="button"
@@ -344,7 +379,9 @@ export const VehiclesView = () => {
                 <div className="admin-form-grid">
                   {/* Title (English) */}
                   <div className="admin-form-group">
-                    <label className="admin-label">Vehicle Title (English) *</label>
+                    <label className="admin-label">
+                      {isArabic ? 'اسم وموديل السيارة (بالإنجليزية) *' : 'Vehicle Title (English) *'}
+                    </label>
                     <input
                       type="text"
                       className="admin-input"
@@ -357,7 +394,9 @@ export const VehiclesView = () => {
 
                   {/* Title (Arabic) */}
                   <div className="admin-form-group">
-                    <label className="admin-label">Vehicle Title (Arabic)</label>
+                    <label className="admin-label">
+                      {isArabic ? 'اسم وموديل السيارة (بالعربية)' : 'Vehicle Title (Arabic)'}
+                    </label>
                     <input
                       type="text"
                       className="admin-input"
@@ -370,22 +409,22 @@ export const VehiclesView = () => {
 
                   {/* Category */}
                   <div className="admin-form-group">
-                    <label className="admin-label">Category</label>
+                    <label className="admin-label">{isArabic ? 'الفئة' : 'Category'}</label>
                     <select
                       className="admin-select"
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                     >
-                      <option value="coupe">Supercars & Coupes</option>
-                      <option value="suv">Luxury SUVs</option>
-                      <option value="sedan">Executive Sedans</option>
-                      <option value="electric">Electric & Hybrid GT</option>
+                      <option value="coupe">{isArabic ? 'سيارات رياضية وسوبركار' : 'Supercars & Coupes'}</option>
+                      <option value="suv">{isArabic ? 'دفع رباعي فاخر' : 'Luxury SUVs'}</option>
+                      <option value="sedan">{isArabic ? 'سيدان تنفيذي' : 'Executive Sedans'}</option>
+                      <option value="electric">{isArabic ? 'كهربائية وهيبرد GT' : 'Electric & Hybrid GT'}</option>
                     </select>
                   </div>
 
                   {/* Year */}
                   <div className="admin-form-group">
-                    <label className="admin-label">Model Year</label>
+                    <label className="admin-label">{isArabic ? 'سنة الصنع' : 'Model Year'}</label>
                     <input
                       type="number"
                       className="admin-input"
@@ -398,7 +437,9 @@ export const VehiclesView = () => {
 
                   {/* Price */}
                   <div className="admin-form-group">
-                    <label className="admin-label">Listing Price (EGP / ج.م) *</label>
+                    <label className="admin-label">
+                      {isArabic ? 'سعر البيع (ج.م) *' : 'Listing Price (EGP) *'}
+                    </label>
                     <input
                       type="number"
                       className="admin-input"
@@ -410,11 +451,11 @@ export const VehiclesView = () => {
 
                   {/* Mileage */}
                   <div className="admin-form-group">
-                    <label className="admin-label">Mileage</label>
+                    <label className="admin-label">{isArabic ? 'المسافة المقطوعة' : 'Mileage'}</label>
                     <input
                       type="text"
                       className="admin-input"
-                      placeholder="e.g. 2,400 mi"
+                      placeholder={isArabic ? 'مثال: 4,000 كم' : 'e.g. 2,400 mi'}
                       value={formData.mileage}
                       onChange={(e) => setFormData({ ...formData, mileage: e.target.value })}
                     />
@@ -422,11 +463,11 @@ export const VehiclesView = () => {
 
                   {/* Engine Specs */}
                   <div className="admin-form-group">
-                    <label className="admin-label">Engine / Output</label>
+                    <label className="admin-label">{isArabic ? 'المحرك / القوة' : 'Engine / Output'}</label>
                     <input
                       type="text"
                       className="admin-input"
-                      placeholder="e.g. 4.0L Twin-Turbo V8 (656 HP)"
+                      placeholder={isArabic ? 'مثال: 4.0L توين تيربو V8 (656 حصان)' : 'e.g. 4.0L Twin-Turbo V8 (656 HP)'}
                       value={formData.engine}
                       onChange={(e) => setFormData({ ...formData, engine: e.target.value })}
                     />
@@ -434,11 +475,11 @@ export const VehiclesView = () => {
 
                   {/* Acceleration */}
                   <div className="admin-form-group">
-                    <label className="admin-label">0-60 Acceleration</label>
+                    <label className="admin-label">{isArabic ? 'التسارع 0-100 كم/س' : '0-60 Acceleration'}</label>
                     <input
                       type="text"
                       className="admin-input"
-                      placeholder="e.g. 0-60 in 3.4s"
+                      placeholder={isArabic ? 'مثال: 0-100 في 3.4 ثانية' : 'e.g. 0-60 in 3.4s'}
                       value={formData.acceleration}
                       onChange={(e) => setFormData({ ...formData, acceleration: e.target.value })}
                     />
@@ -446,7 +487,9 @@ export const VehiclesView = () => {
 
                   {/* Image Selector / URL */}
                   <div className="admin-form-group full">
-                    <label className="admin-label">Vehicle Image URL or Asset Path</label>
+                    <label className="admin-label">
+                      {isArabic ? 'رابط صورة السيارة' : 'Vehicle Image URL or Asset Path'}
+                    </label>
                     <div style={{ display: 'flex', gap: '8px' }}>
                       <input
                         type="text"
@@ -459,7 +502,7 @@ export const VehiclesView = () => {
                     {/* Quick Demo Image Presets */}
                     <div style={{ display: 'flex', gap: '8px', marginTop: '6px', flexWrap: 'wrap' }}>
                       {[
-                        { label: 'Supercar', path: '/images/hero_car.jpg' },
+                        { label: isArabic ? 'سوبركار' : 'Supercar', path: '/images/hero_car.jpg' },
                         { label: 'Porsche GT3', path: '/images/porsche_gt3.jpg' },
                         { label: 'AMG G63', path: '/images/amg_g63.jpg' },
                         { label: 'Audi RSQ8', path: '/images/audi_rsq8.jpg' },
@@ -481,11 +524,11 @@ export const VehiclesView = () => {
 
                   {/* Badge */}
                   <div className="admin-form-group">
-                    <label className="admin-label">Highlight Badge</label>
+                    <label className="admin-label">{isArabic ? 'شارة التمييز' : 'Highlight Badge'}</label>
                     <input
                       type="text"
                       className="admin-input"
-                      placeholder="e.g. Showroom Feature"
+                      placeholder={isArabic ? 'مثال: عرض الصالة المميز' : 'e.g. Showroom Feature'}
                       value={formData.badge}
                       onChange={(e) => setFormData({ ...formData, badge: e.target.value })}
                     />
@@ -493,15 +536,15 @@ export const VehiclesView = () => {
 
                   {/* Initial Status */}
                   <div className="admin-form-group">
-                    <label className="admin-label">Initial Status</label>
+                    <label className="admin-label">{isArabic ? 'الحالة الأولية' : 'Initial Status'}</label>
                     <select
                       className="admin-select"
                       value={formData.status}
                       onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                     >
-                      <option value="Available">Available</option>
-                      <option value="Reserved">Reserved</option>
-                      <option value="Sold">Sold</option>
+                      <option value="Available">{isArabic ? 'متوفر' : 'Available'}</option>
+                      <option value="Reserved">{isArabic ? 'محجوز' : 'Reserved'}</option>
+                      <option value="Sold">{isArabic ? 'تم البيع' : 'Sold'}</option>
                     </select>
                   </div>
                 </div>
@@ -513,10 +556,12 @@ export const VehiclesView = () => {
                   className="admin-btn admin-btn-secondary"
                   onClick={() => setIsModalOpen(false)}
                 >
-                  Cancel
+                  {isArabic ? 'إلغاء' : 'Cancel'}
                 </button>
                 <button type="submit" className="admin-btn admin-btn-primary">
-                  {editingVehicleId ? 'Save Changes' : 'Publish to Showroom'}
+                  {editingVehicleId
+                    ? (isArabic ? 'حفظ التعديلات' : 'Save Changes')
+                    : (isArabic ? 'نشر في المعرض' : 'Publish to Showroom')}
                 </button>
               </div>
             </form>

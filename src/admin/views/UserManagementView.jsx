@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '../../context/LanguageContext';
 import {
   getAdminUsers,
   getAdminUserDetails,
@@ -30,6 +31,7 @@ import {
 } from 'lucide-react';
 
 export const UserManagementView = () => {
+  const { isArabic } = useLanguage();
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -145,14 +147,38 @@ export const UserManagementView = () => {
     }
   };
 
+  const getStatusLabel = (status) => {
+    if (!isArabic) return status;
+    const map = {
+      active: 'نشط',
+      suspended: 'موقوف',
+      inactive: 'غير نشط',
+    };
+    return map[status] || status;
+  };
+
+  const getListingStatusLabel = (status) => {
+    if (!isArabic) {
+      return status === 'approved' ? 'Live in Showroom' : status;
+    }
+    const map = {
+      approved: 'معروض بالمعرض',
+      pending: 'قيد المراجعة',
+      rejected: 'مرفوض',
+    };
+    return map[status] || status;
+  };
+
   return (
     <div className="admin-user-management">
       {/* View Header */}
       <div className="admin-view-header">
         <div>
-          <h2 className="admin-view-title">User Management</h2>
+          <h2 className="admin-view-title">{isArabic ? 'إدارة المستخدمين' : 'User Management'}</h2>
           <p className="admin-view-subtitle">
-            Search, inspect, and administer registered customer accounts and their submitted vehicles.
+            {isArabic
+              ? 'البحث وفحص وإدارة حسابات العملاء المسجلين والسيارات المقدمة منهم.'
+              : 'Search, inspect, and administer registered customer accounts and their submitted vehicles.'}
           </p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -166,7 +192,7 @@ export const UserManagementView = () => {
               fontWeight: 700,
             }}
           >
-            {users.length} Registered Accounts
+            {users.length} {isArabic ? 'حسابات مسجلة' : 'Registered Accounts'}
           </span>
         </div>
       </div>
@@ -212,14 +238,18 @@ export const UserManagementView = () => {
             className="admin-input"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by name, email, phone, city..."
-            style={{ paddingLeft: '38px', height: '40px' }}
+            placeholder={isArabic ? 'البحث بالاسم، الإيميل، الهاتف، المدينة...' : 'Search by name, email, phone, city...'}
+            style={{
+              [isArabic ? 'paddingRight' : 'paddingLeft']: '38px',
+              [isArabic ? 'paddingLeft' : 'paddingRight']: '14px',
+              height: '40px',
+            }}
           />
           <Search
             size={16}
             style={{
               position: 'absolute',
-              left: '12px',
+              [isArabic ? 'right' : 'left']: '12px',
               top: '50%',
               transform: 'translateY(-50%)',
               color: 'var(--admin-text-muted)',
@@ -237,10 +267,10 @@ export const UserManagementView = () => {
             onChange={(e) => setStatusFilter(e.target.value)}
             style={{ height: '40px', width: 'auto', minWidth: '130px' }}
           >
-            <option value="all">All Statuses</option>
-            <option value="active">Active Accounts</option>
-            <option value="suspended">Suspended Accounts</option>
-            <option value="inactive">Inactive Accounts</option>
+            <option value="all">{isArabic ? 'جميع الحالات' : 'All Statuses'}</option>
+            <option value="active">{isArabic ? 'الحسابات النشطة' : 'Active Accounts'}</option>
+            <option value="suspended">{isArabic ? 'الحسابات الموقوفة' : 'Suspended Accounts'}</option>
+            <option value="inactive">{isArabic ? 'الحسابات غير النشطة' : 'Inactive Accounts'}</option>
           </select>
 
           {/* Activity Filter */}
@@ -250,9 +280,9 @@ export const UserManagementView = () => {
             onChange={(e) => setActivityFilter(e.target.value)}
             style={{ height: '40px', width: 'auto', minWidth: '140px' }}
           >
-            <option value="all">All Activity</option>
-            <option value="has_listings">Has Vehicle Listings</option>
-            <option value="no_listings">No Listings</option>
+            <option value="all">{isArabic ? 'جميع الأنشطة' : 'All Activity'}</option>
+            <option value="has_listings">{isArabic ? 'لديه سيارات معروضة' : 'Has Vehicle Listings'}</option>
+            <option value="no_listings">{isArabic ? 'بدون سيارات' : 'No Listings'}</option>
           </select>
 
           {/* Date Filter */}
@@ -262,10 +292,10 @@ export const UserManagementView = () => {
             onChange={(e) => setDateFilter(e.target.value)}
             style={{ height: '40px', width: 'auto', minWidth: '130px' }}
           >
-            <option value="all">All Registration</option>
-            <option value="7days">Past 7 Days</option>
-            <option value="30days">Past 30 Days</option>
-            <option value="older">Older than 30 Days</option>
+            <option value="all">{isArabic ? 'جميع أوقات التسجيل' : 'All Registration'}</option>
+            <option value="7days">{isArabic ? 'آخر 7 أيام' : 'Past 7 Days'}</option>
+            <option value="30days">{isArabic ? 'آخر 30 يوماً' : 'Past 30 Days'}</option>
+            <option value="older">{isArabic ? 'أقدم من 30 يوماً' : 'Older than 30 Days'}</option>
           </select>
         </div>
       </div>
@@ -276,26 +306,26 @@ export const UserManagementView = () => {
           <table className="admin-table">
             <thead>
               <tr>
-                <th>Registered User</th>
-                <th>Phone Number</th>
-                <th>City / Location</th>
-                <th>Registered Date</th>
-                <th>Account Status</th>
-                <th>Vehicle Listings</th>
-                <th style={{ textAlign: 'right' }}>Actions</th>
+                <th>{isArabic ? 'المستخدم المسجل' : 'Registered User'}</th>
+                <th>{isArabic ? 'رقم الهاتف' : 'Phone Number'}</th>
+                <th>{isArabic ? 'المدينة / الموقع' : 'City / Location'}</th>
+                <th>{isArabic ? 'تاريخ التسجيل' : 'Registered Date'}</th>
+                <th>{isArabic ? 'حالة الحساب' : 'Account Status'}</th>
+                <th>{isArabic ? 'السيارات المعروضة' : 'Vehicle Listings'}</th>
+                <th style={{ textAlign: isArabic ? 'left' : 'right' }}>{isArabic ? 'الإجراءات' : 'Actions'}</th>
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
                 <tr>
                   <td colSpan={7} style={{ textAlign: 'center', padding: '40px', color: 'var(--admin-text-muted)' }}>
-                    Loading registered users...
+                    {isArabic ? 'جارِ تحميل المستخدمين المسجلين...' : 'Loading registered users...'}
                   </td>
                 </tr>
               ) : users.length === 0 ? (
                 <tr>
                   <td colSpan={7} style={{ textAlign: 'center', padding: '40px', color: 'var(--admin-text-muted)' }}>
-                    No users found matching your search criteria.
+                    {isArabic ? 'لم يتم العثور على مستخدمين مطابقين لبحثك.' : 'No users found matching your search criteria.'}
                   </td>
                 </tr>
               ) : (
@@ -331,7 +361,7 @@ export const UserManagementView = () => {
                               {u.role === 'admin' && (
                                 <span
                                   style={{
-                                    marginLeft: '6px',
+                                    [isArabic ? 'marginRight' : 'marginLeft']: '6px',
                                     fontSize: '0.68rem',
                                     padding: '1px 6px',
                                     borderRadius: '10px',
@@ -340,7 +370,7 @@ export const UserManagementView = () => {
                                     fontWeight: 800,
                                   }}
                                 >
-                                  Admin
+                                  {isArabic ? 'مدير' : 'Admin'}
                                 </span>
                               )}
                             </div>
@@ -376,7 +406,7 @@ export const UserManagementView = () => {
                           {isActive && <CheckCircle size={11} />}
                           {isSuspended && <Clock size={11} />}
                           {isInactive && <UserX size={11} />}
-                          <span>{u.status}</span>
+                          <span>{getStatusLabel(u.status)}</span>
                         </span>
                       </td>
 
@@ -393,7 +423,7 @@ export const UserManagementView = () => {
                               fontWeight: 700,
                             }}
                           >
-                            {u.listingsCount} Listings
+                            {u.listingsCount} {isArabic ? 'سيارات' : 'Listings'}
                           </span>
                           {u.pendingCount > 0 && (
                             <span
@@ -405,26 +435,26 @@ export const UserManagementView = () => {
                                 fontSize: '0.7rem',
                                 fontWeight: 700,
                               }}
-                              title="Pending Review"
+                              title={isArabic ? 'بانتظار المراجعة' : 'Pending Review'}
                             >
-                              {u.pendingCount} pending
+                              {u.pendingCount} {isArabic ? 'معلق' : 'pending'}
                             </span>
                           )}
                         </div>
                       </td>
 
                       {/* Actions */}
-                      <td style={{ textAlign: 'right' }}>
+                      <td style={{ textAlign: isArabic ? 'left' : 'right' }}>
                         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                           {/* View details */}
                           <button
                             type="button"
                             className="admin-btn admin-btn-sm admin-btn-secondary"
                             onClick={() => handleOpenDetails(u)}
-                            title="View Full Profile & Submitted Listings"
+                            title={isArabic ? 'عرض الملف والسيارات المعروضة' : 'View Full Profile & Submitted Listings'}
                           >
                             <Eye size={13} />
-                            <span>Details</span>
+                            <span>{isArabic ? 'التفاصيل' : 'Details'}</span>
                           </button>
 
                           {/* Edit user */}
@@ -433,7 +463,7 @@ export const UserManagementView = () => {
                             className="admin-btn admin-btn-sm"
                             style={{ background: 'rgba(255, 255, 255, 0.06)' }}
                             onClick={() => setEditingUser({ ...u })}
-                            title="Edit User Information"
+                            title={isArabic ? 'تعديل بيانات العميل' : 'Edit User Information'}
                           >
                             <Edit size={13} />
                           </button>
@@ -445,9 +475,9 @@ export const UserManagementView = () => {
                               className="admin-btn admin-btn-sm"
                               style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#F59E0B' }}
                               onClick={() => handleQuickStatusChange(u.id, 'suspended')}
-                              title="Suspend Account"
+                              title={isArabic ? 'إيقاف الحساب' : 'Suspend Account'}
                             >
-                              Suspend
+                              {isArabic ? 'إيقاف' : 'Suspend'}
                             </button>
                           ) : (
                             <button
@@ -455,9 +485,9 @@ export const UserManagementView = () => {
                               className="admin-btn admin-btn-sm"
                               style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#10B981' }}
                               onClick={() => handleQuickStatusChange(u.id, 'active')}
-                              title="Activate Account"
+                              title={isArabic ? 'تنشيط الحساب' : 'Activate Account'}
                             >
-                              Activate
+                              {isArabic ? 'تنشيط' : 'Activate'}
                             </button>
                           )}
 
@@ -467,7 +497,7 @@ export const UserManagementView = () => {
                               type="button"
                               className="admin-btn admin-btn-sm admin-btn-danger"
                               onClick={() => setDeletingUser(u)}
-                              title="Delete Account"
+                              title={isArabic ? 'حذف الحساب' : 'Delete Account'}
                             >
                               <Trash2 size={13} />
                             </button>
@@ -570,7 +600,7 @@ export const UserManagementView = () => {
             <div style={{ padding: '24px', overflowY: 'auto', flex: 1 }}>
               {isLoadingDetails ? (
                 <div style={{ textAlign: 'center', padding: '40px', color: 'var(--admin-text-muted)' }}>
-                  Loading complete user record and vehicle fleet...
+                  {isArabic ? 'جارِ تحميل سجل العميل الكامل وأسطول السيارات...' : 'Loading complete user record and vehicle fleet...'}
                 </div>
               ) : userDetails ? (
                 <div>
@@ -588,25 +618,33 @@ export const UserManagementView = () => {
                     }}
                   >
                     <div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--admin-text-muted)' }}>Phone Number</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--admin-text-muted)' }}>
+                        {isArabic ? 'رقم الهاتف' : 'Phone Number'}
+                      </div>
                       <div style={{ fontWeight: 600, fontSize: '0.9rem', marginTop: '2px' }}>
-                        {userDetails.phone || 'Not provided'}
+                        {userDetails.phone || (isArabic ? 'غير محدد' : 'Not provided')}
                       </div>
                     </div>
                     <div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--admin-text-muted)' }}>City / Location</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--admin-text-muted)' }}>
+                        {isArabic ? 'المدينة / الموقع' : 'City / Location'}
+                      </div>
                       <div style={{ fontWeight: 600, fontSize: '0.9rem', marginTop: '2px' }}>
-                        {userDetails.city || 'Not provided'}
+                        {userDetails.city || (isArabic ? 'غير محدد' : 'Not provided')}
                       </div>
                     </div>
                     <div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--admin-text-muted)' }}>Account Status</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--admin-text-muted)' }}>
+                        {isArabic ? 'حالة الحساب' : 'Account Status'}
+                      </div>
                       <div style={{ fontWeight: 700, fontSize: '0.9rem', marginTop: '2px', textTransform: 'capitalize' }}>
-                        {userDetails.status}
+                        {getStatusLabel(userDetails.status)}
                       </div>
                     </div>
                     <div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--admin-text-muted)' }}>Registered Since</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--admin-text-muted)' }}>
+                        {isArabic ? 'تاريخ التسجيل' : 'Registered Since'}
+                      </div>
                       <div style={{ fontWeight: 600, fontSize: '0.9rem', marginTop: '2px' }}>
                         {new Date(userDetails.createdAt).toLocaleDateString()}
                       </div>
@@ -618,7 +656,11 @@ export const UserManagementView = () => {
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
                       <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <Car size={18} style={{ color: 'var(--admin-accent-gold)' }} />
-                        <span>Submitted Vehicle Listings ({userDetails.listings ? userDetails.listings.length : 0})</span>
+                        <span>
+                          {isArabic
+                            ? `السيارات المقدمة من العميل (${userDetails.listings ? userDetails.listings.length : 0})`
+                            : `Submitted Vehicle Listings (${userDetails.listings ? userDetails.listings.length : 0})`}
+                        </span>
                       </h4>
                     </div>
 
@@ -633,7 +675,7 @@ export const UserManagementView = () => {
                           fontSize: '0.88rem',
                         }}
                       >
-                        This user has not submitted any vehicles yet.
+                        {isArabic ? 'لم يقم هذا العميل بإضافة أي سيارات بعد.' : 'This user has not submitted any vehicles yet.'}
                       </div>
                     ) : (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
@@ -669,7 +711,7 @@ export const UserManagementView = () => {
                                 <div>
                                   <div style={{ fontWeight: 700, fontSize: '0.95rem' }}>{item.makeModel}</div>
                                   <div style={{ fontSize: '0.88rem', color: 'var(--admin-accent-gold)', fontWeight: 700 }}>
-                                    {Number(item.price).toLocaleString()} EGP
+                                    {Number(item.price).toLocaleString()} {isArabic ? 'ج.م' : 'EGP'}
                                   </div>
                                   <div style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)' }}>
                                     {item.year} • {item.mileage} • {item.city}
@@ -685,7 +727,7 @@ export const UserManagementView = () => {
                                   }`}
                                   style={{ textTransform: 'capitalize' }}
                                 >
-                                  {item.status === 'approved' ? 'Live in Showroom' : item.status}
+                                  {getListingStatusLabel(item.status)}
                                 </span>
 
                                 {/* Approve / Reject Buttons */}
@@ -697,14 +739,14 @@ export const UserManagementView = () => {
                                       style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#10B981' }}
                                       onClick={() => handleListingApproval(item.id, 'approve')}
                                     >
-                                      Approve
+                                      {isArabic ? 'موافقة' : 'Approve'}
                                     </button>
                                     <button
                                       type="button"
                                       className="admin-btn admin-btn-sm admin-btn-danger"
                                       onClick={() => handleListingApproval(item.id, 'reject')}
                                     >
-                                      Reject
+                                      {isArabic ? 'رفض' : 'Reject'}
                                     </button>
                                   </>
                                 )}
@@ -715,9 +757,9 @@ export const UserManagementView = () => {
                                     className="admin-btn admin-btn-sm"
                                     style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#F59E0B' }}
                                     onClick={() => handleListingApproval(item.id, 'reject')}
-                                    title="Unpublish from Showroom"
+                                    title={isArabic ? 'إلغاء النشر من المعرض' : 'Unpublish from Showroom'}
                                   >
-                                    Unpublish
+                                    {isArabic ? 'إلغاء النشر' : 'Unpublish'}
                                   </button>
                                 )}
                               </div>
@@ -746,7 +788,7 @@ export const UserManagementView = () => {
                 className="admin-btn admin-btn-secondary"
                 onClick={() => setSelectedUser(null)}
               >
-                Close
+                {isArabic ? 'إغلاق' : 'Close'}
               </button>
             </div>
           </div>
@@ -785,7 +827,9 @@ export const UserManagementView = () => {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>Edit Customer Information</h3>
+              <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>
+                {isArabic ? 'تعديل بيانات العميل' : 'Edit Customer Information'}
+              </h3>
               <button
                 type="button"
                 onClick={() => setEditingUser(null)}
@@ -797,7 +841,7 @@ export const UserManagementView = () => {
 
             <form onSubmit={handleSaveEdit}>
               <div className="admin-form-group" style={{ marginBottom: '14px' }}>
-                <label className="admin-label">Full Name</label>
+                <label className="admin-label">{isArabic ? 'الاسم بالكامل' : 'Full Name'}</label>
                 <input
                   type="text"
                   className="admin-input"
@@ -808,7 +852,7 @@ export const UserManagementView = () => {
               </div>
 
               <div className="admin-form-group" style={{ marginBottom: '14px' }}>
-                <label className="admin-label">Email Address</label>
+                <label className="admin-label">{isArabic ? 'البريد الإلكتروني' : 'Email Address'}</label>
                 <input
                   type="email"
                   className="admin-input"
@@ -819,7 +863,7 @@ export const UserManagementView = () => {
               </div>
 
               <div className="admin-form-group" style={{ marginBottom: '14px' }}>
-                <label className="admin-label">Phone Number</label>
+                <label className="admin-label">{isArabic ? 'رقم الهاتف' : 'Phone Number'}</label>
                 <input
                   type="tel"
                   className="admin-input"
@@ -829,7 +873,7 @@ export const UserManagementView = () => {
               </div>
 
               <div className="admin-form-group" style={{ marginBottom: '14px' }}>
-                <label className="admin-label">City / Location</label>
+                <label className="admin-label">{isArabic ? 'المدينة / الموقع' : 'City / Location'}</label>
                 <input
                   type="text"
                   className="admin-input"
@@ -839,26 +883,26 @@ export const UserManagementView = () => {
               </div>
 
               <div className="admin-form-group" style={{ marginBottom: '14px' }}>
-                <label className="admin-label">Account Status</label>
+                <label className="admin-label">{isArabic ? 'حالة الحساب' : 'Account Status'}</label>
                 <select
                   className="admin-input"
                   value={editingUser.status}
                   onChange={(e) => setEditingUser({ ...editingUser, status: e.target.value })}
                 >
-                  <option value="active">Active (Full access)</option>
-                  <option value="suspended">Suspended (Access blocked)</option>
-                  <option value="inactive">Inactive / Deactivated</option>
+                  <option value="active">{isArabic ? 'نشط (صلاحية كاملة)' : 'Active (Full access)'}</option>
+                  <option value="suspended">{isArabic ? 'موقوف (محظور مؤقتاً)' : 'Suspended (Access blocked)'}</option>
+                  <option value="inactive">{isArabic ? 'غير نشط' : 'Inactive / Deactivated'}</option>
                 </select>
               </div>
 
               <div className="admin-form-group" style={{ marginBottom: '20px' }}>
-                <label className="admin-label">Administrative Notes</label>
+                <label className="admin-label">{isArabic ? 'ملاحظات إدارية' : 'Administrative Notes'}</label>
                 <textarea
                   className="admin-input"
                   rows={3}
                   value={editingUser.notes || ''}
                   onChange={(e) => setEditingUser({ ...editingUser, notes: e.target.value })}
-                  placeholder="Internal notes about this customer..."
+                  placeholder={isArabic ? 'ملاحظات داخلية حول هذا العميل...' : 'Internal notes about this customer...'}
                   style={{ height: 'auto', padding: '10px' }}
                 />
               </div>
@@ -869,10 +913,10 @@ export const UserManagementView = () => {
                   className="admin-btn admin-btn-secondary"
                   onClick={() => setEditingUser(null)}
                 >
-                  Cancel
+                  {isArabic ? 'إلغاء' : 'Cancel'}
                 </button>
                 <button type="submit" className="admin-btn admin-btn-primary">
-                  Save Changes
+                  {isArabic ? 'حفظ التعديلات' : 'Save Changes'}
                 </button>
               </div>
             </form>
@@ -910,12 +954,17 @@ export const UserManagementView = () => {
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px', color: '#FB7185' }}>
               <AlertTriangle size={24} />
-              <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 800 }}>Confirm Account Deletion</h3>
+              <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 800 }}>
+                {isArabic ? 'تأكيد حذف الحساب' : 'Confirm Account Deletion'}
+              </h3>
             </div>
 
             <p style={{ color: '#CBD5E1', fontSize: '0.88rem', lineHeight: 1.5, margin: '0 0 16px 0' }}>
-              Are you sure you want to permanently delete the account for <strong>{deletingUser.name}</strong> (
-              {deletingUser.email})?
+              {isArabic ? (
+                <>هل أنت متأكد من رغبتك في حذف حساب <strong>{deletingUser.name}</strong> ({deletingUser.email}) نهائياً؟</>
+              ) : (
+                <>Are you sure you want to permanently delete the account for <strong>{deletingUser.name}</strong> ({deletingUser.email})?</>
+              )}
             </p>
 
             <div style={{ marginBottom: '20px', background: 'rgba(255, 255, 255, 0.04)', padding: '12px', borderRadius: '8px' }}>
@@ -926,7 +975,11 @@ export const UserManagementView = () => {
                   onChange={(e) => setDeleteListingsToo(e.target.checked)}
                   style={{ accentColor: 'var(--admin-accent-gold)' }}
                 />
-                <span>Also delete all vehicle listings submitted by this customer</span>
+                <span>
+                  {isArabic
+                    ? 'حذف جميع إعلانات السيارات المقدمة من هذا العميل أيضاً'
+                    : 'Also delete all vehicle listings submitted by this customer'}
+                </span>
               </label>
             </div>
 
@@ -936,14 +989,14 @@ export const UserManagementView = () => {
                 className="admin-btn admin-btn-secondary"
                 onClick={() => setDeletingUser(null)}
               >
-                Cancel
+                {isArabic ? 'إلغاء' : 'Cancel'}
               </button>
               <button
                 type="button"
                 className="admin-btn admin-btn-danger"
                 onClick={handleConfirmDelete}
               >
-                Confirm Delete Account
+                {isArabic ? 'تأكيد حذف الحساب' : 'Confirm Delete Account'}
               </button>
             </div>
           </div>

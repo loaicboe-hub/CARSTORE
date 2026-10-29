@@ -71,7 +71,12 @@ export const VehicleInquiryModal = ({ isOpen, onClose, selectedVehicle = null, d
     const carName = selectedVehicle
       ? (isArabic && selectedVehicle.titleAr ? selectedVehicle.titleAr : selectedVehicle.title)
       : (isArabic ? 'استفسار عام عن الصالة' : 'Showroom Inquiry');
-    const carPrice = selectedVehicle ? ` (${selectedVehicle.priceFormatted})` : '';
+    const carPriceFormatted = selectedVehicle
+      ? (isArabic
+          ? (selectedVehicle.priceFormatted || `${selectedVehicle.price?.toLocaleString()} ج.م`)
+          : (selectedVehicle.priceFormattedEn || (selectedVehicle.priceFormatted ? selectedVehicle.priceFormatted.replace('ج.م', 'EGP') : `${selectedVehicle.price?.toLocaleString()} EGP`)))
+      : '';
+    const carPrice = selectedVehicle ? ` (${carPriceFormatted})` : '';
 
     const text = isArabic
       ? encodeURIComponent(
@@ -121,7 +126,7 @@ export const VehicleInquiryModal = ({ isOpen, onClose, selectedVehicle = null, d
               </h3>
               <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
                 {selectedVehicle
-                  ? `${vehicleSubtitle} | ${selectedVehicle.priceFormatted}`
+                  ? `${vehicleSubtitle} | ${isArabic ? (selectedVehicle.priceFormatted || `${selectedVehicle.price?.toLocaleString()} ج.م`) : (selectedVehicle.priceFormattedEn || (selectedVehicle.priceFormatted ? selectedVehicle.priceFormatted.replace('ج.م', 'EGP') : `${selectedVehicle.price?.toLocaleString()} EGP`))}`
                   : t.modal.generalSubtitle}
               </p>
             </div>

@@ -8,12 +8,27 @@ export const HeroSection = () => {
   const { t, isArabic } = useLanguage();
   const { cmsContent } = useStore();
 
-  const titleP1 = isArabic ? t.hero.titleP1 : (cmsContent.heroTitleP1 || t.hero.titleP1);
-  const titleP2 = isArabic ? t.hero.titleP2 : (cmsContent.heroTitleP2 || t.hero.titleP2);
-  const subtitle = isArabic ? t.brand.heroSubtitle : (cmsContent.heroSubtitle || t.brand.heroSubtitle);
-  const specOutput = cmsContent.specOutput || '656 HP';
-  const specAccel = cmsContent.specAccel || '3.4s';
-  const specSpeed = cmsContent.specSpeed || '202 MPH';
+  const titleP1 = isArabic
+    ? (cmsContent.heroTitleP1Ar || t.hero.titleP1)
+    : (cmsContent.heroTitleP1 && !/[\u0600-\u06FF]/.test(cmsContent.heroTitleP1) ? cmsContent.heroTitleP1 : t.hero.titleP1);
+  const titleP2 = isArabic
+    ? (cmsContent.heroTitleP2Ar || t.hero.titleP2)
+    : (cmsContent.heroTitleP2 && !/[\u0600-\u06FF]/.test(cmsContent.heroTitleP2) ? cmsContent.heroTitleP2 : t.hero.titleP2);
+  const subtitle = isArabic
+    ? (cmsContent.heroSubtitleAr || t.brand.heroSubtitle)
+    : (cmsContent.heroSubtitle && !/[\u0600-\u06FF]/.test(cmsContent.heroSubtitle) ? cmsContent.heroSubtitle : t.brand.heroSubtitle);
+  const heroBadge = isArabic
+    ? (cmsContent.heroBadgeAr || t.hero.badge)
+    : (cmsContent.heroBadge && !/[\u0600-\u06FF]/.test(cmsContent.heroBadge) ? cmsContent.heroBadge : t.hero.badge);
+  const specOutput = isArabic
+    ? (cmsContent.specOutputAr || '190–585 HP')
+    : (cmsContent.specOutput || '656 HP');
+  const specAccel = isArabic
+    ? (cmsContent.specAccelAr || '0–100 في 4.5 ثوانٍ')
+    : (cmsContent.specAccel && !/[\u0600-\u06FF]/.test(cmsContent.specAccel) ? cmsContent.specAccel : '3.4s');
+  const specSpeed = isArabic
+    ? (cmsContent.specSpeedAr || 'استلام فوري')
+    : (cmsContent.specSpeed && !/[\u0600-\u06FF]/.test(cmsContent.specSpeed) ? cmsContent.specSpeed : '202 MPH');
 
   return (
     <section className="hero-section" id="hero">
@@ -38,7 +53,7 @@ export const HeroSection = () => {
             {/* Top Bar inside Banner: Badge & Live Specs */}
             <div className="hero-banner-top-bar">
               <Badge variant="gold" icon={<Sparkles size={14} />}>
-                {cmsContent.heroBadge || t.hero.badge}
+                {heroBadge}
               </Badge>
 
               {/* Live Technical Specs on Banner */}

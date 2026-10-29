@@ -51,16 +51,16 @@ export const AdminLayout = ({ onNavigatePublic, onLogout }) => {
   const newInquiriesCount = inquiries.filter((i) => i.status === 'new').length;
 
   const navItems = [
-    { id: 'overview', label: 'Overview', icon: LayoutDashboard },
-    { id: 'vehicles', label: 'Vehicles Fleet', icon: Car, badge: vehicles.length },
-    { id: 'buy', label: 'Buy Listings', icon: ShoppingBag },
-    { id: 'sell', label: 'Sell Requests', icon: ShoppingBag, badge: pendingSellCount, alert: pendingSellCount > 0 },
-    { id: 'rentals', label: 'Rental Fleet', icon: Key, badge: rentalFleet.length },
-    { id: 'exchanges', label: 'Exchange / Trade-In', icon: ArrowLeftRight },
-    { id: 'inquiries', label: 'Customers & Leads', icon: Users, badge: newInquiriesCount, alert: newInquiriesCount > 0 },
-    { id: 'users', label: 'User Management', icon: UserCheck },
-    { id: 'cms', label: 'Website CMS', icon: FileText },
-    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'overview', label: isArabic ? 'لوحة المتابعة العامة' : 'Overview', icon: LayoutDashboard },
+    { id: 'vehicles', label: isArabic ? 'أسطول السيارات' : 'Vehicles Fleet', icon: Car, badge: vehicles.length },
+    { id: 'buy', label: isArabic ? 'طلبات الشراء' : 'Buy Listings', icon: ShoppingBag },
+    { id: 'sell', label: isArabic ? 'طلبات البيع والتقييم' : 'Sell Requests', icon: ShoppingBag, badge: pendingSellCount, alert: pendingSellCount > 0 },
+    { id: 'rentals', label: isArabic ? 'أسطول التأجير' : 'Rental Fleet', icon: Key, badge: rentalFleet.length },
+    { id: 'exchanges', label: isArabic ? 'طلبات الاستبدال' : 'Exchange / Trade-In', icon: ArrowLeftRight },
+    { id: 'inquiries', label: isArabic ? 'العملاء والاستفسارات' : 'Customers & Leads', icon: Users, badge: newInquiriesCount, alert: newInquiriesCount > 0 },
+    { id: 'users', label: isArabic ? 'إدارة المستخدمين' : 'User Management', icon: UserCheck },
+    { id: 'cms', label: isArabic ? 'محتوى الموقع (CMS)' : 'Website CMS', icon: FileText },
+    { id: 'settings', label: isArabic ? 'إعدادات النظام' : 'Settings', icon: Settings },
   ];
 
   const handleSelectTab = (tabId) => {
@@ -71,7 +71,7 @@ export const AdminLayout = ({ onNavigatePublic, onLogout }) => {
 
   const getTitle = () => {
     const item = navItems.find((n) => n.id === activeTab);
-    return item ? item.label : 'Admin Dashboard';
+    return item ? item.label : (isArabic ? 'لوحة تحكم الإدارة' : 'Admin Dashboard');
   };
 
   return (
@@ -87,10 +87,10 @@ export const AdminLayout = ({ onNavigatePublic, onLogout }) => {
         {/* Brand Monogram Header */}
         <div className="admin-sidebar-brand">
           <div className="admin-brand-link">
-            <div className="admin-brand-emblem">A</div>
+            <div className="admin-brand-emblem">{isArabic ? 'ك' : 'C'}</div>
             <div className="admin-brand-text">
-              {cmsContent.brandName || 'AUTOHAUS'}
-              <span className="admin-subtag">Executive Suite</span>
+              CAR<span style={{ color: 'var(--admin-accent-gold, #C28B14)' }}>IN</span>
+              <span className="admin-subtag">{isArabic ? 'الجناح الإداري' : 'Executive Suite'}</span>
             </div>
           </div>
           <button
@@ -98,6 +98,7 @@ export const AdminLayout = ({ onNavigatePublic, onLogout }) => {
             className="admin-mobile-toggle"
             onClick={() => setIsMobileMenuOpen(false)}
             style={{ color: '#FFFFFF' }}
+            aria-label={isArabic ? 'إغلاق القائمة' : 'Close navigation'}
           >
             <X size={20} />
           </button>
@@ -140,7 +141,7 @@ export const AdminLayout = ({ onNavigatePublic, onLogout }) => {
             style={{ width: '100%', cursor: 'pointer', border: 'none' }}
           >
             <ExternalLink size={15} />
-            <span>View Public Showroom</span>
+            <span>{isArabic ? 'معاينة المعرض العام' : 'View Public Showroom'}</span>
           </button>
 
           {onLogout && (
@@ -192,7 +193,7 @@ export const AdminLayout = ({ onNavigatePublic, onLogout }) => {
               onClick={onNavigatePublic}
             >
               <ExternalLink size={14} />
-              <span>Showroom</span>
+              <span>{isArabic ? 'المعرض العام' : 'Showroom'}</span>
             </button>
 
             {/* Logout Button */}
@@ -233,7 +234,7 @@ export const AdminLayout = ({ onNavigatePublic, onLogout }) => {
           onClick={() => handleSelectTab('overview')}
         >
           <LayoutDashboard size={18} />
-          <span>Overview</span>
+          <span>{isArabic ? 'الرئيسية' : 'Overview'}</span>
         </button>
 
         <button
@@ -242,7 +243,7 @@ export const AdminLayout = ({ onNavigatePublic, onLogout }) => {
           onClick={() => handleSelectTab('vehicles')}
         >
           <Car size={18} />
-          <span>Vehicles</span>
+          <span>{isArabic ? 'السيارات' : 'Vehicles'}</span>
         </button>
 
         <button
@@ -251,7 +252,7 @@ export const AdminLayout = ({ onNavigatePublic, onLogout }) => {
           onClick={() => handleSelectTab('inquiries')}
         >
           <Users size={18} />
-          <span>Leads</span>
+          <span>{isArabic ? 'العملاء' : 'Leads'}</span>
         </button>
 
         <button
@@ -260,7 +261,7 @@ export const AdminLayout = ({ onNavigatePublic, onLogout }) => {
           onClick={() => handleSelectTab('cms')}
         >
           <FileText size={18} />
-          <span>CMS</span>
+          <span>{isArabic ? 'المحتوى' : 'CMS'}</span>
         </button>
 
         <button
@@ -269,7 +270,7 @@ export const AdminLayout = ({ onNavigatePublic, onLogout }) => {
           onClick={() => setIsMobileMenuOpen(true)}
         >
           <Menu size={18} />
-          <span>Menu</span>
+          <span>{isArabic ? 'القائمة' : 'Menu'}</span>
         </button>
       </nav>
     </div>

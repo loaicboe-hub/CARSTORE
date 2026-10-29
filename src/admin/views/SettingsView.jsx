@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useStore } from '../../context/StoreContext';
+import { useLanguage } from '../../context/LanguageContext';
 import {
   Settings,
   Shield,
@@ -25,6 +26,7 @@ export const SettingsView = () => {
     inquiries,
     cmsContent,
   } = useStore();
+  const { isArabic } = useLanguage();
 
   const [pin, setPin] = useState(settings.portalPin || '123456');
   const [adminUser, setAdminUser] = useState(settings.adminUsername || 'admin');
@@ -40,7 +42,11 @@ export const SettingsView = () => {
       adminUsername: adminUser.trim() || 'admin',
       adminPassword: adminPass.trim() || 'admin123',
     });
-    setSavedMsg('Security credentials & access PIN updated successfully.');
+    setSavedMsg(
+      isArabic
+        ? 'تم تحديث بيانات الأمان ورمز PIN بنجاح.'
+        : 'Security credentials & access PIN updated successfully.'
+    );
     setTimeout(() => setSavedMsg(''), 3000);
   };
 
@@ -60,20 +66,24 @@ export const SettingsView = () => {
     const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(backupData, null, 2));
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute('href', dataStr);
-    downloadAnchor.setAttribute('download', `autohaus_backup_${new Date().toISOString().slice(0, 10)}.json`);
+    downloadAnchor.setAttribute('download', `carin_backup_${new Date().toISOString().slice(0, 10)}.json`);
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
   };
 
   const handleResetData = () => {
-    if (
-      window.confirm(
-        'WARNING: This will reset all inventory, sell requests, and CMS customizations back to original factory demo state. Proceed?'
-      )
-    ) {
+    const confirmPrompt = isArabic
+      ? 'تحذير: سيؤدي هذا إلى إعادة ضبط جميع السيارات والطلبات ونصوص المحتوى للحالة الافتراضية الأصلية. هل تريد المتابعة؟'
+      : 'WARNING: This will reset all inventory, sell requests, and CMS customizations back to original factory demo state. Proceed?';
+
+    if (window.confirm(confirmPrompt)) {
       resetAllDataToDefault();
-      setSavedMsg('All dealership data reset to factory demo state.');
+      setSavedMsg(
+        isArabic
+          ? 'تمت إعادة ضبط جميع بيانات المعرض للحالة الافتراضية.'
+          : 'All dealership data reset to factory demo state.'
+      );
       setTimeout(() => setSavedMsg(''), 3000);
     }
   };
@@ -104,7 +114,7 @@ export const SettingsView = () => {
         <div className="admin-card-header">
           <h4 className="admin-card-title">
             <Lock size={18} style={{ color: 'var(--admin-accent-gold)' }} />
-            <span>Executive Portal Security & Admin Credentials</span>
+            <span>{isArabic ? 'أمان البوابة وبيانات دخول الإدارة' : 'Executive Portal Security & Admin Credentials'}</span>
           </h4>
         </div>
 
@@ -112,7 +122,7 @@ export const SettingsView = () => {
           <form onSubmit={handleSaveSecurity} style={{ maxWidth: '520px' }}>
             {/* Admin Username */}
             <div className="admin-form-group" style={{ marginBottom: '16px' }}>
-              <label className="admin-label">Admin Login Username</label>
+              <label className="admin-label">{isArabic ? 'اسم مستخدم دخول الإدارة' : 'Admin Login Username'}</label>
               <input
                 type="text"
                 className="admin-input"
@@ -123,13 +133,15 @@ export const SettingsView = () => {
                 placeholder="e.g. admin"
               />
               <p style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)', margin: '4px 0 0 0' }}>
-                Used to log into the Executive Dashboard at <code>/admin</code>.
+                {isArabic
+                  ? 'يُستخدم لتسجيل الدخول إلى لوحة تحكم الإدارة في /admin.'
+                  : 'Used to log into the Executive Dashboard at /admin.'}
               </p>
             </div>
 
             {/* Admin Password */}
             <div className="admin-form-group" style={{ marginBottom: '16px' }}>
-              <label className="admin-label">Admin Login Password</label>
+              <label className="admin-label">{isArabic ? 'كلمة مرور دخول الإدارة' : 'Admin Login Password'}</label>
               <div style={{ position: 'relative', maxWidth: '320px' }}>
                 <input
                   type={showAdminPass ? 'text' : 'password'}
@@ -137,7 +149,7 @@ export const SettingsView = () => {
                   value={adminPass}
                   onChange={(e) => setAdminPass(e.target.value)}
                   required
-                  style={{ paddingRight: '40px', width: '100%', boxSizing: 'border-box' }}
+                  style={{ [isArabic ? 'paddingLeft' : 'paddingRight']: '45px', width: '100%', boxSizing: 'border-box' }}
                   placeholder="e.g. admin123"
                 />
                 <button
@@ -146,7 +158,7 @@ export const SettingsView = () => {
                   style={{
                     position: 'absolute',
                     top: '50%',
-                    right: '10px',
+                    [isArabic ? 'left' : 'right']: '10px',
                     transform: 'translateY(-50%)',
                     background: 'none',
                     border: 'none',
@@ -156,17 +168,17 @@ export const SettingsView = () => {
                     padding: '4px',
                   }}
                 >
-                  {showAdminPass ? 'Hide' : 'Show'}
+                  {isArabic ? (showAdminPass ? 'إخفاء' : 'إظهار') : (showAdminPass ? 'Hide' : 'Show')}
                 </button>
               </div>
               <p style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)', margin: '4px 0 0 0' }}>
-                Keep your administrative credentials confidential.
+                {isArabic ? 'حافظ على سرية بياناتك الإدارية بعناية.' : 'Keep your administrative credentials confidential.'}
               </p>
             </div>
 
             {/* Authorization PIN */}
             <div className="admin-form-group" style={{ marginBottom: '20px' }}>
-              <label className="admin-label">Dealer Management Authorization PIN</label>
+              <label className="admin-label">{isArabic ? 'رمز PIN لتأكيد العمليات الإدارية' : 'Dealer Management Authorization PIN'}</label>
               <input
                 type="password"
                 className="admin-input"
@@ -176,12 +188,14 @@ export const SettingsView = () => {
                 style={{ letterSpacing: '0.2em', fontSize: '1.2rem', maxWidth: '240px' }}
               />
               <p style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)', margin: '4px 0 0 0' }}>
-                Used by executive personnel to verify operations in the dealership management modal.
+                {isArabic
+                  ? 'يُستخدم من قبل الإدارة لتأكيد العمليات الحساسة في نافذة الإدارة.'
+                  : 'Used by executive personnel to verify operations in the dealership management modal.'}
               </p>
             </div>
 
             <button type="submit" className="admin-btn admin-btn-primary">
-              Save Security Credentials
+              {isArabic ? 'حفظ بيانات الأمان' : 'Save Security Credentials'}
             </button>
           </form>
         </div>
@@ -192,16 +206,20 @@ export const SettingsView = () => {
         <div className="admin-card-header">
           <h4 className="admin-card-title">
             <Database size={18} style={{ color: 'var(--admin-accent-gold)' }} />
-            <span>Data Persistence & Export</span>
+            <span>{isArabic ? 'حفظ وتصدير البيانات' : 'Data Persistence & Export'}</span>
           </h4>
         </div>
 
         <div className="admin-card-body">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '580px' }}>
             <div>
-              <div style={{ fontWeight: 600, marginBottom: '4px' }}>Export Complete Dealership JSON Backup</div>
+              <div style={{ fontWeight: 600, marginBottom: '4px' }}>
+                {isArabic ? 'تصدير نسخة احتياطية كاملة للمعرض (JSON)' : 'Export Complete Dealership JSON Backup'}
+              </div>
               <p style={{ fontSize: '0.82rem', color: 'var(--admin-text-muted)', margin: '0 0 10px 0' }}>
-                Download a complete JSON snapshot containing all live vehicles, sell requests, inquiries, and CMS settings.
+                {isArabic
+                  ? 'تحميل ملف JSON كامل يحتوي على جميع السيارات المعروضة وطلبات البيع والاستفسارات وإعدادات المحتوى.'
+                  : 'Download a complete JSON snapshot containing all live vehicles, sell requests, inquiries, and CMS settings.'}
               </p>
               <button
                 type="button"
@@ -209,7 +227,7 @@ export const SettingsView = () => {
                 onClick={handleExportBackup}
               >
                 <Download size={14} />
-                <span>Export JSON Backup</span>
+                <span>{isArabic ? 'تصدير نسخة JSON' : 'Export JSON Backup'}</span>
               </button>
             </div>
 
@@ -217,10 +235,12 @@ export const SettingsView = () => {
 
             <div>
               <div style={{ fontWeight: 600, marginBottom: '4px', color: 'var(--admin-rose)' }}>
-                Reset Store to Original Demo Data
+                {isArabic ? 'إعادة ضبط المتجر للحالة الافتراضية الأصلية' : 'Reset Store to Original Demo Data'}
               </div>
               <p style={{ fontSize: '0.82rem', color: 'var(--admin-text-muted)', margin: '0 0 10px 0' }}>
-                Clears localStorage modifications and resets all catalog cars, requests, and CMS texts to the fresh showroom defaults.
+                {isArabic
+                  ? 'يمسح جميع التعديلات المحفوظة ويعيد السيارات والطلبات ونصوص المعرض إلى الحالة الافتراضية الأصلية.'
+                  : 'Clears localStorage modifications and resets all catalog cars, requests, and CMS texts to the fresh showroom defaults.'}
               </p>
               <button
                 type="button"
@@ -228,7 +248,7 @@ export const SettingsView = () => {
                 onClick={handleResetData}
               >
                 <RefreshCw size={14} />
-                <span>Reset All Data</span>
+                <span>{isArabic ? 'إعادة ضبط كل البيانات' : 'Reset All Data'}</span>
               </button>
             </div>
           </div>
@@ -240,39 +260,45 @@ export const SettingsView = () => {
         <div className="admin-card-header">
           <h4 className="admin-card-title">
             <Shield size={18} style={{ color: 'var(--admin-accent-gold)' }} />
-            <span>Architecture & Telematics Status</span>
+            <span>{isArabic ? 'حالة البنية التقنية والأنظمة' : 'Architecture & Telematics Status'}</span>
           </h4>
         </div>
 
         <div className="admin-card-body">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
             <div style={{ padding: '14px', background: 'var(--admin-content-bg)', borderRadius: '8px' }}>
-              <div style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)' }}>Storage Layer</div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)' }}>
+                {isArabic ? 'طبقة التخزين' : 'Storage Layer'}
+              </div>
               <div style={{ fontWeight: 700, fontSize: '1.1rem', marginTop: '2px' }}>
-                Hybrid Store
+                {isArabic ? 'تخزين هجين' : 'Hybrid Store'}
               </div>
               <div style={{ fontSize: '0.75rem', color: 'var(--admin-emerald)', marginTop: '2px' }}>
-                ✓ LocalStorage Active + PostgreSQL Ready
+                {isArabic ? '✓ LocalStorage نشط + جاهز لقاعدة البيانات' : '✓ LocalStorage Active + PostgreSQL Ready'}
               </div>
             </div>
 
             <div style={{ padding: '14px', background: 'var(--admin-content-bg)', borderRadius: '8px' }}>
-              <div style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)' }}>Backend Port</div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)' }}>
+                {isArabic ? 'منفذ السيرفر الخلفي' : 'Backend Port'}
+              </div>
               <div style={{ fontWeight: 700, fontSize: '1.1rem', marginTop: '2px' }}>
                 Port 5001
               </div>
               <div style={{ fontSize: '0.75rem', color: 'var(--admin-text-muted)', marginTop: '2px' }}>
-                /api/health & proxy mapped
+                {isArabic ? '/api/health وخادم الوكيل متصل' : '/api/health & proxy mapped'}
               </div>
             </div>
 
             <div style={{ padding: '14px', background: 'var(--admin-content-bg)', borderRadius: '8px' }}>
-              <div style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)' }}>Public Sync</div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)' }}>
+                {isArabic ? 'المزامنة مع الموقع العام' : 'Public Sync'}
+              </div>
               <div style={{ fontWeight: 700, fontSize: '1.1rem', marginTop: '2px' }}>
-                Real-Time Reactive
+                {isArabic ? 'تفاعلي فوري (Real-Time)' : 'Real-Time Reactive'}
               </div>
               <div style={{ fontSize: '0.75rem', color: 'var(--admin-emerald)', marginTop: '2px' }}>
-                ✓ Instant Public Reflection
+                {isArabic ? '✓ انعكاس فوري على المعرض العام' : '✓ Instant Public Reflection'}
               </div>
             </div>
           </div>

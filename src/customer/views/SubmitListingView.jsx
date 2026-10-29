@@ -190,8 +190,8 @@ export const SubmitListingView = ({ onNavigate, editingListing, onSaveSuccess })
           isDraft
             ? isArabic ? 'تم حفظ الإعلان كمسودة.' : 'Listing saved as draft.'
             : isArabic
-            ? 'تم إرسال إعلانك للمراجعة بنجاح! سيظهر في المعرض العام بمجرد اعتماده من إدارة AUTOHAUS.'
-            : 'Vehicle submitted for review! It will appear in the public showroom once approved by AUTOHAUS administrators.'
+            ? 'تم إرسال إعلانك للمراجعة بنجاح! سيظهر في المعرض العام بمجرد اعتماده من إدارة كار إن (CAR IN).'
+            : 'Vehicle submitted for review! It will appear in the public showroom once approved by CAR IN administrators.'
         );
       }
 
@@ -245,7 +245,7 @@ export const SubmitListingView = ({ onNavigate, editingListing, onSaveSuccess })
         </h1>
         <p style={{ margin: 0, color: '#94A3B8', fontSize: '0.88rem' }}>
           {isArabic
-            ? 'قدم تفاصيل سيارتك بدقة. تخضع جميع الإعلانات لمراجعة الجودة والاعتماد من قبل إدارة AUTOHAUS.'
+            ? 'قدم تفاصيل سيارتك بدقة. تخضع جميع الإعلانات لمراجعة الجودة والاعتماد من قبل إدارة كار إن (CAR IN).'
             : 'Complete the verified vehicle appraisal form. All client submissions are verified by administrators before public catalogue publication.'}
         </p>
       </div>
@@ -849,7 +849,7 @@ export const SubmitListingView = ({ onNavigate, editingListing, onSaveSuccess })
           {/* Quick Studio Presets */}
           <div>
             <div style={{ fontSize: '0.78rem', color: '#94A3B8', marginBottom: '8px' }}>
-              {isArabic ? 'أو اختر صور تجريبية من معرض AUTOHAUS:' : 'Or pick from verified AUTOHAUS studio showcase:'}
+              {isArabic ? 'أو اختر صور تجريبية من استوديو كار إن (CAR IN):' : 'Or pick from verified CAR IN studio showcase:'}
             </div>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
               {PRESET_CAR_PHOTOS.map((p, idx) => (

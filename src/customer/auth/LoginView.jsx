@@ -48,7 +48,7 @@ export const LoginView = ({ onNavigate }) => {
   };
 
   const handleDemoLogin = () => {
-    setEmail('client@autohaus.com');
+    setEmail('client@carrinn.com');
     setPassword('client123');
     setErrorMsg('');
   };
@@ -476,7 +476,9 @@ export const LoginView = ({ onNavigate }) => {
       </div>
 
       <div style={{ fontSize: '0.78rem', color: '#64748B', textAlign: 'center' }}>
-        &copy; {new Date().getFullYear()} CAR IN / AUTOHAUS Luxury Platform. All Rights Reserved.
+        {isArabic
+          ? `© ${new Date().getFullYear()} كار إن (CAR IN). جميع الحقوق محفوظة.`
+          : `© ${new Date().getFullYear()} CAR IN Luxury Platform. All Rights Reserved.`}
       </div>
     </div>
   );

@@ -231,7 +231,7 @@ export const SignupView = ({ onNavigate }) => {
               color: '#FFFFFF',
             }}
           >
-            {isArabic ? 'إنشاء حساب جديد' : 'Join AUTOHAUS'}
+            {isArabic ? 'إنشاء حساب جديد' : 'Join CAR IN'}
           </h1>
           <p style={{ margin: 0, color: '#94A3B8', fontSize: '0.85rem' }}>
             {isArabic ? 'سجل لعرض سياراتك، تتبع الإعلانات وإتمام الصفقات' : 'Create your account to list vehicles and access VIP inventory'}
@@ -606,8 +606,8 @@ export const SignupView = ({ onNavigate }) => {
               />
               <span>
                 {isArabic
-                  ? 'أوافق على شروط الخدمة وسياسة الخصوصية الخاصة بمنصة AUTOHAUS'
-                  : 'I agree to the AUTOHAUS Terms of Service and Privacy Policy for vehicle transactions.'}
+                  ? 'أوافق على شروط الخدمة وسياسة الخصوصية الخاصة بمنصة كار إن (CAR IN)'
+                  : 'I agree to the CAR IN Terms of Service and Privacy Policy for vehicle transactions.'}
               </span>
             </label>
           </div>
@@ -676,7 +676,9 @@ export const SignupView = ({ onNavigate }) => {
       </div>
 
       <div style={{ fontSize: '0.78rem', color: '#64748B', textAlign: 'center' }}>
-        &copy; {new Date().getFullYear()} CAR IN / AUTOHAUS Luxury Platform. All Rights Reserved.
+        {isArabic
+          ? `© ${new Date().getFullYear()} كار إن (CAR IN). جميع الحقوق محفوظة.`
+          : `© ${new Date().getFullYear()} CAR IN Luxury Platform. All Rights Reserved.`}
       </div>
     </div>
   );

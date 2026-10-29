@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useStore } from '../../context/StoreContext';
+import { useLanguage } from '../../context/LanguageContext';
 import {
   Key,
   Plus,
@@ -24,6 +25,7 @@ export const RentalFleetView = () => {
     deleteRentalCar,
     updateRentalInquiryStatus,
   } = useStore();
+  const { isArabic } = useLanguage();
 
   const [activeTab, setActiveTab] = useState('fleet'); // 'fleet' or 'inquiries'
   const [searchTerm, setSearchTerm] = useState('');
@@ -79,7 +81,11 @@ export const RentalFleetView = () => {
             onClick={() => setActiveTab('fleet')}
           >
             <Car size={16} />
-            <span>Rental Fleet Vehicles ({rentalFleet.length})</span>
+            <span>
+              {isArabic
+                ? `أسطول التأجير (${rentalFleet.length})`
+                : `Rental Fleet Vehicles (${rentalFleet.length})`}
+            </span>
           </button>
           <button
             type="button"
@@ -87,7 +93,11 @@ export const RentalFleetView = () => {
             onClick={() => setActiveTab('inquiries')}
           >
             <Calendar size={16} />
-            <span>Booking Reservations ({rentalInquiries.length})</span>
+            <span>
+              {isArabic
+                ? `حجوزات الإيجار (${rentalInquiries.length})`
+                : `Booking Reservations (${rentalInquiries.length})`}
+            </span>
           </button>
         </div>
 
@@ -98,7 +108,7 @@ export const RentalFleetView = () => {
             onClick={() => setIsModalOpen(true)}
           >
             <Plus size={16} />
-            <span>Add Rental Vehicle</span>
+            <span>{isArabic ? 'إضافة سيارة تأجير' : 'Add Rental Vehicle'}</span>
           </button>
         )}
       </div>
@@ -110,10 +120,16 @@ export const RentalFleetView = () => {
             <div>
               <h3 className="admin-card-title">
                 <Key size={18} style={{ color: 'var(--admin-accent-gold)' }} />
-                <span>Exotic & Executive Rental Fleet</span>
+                <span>
+                  {isArabic
+                    ? 'أسطول السيارات الفاخرة والتنفيذية للإيجار'
+                    : 'Exotic & Executive Rental Fleet'}
+                </span>
               </h3>
               <p className="admin-card-desc">
-                Daily and weekly rental rates, security deposits, and real-time fleet availability.
+                {isArabic
+                  ? 'أسعار الإيجار اليومي والأسبوعي، مبالغ التأمين، وحالة توافر الأسطول الفورية.'
+                  : 'Daily and weekly rental rates, security deposits, and real-time fleet availability.'}
               </p>
             </div>
 
@@ -122,7 +138,7 @@ export const RentalFleetView = () => {
               <input
                 type="text"
                 className="admin-search-input"
-                placeholder="Search fleet..."
+                placeholder={isArabic ? 'البحث في الأسطول...' : 'Search fleet...'}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -134,13 +150,13 @@ export const RentalFleetView = () => {
               <table className="admin-table">
                 <thead>
                   <tr>
-                    <th>Vehicle</th>
-                    <th>Category</th>
-                    <th>Daily Rate</th>
-                    <th>Weekly Rate</th>
-                    <th>Deposit</th>
-                    <th>Status</th>
-                    <th style={{ textAlign: 'right' }}>Actions</th>
+                    <th>{isArabic ? 'السيارة' : 'Vehicle'}</th>
+                    <th>{isArabic ? 'الفئة' : 'Category'}</th>
+                    <th>{isArabic ? 'السعر اليومي' : 'Daily Rate'}</th>
+                    <th>{isArabic ? 'السعر الأسبوعي' : 'Weekly Rate'}</th>
+                    <th>{isArabic ? 'التأمين' : 'Deposit'}</th>
+                    <th>{isArabic ? 'الحالة' : 'Status'}</th>
+                    <th style={{ textAlign: isArabic ? 'left' : 'right' }}>{isArabic ? 'الإجراءات' : 'Actions'}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -159,7 +175,7 @@ export const RentalFleetView = () => {
                           <div>
                             <div style={{ fontWeight: 600 }}>{car.title}</div>
                             <div style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)' }}>
-                              {car.fuel} • {car.seats} Seats
+                              {car.fuel} • {car.seats} {isArabic ? 'مقاعد' : 'Seats'}
                             </div>
                           </div>
                         </div>
@@ -167,11 +183,15 @@ export const RentalFleetView = () => {
                       <td>{car.category}</td>
                       <td>
                         <strong style={{ color: 'var(--admin-accent-gold)' }}>
-                          {(Number(car.dailyRate) || 0).toLocaleString()} EGP / day
+                          {(Number(car.dailyRate) || 0).toLocaleString()} {isArabic ? 'ج.م / يوم' : 'EGP / day'}
                         </strong>
                       </td>
-                      <td>{(Number(car.weeklyRate) || 0).toLocaleString()} EGP / week</td>
-                      <td>{(Number(car.deposit) || 0).toLocaleString()} EGP</td>
+                      <td>
+                        {(Number(car.weeklyRate) || 0).toLocaleString()} {isArabic ? 'ج.م / أسبوع' : 'EGP / week'}
+                      </td>
+                      <td>
+                        {(Number(car.deposit) || 0).toLocaleString()} {isArabic ? 'ج.م' : 'EGP'}
+                      </td>
                       <td>
                         <select
                           className="admin-select"
@@ -179,21 +199,22 @@ export const RentalFleetView = () => {
                           value={car.status}
                           onChange={(e) => updateRentalCar(car.id, { status: e.target.value })}
                         >
-                          <option value="available">Available</option>
-                          <option value="rented">Currently Rented</option>
-                          <option value="maintenance">Maintenance</option>
+                          <option value="available">{isArabic ? 'متاح للتأجير' : 'Available'}</option>
+                          <option value="rented">{isArabic ? 'مؤجرة حالياً' : 'Currently Rented'}</option>
+                          <option value="maintenance">{isArabic ? 'صيانة دورية' : 'Maintenance'}</option>
                         </select>
                       </td>
-                      <td style={{ textAlign: 'right' }}>
-                        <div className="admin-table-actions" style={{ justifyContent: 'flex-end' }}>
+                      <td style={{ textAlign: isArabic ? 'left' : 'right' }}>
+                        <div className="admin-table-actions" style={{ justifyContent: isArabic ? 'flex-start' : 'flex-end' }}>
                           <button
                             type="button"
                             className="admin-btn admin-btn-danger admin-btn-sm"
                             onClick={() => {
-                              if (window.confirm(`Delete ${car.title} from rental fleet?`)) {
+                              if (window.confirm(isArabic ? `حذف ${car.title} من أسطول التأجير؟` : `Delete ${car.title} from rental fleet?`)) {
                                 deleteRentalCar(car.id);
                               }
                             }}
+                            title={isArabic ? 'حذف السيارة' : 'Delete Vehicle'}
                           >
                             <Trash2 size={14} />
                           </button>
@@ -215,10 +236,12 @@ export const RentalFleetView = () => {
             <div>
               <h3 className="admin-card-title">
                 <Calendar size={18} style={{ color: 'var(--admin-accent-gold)' }} />
-                <span>Rental Booking Reservations</span>
+                <span>{isArabic ? 'حجوزات وطلبات التأجير' : 'Rental Booking Reservations'}</span>
               </h3>
               <p className="admin-card-desc">
-                Inbound customer fleet reservations, rental schedules, and delivery logistics.
+                {isArabic
+                  ? 'طلبات حجز العملاء الواردة، جداول الاستلام، ولوجستيات التسليم.'
+                  : 'Inbound customer fleet reservations, rental schedules, and delivery logistics.'}
               </p>
             </div>
           </div>
@@ -228,12 +251,12 @@ export const RentalFleetView = () => {
               <table className="admin-table">
                 <thead>
                   <tr>
-                    <th>Customer</th>
-                    <th>Requested Vehicle</th>
-                    <th>Rental Dates</th>
-                    <th>Duration & Total</th>
-                    <th>Status</th>
-                    <th style={{ textAlign: 'right' }}>Contact</th>
+                    <th>{isArabic ? 'العميل' : 'Customer'}</th>
+                    <th>{isArabic ? 'السيارة المطلوبة' : 'Requested Vehicle'}</th>
+                    <th>{isArabic ? 'تواريخ الإيجار' : 'Rental Dates'}</th>
+                    <th>{isArabic ? 'المدة والإجمالي' : 'Duration & Total'}</th>
+                    <th>{isArabic ? 'الحالة' : 'Status'}</th>
+                    <th style={{ textAlign: isArabic ? 'left' : 'right' }}>{isArabic ? 'التواصل' : 'Contact'}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -257,9 +280,9 @@ export const RentalFleetView = () => {
                         </div>
                       </td>
                       <td>
-                        <div>{inq.days} Days</div>
+                        <div>{inq.days} {isArabic ? 'أيام' : 'Days'}</div>
                         <div style={{ fontWeight: 700, color: 'var(--admin-accent-gold)' }}>
-                          {(inq.totalEstimated || 0).toLocaleString()} EGP
+                          {(inq.totalEstimated || 0).toLocaleString()} {isArabic ? 'ج.م' : 'EGP'}
                         </div>
                       </td>
                       <td>
@@ -269,23 +292,25 @@ export const RentalFleetView = () => {
                           value={inq.status}
                           onChange={(e) => updateRentalInquiryStatus(inq.id, e.target.value)}
                         >
-                          <option value="pending">Pending Review</option>
-                          <option value="confirmed">Confirmed & Scheduled</option>
-                          <option value="completed">Returned / Completed</option>
-                          <option value="cancelled">Cancelled</option>
+                          <option value="pending">{isArabic ? 'قيد المراجعة' : 'Pending Review'}</option>
+                          <option value="confirmed">{isArabic ? 'مؤكد ومجدول' : 'Confirmed & Scheduled'}</option>
+                          <option value="completed">{isArabic ? 'تم الإرجاع واكتمل' : 'Returned / Completed'}</option>
+                          <option value="cancelled">{isArabic ? 'ملغي' : 'Cancelled'}</option>
                         </select>
                       </td>
-                      <td style={{ textAlign: 'right' }}>
-                        <div className="admin-table-actions" style={{ justifyContent: 'flex-end' }}>
+                      <td style={{ textAlign: isArabic ? 'left' : 'right' }}>
+                        <div className="admin-table-actions" style={{ justifyContent: isArabic ? 'flex-start' : 'flex-end' }}>
                           <a
                             href={`https://wa.me/${inq.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-                              `Hello ${inq.customerName}, regarding your AUTOHAUS rental reservation for ${inq.vehicleTitle}.`
+                              isArabic
+                                ? `مرحباً ${inq.customerName}، بخصوص حجز سيارة ${inq.vehicleTitle} من كار إن.`
+                                : `Hello ${inq.customerName}, regarding your CAR IN rental reservation for ${inq.vehicleTitle}.`
                             )}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="admin-btn admin-btn-secondary admin-btn-sm"
                             style={{ color: '#059669' }}
-                            title="Chat on WhatsApp"
+                            title={isArabic ? 'تواصل عبر واتساب' : 'Chat on WhatsApp'}
                           >
                             <MessageCircle size={14} />
                           </a>
@@ -305,7 +330,9 @@ export const RentalFleetView = () => {
         <div className="admin-modal-overlay" onClick={() => setIsModalOpen(false)}>
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal-header">
-              <h3 className="admin-modal-title">Add Vehicle to Rental Fleet</h3>
+              <h3 className="admin-modal-title">
+                {isArabic ? 'إضافة سيارة لأسطول التأجير' : 'Add Vehicle to Rental Fleet'}
+              </h3>
               <button
                 type="button"
                 className="admin-modal-close"
@@ -319,7 +346,9 @@ export const RentalFleetView = () => {
               <div className="admin-modal-body">
                 <div className="admin-form-grid">
                   <div className="admin-form-group">
-                    <label className="admin-label">Vehicle Name *</label>
+                    <label className="admin-label">
+                      {isArabic ? 'اسم السيارة والموديل *' : 'Vehicle Name *'}
+                    </label>
                     <input
                       type="text"
                       className="admin-input"
@@ -331,18 +360,20 @@ export const RentalFleetView = () => {
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Category</label>
+                    <label className="admin-label">{isArabic ? 'الفئة' : 'Category'}</label>
                     <input
                       type="text"
                       className="admin-input"
-                      placeholder="e.g. Supercar / Grand Tourer"
+                      placeholder={isArabic ? 'مثال: سوبركار / جراند تورر' : 'e.g. Supercar / Grand Tourer'}
                       value={newCar.category}
                       onChange={(e) => setNewCar({ ...newCar, category: e.target.value })}
                     />
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Daily Rental Rate (EGP / ج.م) *</label>
+                    <label className="admin-label">
+                      {isArabic ? 'سعر الإيجار اليومي (ج.م) *' : 'Daily Rental Rate (EGP) *'}
+                    </label>
                     <input
                       type="number"
                       className="admin-input"
@@ -353,7 +384,9 @@ export const RentalFleetView = () => {
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Weekly Rate (EGP / ج.م)</label>
+                    <label className="admin-label">
+                      {isArabic ? 'سعر الإيجار الأسبوعي (ج.م)' : 'Weekly Rate (EGP)'}
+                    </label>
                     <input
                       type="number"
                       className="admin-input"
@@ -363,7 +396,9 @@ export const RentalFleetView = () => {
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Security Deposit (EGP / ج.م)</label>
+                    <label className="admin-label">
+                      {isArabic ? 'مبلغ التأمين المسترد (ج.م)' : 'Security Deposit (EGP)'}
+                    </label>
                     <input
                       type="number"
                       className="admin-input"
@@ -373,18 +408,20 @@ export const RentalFleetView = () => {
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Engine / Spec</label>
+                    <label className="admin-label">{isArabic ? 'المحرك والمواصفات' : 'Engine / Spec'}</label>
                     <input
                       type="text"
                       className="admin-input"
-                      placeholder="e.g. Twin-Turbo V6 Hybrid (819 HP)"
+                      placeholder={isArabic ? 'مثال: توين تيربو V6 هايبرد (819 حصان)' : 'e.g. Twin-Turbo V6 Hybrid (819 HP)'}
                       value={newCar.fuel}
                       onChange={(e) => setNewCar({ ...newCar, fuel: e.target.value })}
                     />
                   </div>
 
                   <div className="admin-form-group full">
-                    <label className="admin-label">Image Path or URL</label>
+                    <label className="admin-label">
+                      {isArabic ? 'رابط أو مسار الصورة' : 'Image Path or URL'}
+                    </label>
                     <input
                       type="text"
                       className="admin-input"
@@ -401,10 +438,10 @@ export const RentalFleetView = () => {
                   className="admin-btn admin-btn-secondary"
                   onClick={() => setIsModalOpen(false)}
                 >
-                  Cancel
+                  {isArabic ? 'إلغاء' : 'Cancel'}
                 </button>
                 <button type="submit" className="admin-btn admin-btn-primary">
-                  Add to Fleet
+                  {isArabic ? 'إضافة إلى الأسطول' : 'Add to Fleet'}
                 </button>
               </div>
             </form>

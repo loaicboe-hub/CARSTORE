@@ -85,37 +85,57 @@ export const VehicleDetailsModal = ({
   const title = isArabic && vehicle.titleAr ? vehicle.titleAr : vehicle.title;
   const subtitle = isArabic && vehicle.subtitleAr ? vehicle.subtitleAr : vehicle.subtitle;
   const categoryLabel = isArabic && vehicle.categoryLabelAr ? vehicle.categoryLabelAr : vehicle.categoryLabel;
-  const badge = isArabic && vehicle.badgeAr ? vehicle.badgeAr : vehicle.badge;
-  const status = isArabic && vehicle.statusAr ? vehicle.statusAr : vehicle.status;
-  const power = isArabic && vehicle.powerAr ? vehicle.powerAr : vehicle.power;
-  const accel = isArabic && vehicle.accelerationAr ? vehicle.accelerationAr : vehicle.acceleration;
-  const topSpeed = isArabic && vehicle.topSpeedAr ? vehicle.topSpeedAr : (vehicle.topSpeed || '230 كم/س');
-  const transmission = isArabic && vehicle.transmissionAr ? vehicle.transmissionAr : vehicle.transmission;
-  const drivetrain = isArabic && vehicle.drivetrainAr ? vehicle.drivetrainAr : (vehicle.drivetrain || 'دفع خلفي RWD');
-  const fuel = isArabic && vehicle.fuelAr ? vehicle.fuelAr : vehicle.fuel;
-  const mileage = isArabic && vehicle.mileageAr ? vehicle.mileageAr : vehicle.mileage;
-  const extColor = vehicle.exteriorColor || (isArabic ? 'حسب المواصفات' : 'As Specified');
-  const intColor = vehicle.interiorColor || (isArabic ? 'جلد طبيعي فاخر' : 'Luxury Leather');
+  const badge = isArabic
+    ? (vehicle.badgeAr || vehicle.badge || 'فابريكا شركة بالكامل 100%')
+    : (vehicle.badgeEn || (!/[\u0600-\u06FF]/.test(vehicle.badge || '') ? vehicle.badge : '100% Factory Paint Certified'));
+  const status = isArabic
+    ? (vehicle.statusAr || vehicle.status || 'متوفرة للتسليم الفوري')
+    : (vehicle.statusEn || (!/[\u0600-\u06FF]/.test(vehicle.status || '') ? vehicle.status : 'Available for Immediate Delivery'));
+  const power = isArabic && vehicle.powerAr ? vehicle.powerAr : (vehicle.powerEn || vehicle.power);
+  const accel = isArabic && vehicle.accelerationAr
+    ? vehicle.accelerationAr
+    : (vehicle.accelerationEn || (vehicle.acceleration ? vehicle.acceleration.replace(/في/, 'in').replace(/ثانية|ثوانٍ/, 's') : vehicle.acceleration));
+  const topSpeed = isArabic && vehicle.topSpeedAr
+    ? vehicle.topSpeedAr
+    : (vehicle.topSpeedEn || (vehicle.topSpeed ? vehicle.topSpeed.replace(/كم\/س/, 'KM/H') : '230 KM/H'));
+  const transmission = isArabic && vehicle.transmissionAr ? vehicle.transmissionAr : (vehicle.transmissionEn || vehicle.transmission);
+  const drivetrain = isArabic && vehicle.drivetrainAr
+    ? vehicle.drivetrainAr
+    : (vehicle.drivetrainEn || (vehicle.drivetrain && !/[\u0600-\u06FF]/.test(vehicle.drivetrain) ? vehicle.drivetrain : 'Rear-Wheel Drive (RWD)'));
+  const fuel = isArabic && vehicle.fuelAr
+    ? vehicle.fuelAr
+    : (vehicle.fuelEn ? vehicle.fuelEn : (vehicle.fuel ? vehicle.fuel.replace(/بنزين/, 'Gasoline') : 'Gasoline'));
+  const mileage = isArabic && vehicle.mileageAr
+    ? vehicle.mileageAr
+    : (vehicle.mileageEn || (vehicle.mileage ? vehicle.mileage.replace(/كم/, 'KM') : vehicle.mileage));
+  const extColor = isArabic
+    ? (vehicle.exteriorColorAr || vehicle.exteriorColor || 'أبيض بولار ميتاليك')
+    : (vehicle.exteriorColorEn || (!/[\u0600-\u06FF]/.test(vehicle.exteriorColor || '') ? vehicle.exteriorColor : 'Polar White Metallic'));
+  const intColor = isArabic
+    ? (vehicle.interiorColorAr || vehicle.interiorColor || 'جلد طبيعي فاخر أسود')
+    : (vehicle.interiorColorEn || (!/[\u0600-\u06FF]/.test(vehicle.interiorColor || '') ? vehicle.interiorColor : 'Black Exclusive Nappa Leather'));
   const vin = vehicle.vin || 'EGY-CERTIFIED-AUTO-2024';
   const features = (isArabic && vehicle.featuresAr && vehicle.featuresAr.length > 0)
     ? vehicle.featuresAr
     : (vehicle.features || []);
 
   // Egyptian Specific Data
-  const trafficDept = isArabic ? (vehicle.trafficDept || 'مرور التجمع الخامس') : (vehicle.trafficDeptEn || 'New Cairo Traffic');
-  const licenseValidity = isArabic ? (vehicle.licenseValidity || 'رخصة سارية سنتين') : (vehicle.licenseValidityEn || 'Valid 2 Years');
+  const trafficDept = isArabic ? (vehicle.trafficDept || 'مرور التجمع الخامس') : (vehicle.trafficDeptEn || 'New Cairo Traffic Dept');
+  const licenseValidity = isArabic ? (vehicle.licenseValidity || 'رخصة سارية سنتين') : (vehicle.licenseValidityEn || 'Valid for 2 Years');
   const ownership = isArabic ? (vehicle.ownership || 'أول يد من الزيرو - صفر توكيلات') : (vehicle.ownershipEn || '1st Owner - Zero Powers of Attorney');
-  const agencyMaintenance = vehicle.agencyMaintenance || (isArabic ? 'صيانات دورية منتظمة بالتوكيل الرسمي' : 'Official Dealership Service Records');
+  const agencyMaintenance = isArabic
+    ? (vehicle.agencyMaintenance || 'صيانات دورية منتظمة بالتوكيل الرسمي')
+    : (vehicle.agencyMaintenanceEn || 'Official Dealership Service Records with Invoices');
   const fabrikaRadar = vehicle.fabrikaRadar || {
     status: 'فابريكا شركة بالكامل 100%',
     statusEn: '100% Original Factory Paint',
     micronAvg: '95 - 110 µm',
-    hood: { label: 'الكبوت', val: '102 µm', status: 'factory' },
-    roof: { label: 'السقف', val: '95 µm', status: 'factory' },
-    trunk: { label: 'الشنطة', val: '108 µm', status: 'factory' },
-    rightSide: { label: 'الجانب الأيمن', val: '104 µm', status: 'factory' },
-    leftSide: { label: 'الجانب الأيسر', val: '100 µm', status: 'factory' },
-    chassis: { label: 'الشاسيه والقوايم', val: 'عظم شركة سليم 100%', status: 'factory' },
+    hood: { label: isArabic ? 'الكبوت' : 'Hood', val: '102 µm', status: 'factory' },
+    roof: { label: isArabic ? 'السقف' : 'Roof', val: '95 µm', status: 'factory' },
+    trunk: { label: isArabic ? 'الشنطة' : 'Trunk', val: '108 µm', status: 'factory' },
+    rightSide: { label: isArabic ? 'الجانب الأيمن' : 'Right Side', val: '104 µm', status: 'factory' },
+    leftSide: { label: isArabic ? 'الجانب الأيسر' : 'Left Side', val: '100 µm', status: 'factory' },
+    chassis: { label: isArabic ? 'الشاسيه والقوايم' : 'Chassis & Pillars', val: isArabic ? 'عظم شركة سليم 100%' : '100% Intact Structural Pillars', status: 'factory' },
   };
 
   // Image navigation
@@ -221,7 +241,7 @@ export const VehicleDetailsModal = ({
 
             <div className="veh-modal-price-box">
               <span className="veh-modal-price" dir="ltr">
-                {vehicle.priceFormatted || `${carPrice.toLocaleString()} ج.م`}
+                {isArabic ? (vehicle.priceFormatted || `${carPrice.toLocaleString()} ج.م`) : (vehicle.priceFormattedEn || `${carPrice.toLocaleString()} EGP`)}
               </span>
               <span className="veh-modal-monthly">
                 {isArabic
@@ -341,13 +361,13 @@ export const VehicleDetailsModal = ({
               <div className="egypt-waitlist-box">
                 <div className="waitlist-card agency">
                   <span className="waitlist-tag">{isArabic ? 'حجز التوكيل الرسمي' : 'Official Agency Waitlist'}</span>
-                  <div className="waitlist-price">{vehicle.waitlistComparison.agencyPrice}</div>
-                  <p className="waitlist-desc">{vehicle.waitlistComparison.agencyWait}</p>
+                  <div className="waitlist-price">{isArabic ? vehicle.waitlistComparison.agencyPrice : (vehicle.waitlistComparison.agencyPriceEn || vehicle.waitlistComparison.agencyPrice.replace('ج.م', 'EGP'))}</div>
+                  <p className="waitlist-desc">{isArabic ? vehicle.waitlistComparison.agencyWait : (vehicle.waitlistComparison.agencyWaitEn || 'Official dealership order with 6-8 months waiting list')}</p>
                 </div>
                 <div className="waitlist-card instant">
                   <span className="waitlist-tag gold">{isArabic ? 'استلام فوري بمعرضنا اليوم' : 'Instant Showroom Delivery'}</span>
-                  <div className="waitlist-price gold">{vehicle.priceFormatted}</div>
-                  <p className="waitlist-desc">{vehicle.waitlistComparison.instantSaving}</p>
+                  <div className="waitlist-price gold">{isArabic ? (vehicle.priceFormatted || `${carPrice.toLocaleString()} ج.م`) : (vehicle.priceFormattedEn || `${carPrice.toLocaleString()} EGP`)}</div>
+                  <p className="waitlist-desc">{isArabic ? vehicle.waitlistComparison.instantSaving : (vehicle.waitlistComparison.instantSavingEn || 'Immediate showroom delivery within 1 hour, locked-in price')}</p>
                 </div>
               </div>
             )}
@@ -494,8 +514,8 @@ export const VehicleDetailsModal = ({
               <div className="micron-scale-bar-wrap">
                 <div className="micron-scale-labels">
                   <span>0 µm</span>
-                  <span className="micron-sweet-spot">🟢 نطاق فابريكا المصنع (85 - 130 µm)</span>
-                  <span>200+ µm (رش أو معجون)</span>
+                  <span className="micron-sweet-spot">{isArabic ? '🟢 نطاق فابريكا المصنع (85 - 130 µm)' : '🟢 Factory Paint Range (85 - 130 µm)'}</span>
+                  <span>{isArabic ? '200+ µm (رش أو معجون)' : '200+ µm (Repainted / Body filler)'}</span>
                 </div>
                 <div className="micron-scale-track">
                   <div className="micron-green-zone" />
@@ -567,7 +587,7 @@ export const VehicleDetailsModal = ({
                     <span className="panel-name">{fabrikaRadar.chassis.label}</span>
                     <strong className="panel-micron">{fabrikaRadar.chassis.val}</strong>
                   </div>
-                  <span className="panel-badge ok">{isArabic ? 'عظم شركة سليم' : 'Intact'}</span>
+                  <span className="panel-badge ok">{isArabic ? 'عظم شركة سليم' : '100% Intact'}</span>
                 </div>
               </div>
 
@@ -684,28 +704,28 @@ export const VehicleDetailsModal = ({
                     className={`financier-btn ${selectedFinancier === 'contact' ? 'active' : ''}`}
                     onClick={() => setSelectedFinancier('contact')}
                   >
-                    Contact Cars (كونتكت)
+                    {isArabic ? 'كونتكت كارز (Contact)' : 'Contact Auto Finance'}
                   </button>
                   <button
                     type="button"
                     className={`financier-btn ${selectedFinancier === 'cib' ? 'active' : ''}`}
                     onClick={() => setSelectedFinancier('cib')}
                   >
-                    CIB (البنك التجاري الدولي)
+                    {isArabic ? 'CIB (البنك التجاري الدولي)' : 'CIB Commercial International Bank'}
                   </button>
                   <button
                     type="button"
                     className={`financier-btn ${selectedFinancier === 'valu' ? 'active' : ''}`}
                     onClick={() => setSelectedFinancier('valu')}
                   >
-                    ValU (فاليو سيارات)
+                    {isArabic ? 'فاليو (valU)' : 'valU Consumer Finance'}
                   </button>
                   <button
                     type="button"
                     className={`financier-btn ${selectedFinancier === 'drive' ? 'active' : ''}`}
                     onClick={() => setSelectedFinancier('drive')}
                   >
-                    Drive (درايف للتمويل)
+                    {isArabic ? 'درايف للتمويل (Drive)' : 'Drive Auto Finance'}
                   </button>
                 </div>
               </div>
@@ -716,7 +736,7 @@ export const VehicleDetailsModal = ({
                   <div className="veh-calc-header">
                     <label>{isArabic ? 'الدفعة الأولى (المقدم)' : 'Down Payment'}</label>
                     <span className="veh-calc-val">
-                      {downPaymentPercent}% ({downPaymentAmount.toLocaleString()} ج.م)
+                      {downPaymentPercent}% ({downPaymentAmount.toLocaleString()} {isArabic ? 'ج.م' : 'EGP'})
                     </span>
                   </div>
                   <div className="veh-pct-buttons">
@@ -769,15 +789,15 @@ export const VehicleDetailsModal = ({
               <div className="veh-finance-result-box">
                 <div className="veh-result-row">
                   <span>{isArabic ? 'سعر السيارة النقدي:' : 'Vehicle Cash Price:'}</span>
-                  <strong dir="ltr">{carPrice.toLocaleString()} ج.م</strong>
+                  <strong dir="ltr">{carPrice.toLocaleString()} {isArabic ? 'ج.م' : 'EGP'}</strong>
                 </div>
                 <div className="veh-result-row">
                   <span>{isArabic ? 'قيمة الدفعة الأولى (المقدم):' : 'Down Payment Amount:'}</span>
-                  <strong dir="ltr">-{downPaymentAmount.toLocaleString()} ج.م</strong>
+                  <strong dir="ltr">-{downPaymentAmount.toLocaleString()} {isArabic ? 'ج.م' : 'EGP'}</strong>
                 </div>
                 <div className="veh-result-row">
                   <span>{isArabic ? 'المبلغ الممول الصافي:' : 'Financed Balance:'}</span>
-                  <strong dir="ltr">{loanPrincipal.toLocaleString()} ج.م</strong>
+                  <strong dir="ltr">{loanPrincipal.toLocaleString()} {isArabic ? 'ج.م' : 'EGP'}</strong>
                 </div>
                 <div className="veh-result-divider" />
                 <div className="veh-result-total">
@@ -791,7 +811,7 @@ export const VehicleDetailsModal = ({
                   </div>
                   <div className="veh-total-amount" dir="ltr">
                     {estimatedMonthlyPayment.toLocaleString()}
-                    <span className="veh-per-mo"> ج.م / شهر</span>
+                    <span className="veh-per-mo"> {isArabic ? 'ج.م / شهر' : 'EGP / mo'}</span>
                   </div>
                 </div>
               </div>

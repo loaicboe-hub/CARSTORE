@@ -420,7 +420,9 @@ export const CustomerLayout = ({ activeTab, onNavigate, children }) => {
           color: '#64748B',
         }}
       >
-        &copy; {new Date().getFullYear()} CAR IN / AUTOHAUS Customer Services. All personal data is encrypted and secure.
+        {isArabic
+          ? `© ${new Date().getFullYear()} خدمات عملاء كار إن (CAR IN). جميع البيانات الشخصية مشفرة ومحمية.`
+          : `© ${new Date().getFullYear()} CAR IN Concierge & Customer Services. All personal data is encrypted and secure.`}
       </footer>
     </div>
   );

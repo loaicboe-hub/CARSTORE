@@ -99,13 +99,13 @@ export const Footer = ({ onOpenAdmin }) => {
             { label: 'فحص فني شامل 180 نقطة', href: '#why-us' },
             { label: 'نقل وشحن مغلق VIP', href: '#why-us' },
             { label: 'استفسار عن حجز سيارة', href: '#contact' },
-            { label: 'لوحة تحكم AUTOHAUS الإدارية (/admin)', href: '/admin', onClick: onOpenAdmin },
+            { label: 'لوحة تحكم CAR IN الإدارية (/admin)', href: '/admin', onClick: onOpenAdmin },
           ]
         : [
             { label: '180-Point Inspection', href: '#why-us' },
             { label: 'Enclosed Delivery', href: '#why-us' },
             { label: 'Inquire on a Vehicle', href: '#contact' },
-            { label: 'AUTOHAUS Admin Suite (/admin)', href: '/admin', onClick: onOpenAdmin },
+            { label: 'CAR IN Admin Suite (/admin)', href: '/admin', onClick: onOpenAdmin },
           ],
     },
   ];

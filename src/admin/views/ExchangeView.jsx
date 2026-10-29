@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useStore } from '../../context/StoreContext';
+import { useLanguage } from '../../context/LanguageContext';
 import {
   ArrowLeftRight,
   Plus,
@@ -21,6 +22,7 @@ export const ExchangeView = () => {
     deleteExchangeRequest,
     vehicles,
   } = useStore();
+  const { isArabic } = useLanguage();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -79,7 +81,11 @@ export const ExchangeView = () => {
             <input
               type="text"
               className="admin-search-input"
-              placeholder="Search trade-in customer, current or desired car..."
+              placeholder={
+                isArabic
+                  ? 'البحث بالعميل، السيارة الحالية أو المرغوبة...'
+                  : 'Search trade-in customer, current or desired car...'
+              }
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -90,12 +96,12 @@ export const ExchangeView = () => {
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
-            <option value="all">All Exchange Statuses</option>
-            <option value="pending">Pending Evaluation</option>
-            <option value="inspection_scheduled">Inspection Scheduled</option>
-            <option value="offer_made">Offer Made</option>
-            <option value="completed">Completed & Upgraded</option>
-            <option value="declined">Declined</option>
+            <option value="all">{isArabic ? 'جميع حالات الاستبدال' : 'All Exchange Statuses'}</option>
+            <option value="pending">{isArabic ? 'قيد التقييم' : 'Pending Evaluation'}</option>
+            <option value="inspection_scheduled">{isArabic ? 'تم تحديد موعد الفحص' : 'Inspection Scheduled'}</option>
+            <option value="offer_made">{isArabic ? 'تم تقديم عرض استبدال' : 'Offer Made'}</option>
+            <option value="completed">{isArabic ? 'تم الاستبدال والترقية' : 'Completed & Upgraded'}</option>
+            <option value="declined">{isArabic ? 'ملغي / مرفوض' : 'Declined'}</option>
           </select>
         </div>
 
@@ -105,7 +111,7 @@ export const ExchangeView = () => {
           onClick={() => setIsModalOpen(true)}
         >
           <Plus size={16} />
-          <span>New Exchange Deal</span>
+          <span>{isArabic ? 'صفقة استبدال جديدة' : 'New Exchange Deal'}</span>
         </button>
       </div>
 
@@ -115,11 +121,15 @@ export const ExchangeView = () => {
           <div>
             <h3 className="admin-card-title">
               <ArrowLeftRight size={18} style={{ color: 'var(--admin-accent-gold)' }} />
-              <span>Bespoke Trade-In & Equity Transitions</span>
-              <span className="admin-counter-badge">{filteredExchanges.length} Deals</span>
+              <span>{isArabic ? 'طلبات الاستبدال وترقية الأسطول' : 'Bespoke Trade-In & Equity Transitions'}</span>
+              <span className="admin-counter-badge">
+                {isArabic ? `${filteredExchanges.length} صفقات` : `${filteredExchanges.length} Deals`}
+              </span>
             </h3>
             <p className="admin-card-desc">
-              Customer vehicle equity applied directly toward new showroom acquisitions.
+              {isArabic
+                ? 'استبدال سيارة العميل الحالية وتحويل قيمتها مباشرة لاقتناء سيارة من المعرض.'
+                : 'Customer vehicle equity applied directly toward new showroom acquisitions.'}
             </p>
           </div>
         </div>
@@ -129,12 +139,12 @@ export const ExchangeView = () => {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Client</th>
-                  <th>Current Trade-In Vehicle</th>
-                  <th>Desired Showroom Upgrade</th>
-                  <th>Equity Difference</th>
-                  <th>Status Workflow</th>
-                  <th style={{ textAlign: 'right' }}>Actions</th>
+                  <th>{isArabic ? 'العميل' : 'Client'}</th>
+                  <th>{isArabic ? 'السيارة الحالية للاستبدال' : 'Current Trade-In Vehicle'}</th>
+                  <th>{isArabic ? 'السيارة المرغوبة من المعرض' : 'Desired Showroom Upgrade'}</th>
+                  <th>{isArabic ? 'فارق القيمة' : 'Equity Difference'}</th>
+                  <th>{isArabic ? 'مرحلة الصفقة' : 'Status Workflow'}</th>
+                  <th style={{ textAlign: isArabic ? 'left' : 'right' }}>{isArabic ? 'الإجراءات' : 'Actions'}</th>
                 </tr>
               </thead>
               <tbody>
@@ -152,29 +162,31 @@ export const ExchangeView = () => {
                     <td>
                       <div style={{ fontWeight: 600 }}>{ex.currentCar}</div>
                       <div style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)' }}>
-                        {ex.currentCarMileage} • Valuation: {(Number(ex.currentCarValue) || 0).toLocaleString()} EGP
+                        {ex.currentCarMileage} • {isArabic ? 'التقييم: ' : 'Valuation: '}
+                        {(Number(ex.currentCarValue) || 0).toLocaleString()} {isArabic ? 'ج.م' : 'EGP'}
                       </div>
                     </td>
                     <td>
                       <div style={{ fontWeight: 600 }}>{ex.desiredCarTitle}</div>
                       <div style={{ fontSize: '0.78rem', color: 'var(--admin-accent-gold)' }}>
-                        Price: {(Number(ex.desiredCarPrice) || 0).toLocaleString()} EGP
+                        {isArabic ? 'السعر: ' : 'Price: '}
+                        {(Number(ex.desiredCarPrice) || 0).toLocaleString()} {isArabic ? 'ج.م' : 'EGP'}
                       </div>
                     </td>
                     <td>
                       <div>
                         {Number(ex.equityDifference) >= 0 ? (
                           <strong style={{ color: 'var(--admin-text-main)' }}>
-                            +{(Number(ex.equityDifference) || 0).toLocaleString()} EGP (Client Pays)
+                            +{(Number(ex.equityDifference) || 0).toLocaleString()} {isArabic ? 'ج.م (يدفع العميل)' : 'EGP (Client Pays)'}
                           </strong>
                         ) : (
                           <strong style={{ color: 'var(--admin-emerald)' }}>
-                            {Math.abs(Number(ex.equityDifference)).toLocaleString()} EGP (Cashback)
+                            {Math.abs(Number(ex.equityDifference)).toLocaleString()} {isArabic ? 'ج.م (فارق نقدي للعميل)' : 'EGP (Cashback)'}
                           </strong>
                         )}
                       </div>
                       <div style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)' }}>
-                        {ex.notes || 'Standard equity swap'}
+                        {ex.notes || (isArabic ? 'استبدال عادي' : 'Standard equity swap')}
                       </div>
                     </td>
                     <td>
@@ -184,24 +196,26 @@ export const ExchangeView = () => {
                         value={ex.status}
                         onChange={(e) => updateExchangeStatus(ex.id, e.target.value)}
                       >
-                        <option value="pending">Pending Evaluation</option>
-                        <option value="inspection_scheduled">Inspection Scheduled</option>
-                        <option value="offer_made">Offer Made</option>
-                        <option value="completed">Completed / Upgraded</option>
-                        <option value="declined">Declined</option>
+                        <option value="pending">{isArabic ? 'قيد التقييم' : 'Pending Evaluation'}</option>
+                        <option value="inspection_scheduled">{isArabic ? 'موعد فحص مجدول' : 'Inspection Scheduled'}</option>
+                        <option value="offer_made">{isArabic ? 'تم تقديم عرض' : 'Offer Made'}</option>
+                        <option value="completed">{isArabic ? 'تم الاستبدال واكتمل' : 'Completed / Upgraded'}</option>
+                        <option value="declined">{isArabic ? 'ملغي / مرفوض' : 'Declined'}</option>
                       </select>
                     </td>
-                    <td style={{ textAlign: 'right' }}>
-                      <div className="admin-table-actions" style={{ justifyContent: 'flex-end' }}>
+                    <td style={{ textAlign: isArabic ? 'left' : 'right' }}>
+                      <div className="admin-table-actions" style={{ justifyContent: isArabic ? 'flex-start' : 'flex-end' }}>
                         <a
                           href={`https://wa.me/${ex.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-                            `Hello ${ex.customerName}, this is AUTOHAUS regarding your trade-in exchange inquiry (${ex.currentCar} for ${ex.desiredCarTitle}).`
+                            isArabic
+                              ? `مرحباً ${ex.customerName}، يتواصل معك فريق كار إن بخصوص طلب استبدال (${ex.currentCar} مقابل ${ex.desiredCarTitle}).`
+                              : `Hello ${ex.customerName}, this is CAR IN regarding your trade-in exchange inquiry (${ex.currentCar} for ${ex.desiredCarTitle}).`
                           )}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="admin-btn admin-btn-secondary admin-btn-sm"
                           style={{ color: '#059669' }}
-                          title="Chat on WhatsApp"
+                          title={isArabic ? 'تواصل عبر واتساب' : 'Chat on WhatsApp'}
                         >
                           <MessageCircle size={14} />
                         </a>
@@ -209,10 +223,11 @@ export const ExchangeView = () => {
                           type="button"
                           className="admin-btn admin-btn-danger admin-btn-sm"
                           onClick={() => {
-                            if (window.confirm(`Delete exchange deal for ${ex.customerName}?`)) {
+                            if (window.confirm(isArabic ? `حذف صفقة استبدال ${ex.customerName}؟` : `Delete exchange deal for ${ex.customerName}?`)) {
                               deleteExchangeRequest(ex.id);
                             }
                           }}
+                          title={isArabic ? 'حذف الصفقة' : 'Delete Deal'}
                         >
                           <Trash2 size={14} />
                         </button>
@@ -225,7 +240,9 @@ export const ExchangeView = () => {
                   <tr>
                     <td colSpan={6} style={{ textAlign: 'center', padding: '36px' }}>
                       <ArrowLeftRight size={36} style={{ color: 'var(--admin-text-light)', margin: '0 auto 8px auto' }} />
-                      <div style={{ color: 'var(--admin-text-muted)' }}>No trade-in exchange requests found.</div>
+                      <div style={{ color: 'var(--admin-text-muted)' }}>
+                        {isArabic ? 'لم يتم العثور على طلبات استبدال.' : 'No trade-in exchange requests found.'}
+                      </div>
                     </td>
                   </tr>
                 )}
@@ -240,7 +257,9 @@ export const ExchangeView = () => {
         <div className="admin-modal-overlay" onClick={() => setIsModalOpen(false)}>
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal-header">
-              <h3 className="admin-modal-title">Log Trade-In Exchange Deal</h3>
+              <h3 className="admin-modal-title">
+                {isArabic ? 'تسجيل صفقة استبدال جديدة' : 'Log Trade-In Exchange Deal'}
+              </h3>
               <button
                 type="button"
                 className="admin-modal-close"
@@ -254,11 +273,13 @@ export const ExchangeView = () => {
               <div className="admin-modal-body">
                 <div className="admin-form-grid">
                   <div className="admin-form-group">
-                    <label className="admin-label">Client Name *</label>
+                    <label className="admin-label">
+                      {isArabic ? 'اسم العميل *' : 'Client Name *'}
+                    </label>
                     <input
                       type="text"
                       className="admin-input"
-                      placeholder="e.g. Victor Hernandez"
+                      placeholder={isArabic ? 'مثال: كريم المنشاوي' : 'e.g. Victor Hernandez'}
                       value={newExchange.customerName}
                       onChange={(e) => setNewExchange({ ...newExchange, customerName: e.target.value })}
                       required
@@ -266,11 +287,13 @@ export const ExchangeView = () => {
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Mobile / WhatsApp *</label>
+                    <label className="admin-label">
+                      {isArabic ? 'الهاتف / واتساب *' : 'Mobile / WhatsApp *'}
+                    </label>
                     <input
                       type="text"
                       className="admin-input"
-                      placeholder="+1 (555) 000-0000"
+                      placeholder={isArabic ? '01012345678' : '+1 (555) 000-0000'}
                       value={newExchange.phone}
                       onChange={(e) => setNewExchange({ ...newExchange, phone: e.target.value })}
                       required
@@ -278,11 +301,13 @@ export const ExchangeView = () => {
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Current Trade-In Vehicle *</label>
+                    <label className="admin-label">
+                      {isArabic ? 'السيارة الحالية للاستبدال *' : 'Current Trade-In Vehicle *'}
+                    </label>
                     <input
                       type="text"
                       className="admin-input"
-                      placeholder="e.g. 2021 BMW M5 CS"
+                      placeholder={isArabic ? 'مثال: 2021 بي إم دبليو M5' : 'e.g. 2021 BMW M5 CS'}
                       value={newExchange.currentCar}
                       onChange={(e) => setNewExchange({ ...newExchange, currentCar: e.target.value })}
                       required
@@ -290,7 +315,9 @@ export const ExchangeView = () => {
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Trade-In Valuation Estimate (EGP / ج.م)</label>
+                    <label className="admin-label">
+                      {isArabic ? 'التقييم التقديري للسيارة الحالية (ج.م)' : 'Trade-In Valuation Estimate (EGP)'}
+                    </label>
                     <input
                       type="number"
                       className="admin-input"
@@ -300,7 +327,9 @@ export const ExchangeView = () => {
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Target Showroom Car Title *</label>
+                    <label className="admin-label">
+                      {isArabic ? 'اسم السيارة المطلوبة من المعرض *' : 'Target Showroom Car Title *'}
+                    </label>
                     <input
                       type="text"
                       className="admin-input"
@@ -311,7 +340,9 @@ export const ExchangeView = () => {
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Target Car Price (EGP / ج.م)</label>
+                    <label className="admin-label">
+                      {isArabic ? 'سعر السيارة المطلوبة (ج.م)' : 'Target Car Price (EGP)'}
+                    </label>
                     <input
                       type="number"
                       className="admin-input"
@@ -321,10 +352,16 @@ export const ExchangeView = () => {
                   </div>
 
                   <div className="admin-form-group full">
-                    <label className="admin-label">Exchange Terms & Inspection Remarks</label>
+                    <label className="admin-label">
+                      {isArabic ? 'شروط الاستبدال وملاحظات الفحص' : 'Exchange Terms & Inspection Remarks'}
+                    </label>
                     <textarea
                       className="admin-textarea"
-                      placeholder="Financing terms, inspection location, differential payoff..."
+                      placeholder={
+                        isArabic
+                          ? 'شروط التمويل، موقع الفحص، طريقة سداد فارق القيمة...'
+                          : 'Financing terms, inspection location, differential payoff...'
+                      }
                       value={newExchange.notes}
                       onChange={(e) => setNewExchange({ ...newExchange, notes: e.target.value })}
                     />
@@ -338,10 +375,10 @@ export const ExchangeView = () => {
                   className="admin-btn admin-btn-secondary"
                   onClick={() => setIsModalOpen(false)}
                 >
-                  Cancel
+                  {isArabic ? 'إلغاء' : 'Cancel'}
                 </button>
                 <button type="submit" className="admin-btn admin-btn-primary">
-                  Record Exchange Deal
+                  {isArabic ? 'تسجيل صفقة الاستبدال' : 'Record Exchange Deal'}
                 </button>
               </div>
             </form>
@@ -353,3 +390,4 @@ export const ExchangeView = () => {
 };
 
 export default ExchangeView;
+

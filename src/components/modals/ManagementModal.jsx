@@ -137,7 +137,7 @@ export const ManagementModal = ({ isOpen, onClose, onOpenAdmin }) => {
                     {isArabic ? 'المخزون النشط' : 'Active Fleet'}
                   </div>
                   <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>
-                    {portalStats.activeVehicles} Units
+                    {portalStats.activeVehicles} {isArabic ? 'سيارة' : 'Units'}
                   </div>
                 </div>
                 <div>
@@ -145,7 +145,7 @@ export const ManagementModal = ({ isOpen, onClose, onOpenAdmin }) => {
                     {isArabic ? 'عروض الشراء' : 'Live Inquiries'}
                   </div>
                   <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--accent-gold)' }}>
-                    {portalStats.pendingInquiries} Pending
+                    {portalStats.pendingInquiries} {isArabic ? 'طلب معلق' : 'Pending'}
                   </div>
                 </div>
                 <div>
@@ -167,7 +167,7 @@ export const ManagementModal = ({ isOpen, onClose, onOpenAdmin }) => {
                     if (onOpenAdmin) onOpenAdmin();
                   }}
                 >
-                  {isArabic ? 'فتح لوحة تحكم AUTOHAUS الإدارية (/admin)' : 'Launch AUTOHAUS Admin Suite (/admin)'}
+                  {isArabic ? 'فتح لوحة تحكم CAR IN الإدارية (/admin)' : 'Launch CAR IN Admin Suite (/admin)'}
                 </Button>
                 <Button variant="secondary" size="md" onClick={handleReset}>
                   {m.closeBtn}

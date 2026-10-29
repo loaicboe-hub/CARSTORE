@@ -99,7 +99,7 @@ export const DashboardOverview = ({ onNavigate }) => {
           </h1>
           <p style={{ margin: 0, color: '#94A3B8', fontSize: '0.9rem', maxWidth: '580px' }}>
             {isArabic
-              ? 'قم بإدارة مركباتك المعروضة، متابعة حالة مراجعة الإعلانات، وعرض سيارات جديدة للبيع في معرض AUTOHAUS.'
+              ? 'قم بإدارة مركباتك المعروضة، متابعة حالة مراجعة الإعلانات، وعرض سيارات جديدة للبيع في معرض كار إن (CAR IN).'
               : 'Manage your vehicle listings, track review and approval statuses, and submit new luxury cars directly to the public showroom.'}
           </p>
         </div>
@@ -363,7 +363,7 @@ export const DashboardOverview = ({ onNavigate }) => {
             </h3>
             <p style={{ color: '#94A3B8', fontSize: '0.85rem', maxWidth: '380px', margin: '0 auto 20px auto' }}>
               {isArabic
-                ? 'اعرض سيارتك الفاخرة للبيع أمام آلاف المشترين عبر منصة AUTOHAUS.'
+                ? 'اعرض سيارتك الفاخرة للبيع أمام آلاف المشترين عبر منصة كار إن (CAR IN).'
                 : 'List your luxury or exotic automobile to reach certified buyers across the network.'}
             </p>
             <button

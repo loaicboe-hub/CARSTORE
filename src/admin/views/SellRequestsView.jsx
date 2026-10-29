@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useStore } from '../../context/StoreContext';
+import { useLanguage } from '../../context/LanguageContext';
 import {
   ShoppingBag,
   Plus,
@@ -18,6 +19,7 @@ import {
 
 export const SellRequestsView = () => {
   const { sellRequests, updateSellRequestStatus, addSellRequest, deleteSellRequest } = useStore();
+  const { isArabic } = useLanguage();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -65,10 +67,35 @@ export const SellRequestsView = () => {
   };
 
   const handleUpdateValuation = (id, currentValuation) => {
-    const newVal = window.prompt('Enter new valuation appraisal (EGP / ج.م):', currentValuation);
+    const newVal = window.prompt(
+      isArabic ? 'أدخل التقييم التقديري الجديد (ج.م):' : 'Enter new valuation appraisal (EGP):',
+      currentValuation
+    );
     if (newVal && !isNaN(Number(newVal))) {
       updateSellRequestStatus(id, undefined, Number(newVal));
     }
+  };
+
+  const getStatusLabel = (status) => {
+    if (!isArabic) return status;
+    const map = {
+      new: 'طلب جديد',
+      under_review: 'قيد المراجعة',
+      offer_sent: 'تم تقديم عرض',
+      approved: 'تمت الموافقة والاستحواذ',
+      rejected: 'مرفوض',
+    };
+    return map[status] || status;
+  };
+
+  const getConditionLabel = (condition) => {
+    if (!isArabic) return condition;
+    const map = {
+      Excellent: 'حالة ممتازة (فابريكا)',
+      Good: 'حالة جيدة جداً',
+      Fair: 'حالة مقبولة',
+    };
+    return map[condition] || condition;
   };
 
   return (
@@ -81,7 +108,7 @@ export const SellRequestsView = () => {
             <input
               type="text"
               className="admin-search-input"
-              placeholder="Search customer, vehicle, or phone..."
+              placeholder={isArabic ? 'البحث بالعميل، السيارة، أو الهاتف...' : 'Search customer, vehicle, or phone...'}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -92,12 +119,12 @@ export const SellRequestsView = () => {
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
-            <option value="all">All Request Statuses</option>
-            <option value="new">New Inquiries</option>
-            <option value="under_review">Under Review</option>
-            <option value="offer_sent">Offer Sent</option>
-            <option value="approved">Approved & Acquired</option>
-            <option value="rejected">Rejected / Passed</option>
+            <option value="all">{isArabic ? 'جميع حالات الطلب' : 'All Request Statuses'}</option>
+            <option value="new">{isArabic ? 'طلبات جديدة' : 'New Inquiries'}</option>
+            <option value="under_review">{isArabic ? 'قيد المراجعة' : 'Under Review'}</option>
+            <option value="offer_sent">{isArabic ? 'تم إرسال العرض' : 'Offer Sent'}</option>
+            <option value="approved">{isArabic ? 'تمت الموافقة والاستحواذ' : 'Approved & Acquired'}</option>
+            <option value="rejected">{isArabic ? 'مرفوض' : 'Rejected / Passed'}</option>
           </select>
         </div>
 
@@ -107,7 +134,7 @@ export const SellRequestsView = () => {
           onClick={() => setIsModalOpen(true)}
         >
           <Plus size={16} />
-          <span>Log Seller Appraisal</span>
+          <span>{isArabic ? 'تسجيل تقييم بائع' : 'Log Seller Appraisal'}</span>
         </button>
       </div>
 
@@ -117,11 +144,15 @@ export const SellRequestsView = () => {
           <div>
             <h3 className="admin-card-title">
               <ShoppingBag size={18} style={{ color: 'var(--admin-accent-gold)' }} />
-              <span>Sell & Consignment Pipeline</span>
-              <span className="admin-counter-badge">{filteredRequests.length} Requests</span>
+              <span>{isArabic ? 'قائمة طلبات البيع والتقييم' : 'Sell & Consignment Pipeline'}</span>
+              <span className="admin-counter-badge">
+                {isArabic ? `${filteredRequests.length} طلبات` : `${filteredRequests.length} Requests`}
+              </span>
             </h3>
             <p className="admin-card-desc">
-              Customer vehicle submissions, valuation underwriting, and acquisition negotiations.
+              {isArabic
+                ? 'طلبات بيع سيارات العملاء، تقييمات التسعير، ومفاوضات الشراء.'
+                : 'Customer vehicle submissions, valuation underwriting, and acquisition negotiations.'}
             </p>
           </div>
         </div>
@@ -131,12 +162,12 @@ export const SellRequestsView = () => {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Client</th>
-                  <th>Vehicle Details</th>
-                  <th>Condition & Mileage</th>
-                  <th>Asking vs Appraisal</th>
-                  <th>Status Workflow</th>
-                  <th style={{ textAlign: 'right' }}>Actions</th>
+                  <th>{isArabic ? 'العميل' : 'Client'}</th>
+                  <th>{isArabic ? 'تفاصيل السيارة' : 'Vehicle Details'}</th>
+                  <th>{isArabic ? 'الحالة والمسافة' : 'Condition & Mileage'}</th>
+                  <th>{isArabic ? 'المطلوب مقابل التقييم' : 'Asking vs Appraisal'}</th>
+                  <th>{isArabic ? 'مرحلة الطلب' : 'Status Workflow'}</th>
+                  <th style={{ textAlign: isArabic ? 'left' : 'right' }}>{isArabic ? 'الإجراءات' : 'Actions'}</th>
                 </tr>
               </thead>
               <tbody>
@@ -154,27 +185,30 @@ export const SellRequestsView = () => {
                     <td>
                       <div style={{ fontWeight: 600 }}>{req.vehicleTitle}</div>
                       <div style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)' }}>
-                        {req.notes || 'No inspection notes'}
+                        {req.notes || (isArabic ? 'لا توجد ملاحظات فحص' : 'No inspection notes')}
                       </div>
                     </td>
                     <td>
-                      <div>{req.condition}</div>
+                      <div>{getConditionLabel(req.condition)}</div>
                       <div style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)' }}>
                         {req.mileage}
                       </div>
                     </td>
                     <td>
                       <div style={{ fontSize: '0.88rem' }}>
-                        Asking:{' '}
-                        <strong>{(Number(req.askingPrice) || 0).toLocaleString()} EGP</strong>
+                        {isArabic ? 'المطلوب: ' : 'Asking: '}
+                        <strong>{(Number(req.askingPrice) || 0).toLocaleString()} {isArabic ? 'ج.م' : 'EGP'}</strong>
                       </div>
                       <div style={{ fontSize: '0.85rem', color: 'var(--admin-emerald)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <span>Appraisal: {(Number(req.estimatedValuation) || 0).toLocaleString()} EGP</span>
+                        <span>
+                          {isArabic ? 'التقييم: ' : 'Appraisal: '}
+                          {(Number(req.estimatedValuation) || 0).toLocaleString()} {isArabic ? 'ج.م' : 'EGP'}
+                        </span>
                         <button
                           type="button"
                           onClick={() => handleUpdateValuation(req.id, req.estimatedValuation)}
                           style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'var(--admin-accent-gold)', padding: 0 }}
-                          title="Edit appraisal valuation"
+                          title={isArabic ? 'تعديل التقييم التقديري' : 'Edit appraisal valuation'}
                         >
                           <Edit3 size={12} />
                         </button>
@@ -187,25 +221,27 @@ export const SellRequestsView = () => {
                         value={req.status}
                         onChange={(e) => updateSellRequestStatus(req.id, e.target.value)}
                       >
-                        <option value="new">New Submission</option>
-                        <option value="under_review">Under Review</option>
-                        <option value="offer_sent">Offer Sent</option>
-                        <option value="approved">Approved & Acquired</option>
-                        <option value="rejected">Declined</option>
+                        <option value="new">{isArabic ? 'طلب جديد' : 'New Submission'}</option>
+                        <option value="under_review">{isArabic ? 'قيد المراجعة' : 'Under Review'}</option>
+                        <option value="offer_sent">{isArabic ? 'تم تقديم عرض' : 'Offer Sent'}</option>
+                        <option value="approved">{isArabic ? 'تمت الموافقة والاستحواذ' : 'Approved & Acquired'}</option>
+                        <option value="rejected">{isArabic ? 'مرفوض' : 'Declined'}</option>
                       </select>
                     </td>
-                    <td style={{ textAlign: 'right' }}>
-                      <div className="admin-table-actions" style={{ justifyContent: 'flex-end' }}>
+                    <td style={{ textAlign: isArabic ? 'left' : 'right' }}>
+                      <div className="admin-table-actions" style={{ justifyContent: isArabic ? 'flex-start' : 'flex-end' }}>
                         {/* Direct WhatsApp Concierge Button */}
                         <a
                           href={`https://wa.me/${req.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-                            `Hello ${req.customerName}, this is the executive appraisal team from AUTOHAUS regarding your ${req.vehicleTitle}.`
+                            isArabic
+                              ? `مرحباً ${req.customerName}، يتواصل معك فريق التقييم التنفيذي من كار إن بخصوص سيارتك ${req.vehicleTitle}.`
+                              : `Hello ${req.customerName}, this is the executive appraisal team from CAR IN regarding your ${req.vehicleTitle}.`
                           )}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="admin-btn admin-btn-secondary admin-btn-sm"
                           style={{ color: '#059669' }}
-                          title="Chat with Seller on WhatsApp"
+                          title={isArabic ? 'تواصل مع البائع عبر واتساب' : 'Chat with Seller on WhatsApp'}
                         >
                           <MessageCircle size={14} />
                         </a>
@@ -213,11 +249,11 @@ export const SellRequestsView = () => {
                           type="button"
                           className="admin-btn admin-btn-danger admin-btn-sm"
                           onClick={() => {
-                            if (window.confirm(`Delete request from ${req.customerName}?`)) {
+                            if (window.confirm(isArabic ? `حذف طلب ${req.customerName}؟` : `Delete request from ${req.customerName}?`)) {
                               deleteSellRequest(req.id);
                             }
                           }}
-                          title="Delete Request"
+                          title={isArabic ? 'حذف الطلب' : 'Delete Request'}
                         >
                           <Trash2 size={14} />
                         </button>
@@ -230,7 +266,9 @@ export const SellRequestsView = () => {
                   <tr>
                     <td colSpan={6} style={{ textAlign: 'center', padding: '36px' }}>
                       <ShoppingBag size={36} style={{ color: 'var(--admin-text-light)', margin: '0 auto 8px auto' }} />
-                      <div style={{ color: 'var(--admin-text-muted)' }}>No sell requests match your filter.</div>
+                      <div style={{ color: 'var(--admin-text-muted)' }}>
+                        {isArabic ? 'لا توجد طلبات بيع مطابقة للمحددات.' : 'No sell requests match your filter.'}
+                      </div>
                     </td>
                   </tr>
                 )}
@@ -245,7 +283,9 @@ export const SellRequestsView = () => {
         <div className="admin-modal-overlay" onClick={() => setIsModalOpen(false)}>
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal-header">
-              <h3 className="admin-modal-title">Log In-Person Seller Appraisal</h3>
+              <h3 className="admin-modal-title">
+                {isArabic ? 'تسجيل تقييم سيارة بائع بالصالة' : 'Log In-Person Seller Appraisal'}
+              </h3>
               <button
                 type="button"
                 className="admin-modal-close"
@@ -259,11 +299,13 @@ export const SellRequestsView = () => {
               <div className="admin-modal-body">
                 <div className="admin-form-grid">
                   <div className="admin-form-group">
-                    <label className="admin-label">Seller Full Name *</label>
+                    <label className="admin-label">
+                      {isArabic ? 'اسم البائع بالكامل *' : 'Seller Full Name *'}
+                    </label>
                     <input
                       type="text"
                       className="admin-input"
-                      placeholder="e.g. Jonathan Pierce"
+                      placeholder={isArabic ? 'مثال: م. أحمد عبد الرحمن' : 'e.g. Jonathan Pierce'}
                       value={newRequest.customerName}
                       onChange={(e) => setNewRequest({ ...newRequest, customerName: e.target.value })}
                       required
@@ -271,11 +313,13 @@ export const SellRequestsView = () => {
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Mobile / WhatsApp *</label>
+                    <label className="admin-label">
+                      {isArabic ? 'رقم الهاتف / واتساب *' : 'Mobile / WhatsApp *'}
+                    </label>
                     <input
                       type="text"
                       className="admin-input"
-                      placeholder="+1 (555) 000-0000"
+                      placeholder={isArabic ? '01012345678' : '+1 (555) 000-0000'}
                       value={newRequest.phone}
                       onChange={(e) => setNewRequest({ ...newRequest, phone: e.target.value })}
                       required
@@ -283,11 +327,13 @@ export const SellRequestsView = () => {
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Vehicle Title (Make & Model) *</label>
+                    <label className="admin-label">
+                      {isArabic ? 'موديل وتفاصيل السيارة *' : 'Vehicle Title (Make & Model) *'}
+                    </label>
                     <input
                       type="text"
                       className="admin-input"
-                      placeholder="e.g. 2023 Bentley Continental GT"
+                      placeholder={isArabic ? 'مثال: 2023 مرسيدس C180 AMG' : 'e.g. 2023 Bentley Continental GT'}
                       value={newRequest.vehicleTitle}
                       onChange={(e) => setNewRequest({ ...newRequest, vehicleTitle: e.target.value })}
                       required
@@ -295,18 +341,20 @@ export const SellRequestsView = () => {
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Mileage</label>
+                    <label className="admin-label">{isArabic ? 'المسافة المقطوعة' : 'Mileage'}</label>
                     <input
                       type="text"
                       className="admin-input"
-                      placeholder="e.g. 5,100 mi"
+                      placeholder={isArabic ? 'مثال: 12,000 كم' : 'e.g. 5,100 mi'}
                       value={newRequest.mileage}
                       onChange={(e) => setNewRequest({ ...newRequest, mileage: e.target.value })}
                     />
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Seller Asking Price (EGP / ج.م)</label>
+                    <label className="admin-label">
+                      {isArabic ? 'السعر المطلوب من البائع (ج.م)' : 'Seller Asking Price (EGP)'}
+                    </label>
                     <input
                       type="number"
                       className="admin-input"
@@ -316,7 +364,9 @@ export const SellRequestsView = () => {
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Underwriting Appraisal Value (EGP / ج.م)</label>
+                    <label className="admin-label">
+                      {isArabic ? 'قيمة التقييم التقديري (ج.م)' : 'Underwriting Appraisal Value (EGP)'}
+                    </label>
                     <input
                       type="number"
                       className="admin-input"
@@ -326,10 +376,16 @@ export const SellRequestsView = () => {
                   </div>
 
                   <div className="admin-form-group full">
-                    <label className="admin-label">Inspection & Condition Notes</label>
+                    <label className="admin-label">
+                      {isArabic ? 'ملاحظات الفحص وحالة السيارة' : 'Inspection & Condition Notes'}
+                    </label>
                     <textarea
                       className="admin-textarea"
-                      placeholder="Service history, paint depth, interior wear, mechanical remarks..."
+                      placeholder={
+                        isArabic
+                          ? 'سجل الصيانة، قياس دهان الفابريكا، حالة الفرش الداخلي، وملاحظات الميكانيكا...'
+                          : 'Service history, paint depth, interior wear, mechanical remarks...'
+                      }
                       value={newRequest.notes}
                       onChange={(e) => setNewRequest({ ...newRequest, notes: e.target.value })}
                     />
@@ -343,10 +399,10 @@ export const SellRequestsView = () => {
                   className="admin-btn admin-btn-secondary"
                   onClick={() => setIsModalOpen(false)}
                 >
-                  Cancel
+                  {isArabic ? 'إلغاء' : 'Cancel'}
                 </button>
                 <button type="submit" className="admin-btn admin-btn-primary">
-                  Save Appraisal Request
+                  {isArabic ? 'حفظ طلب التقييم' : 'Save Appraisal Request'}
                 </button>
               </div>
             </form>

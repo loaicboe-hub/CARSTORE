@@ -223,31 +223,74 @@ const initialInquiries = [
   },
 ];
 
-// Initial CMS Editable Content
+// Initial CMS Editable Content (Bilingual EN & AR)
 const initialCmsContent = {
   brandName: 'CAR',
   brandSuffix: 'IN',
   legalName: 'CAR IN Luxury Automotive Egypt S.A.E',
-  tagline: 'الصفوة في تجارة واقتناء السيارات الفاخرة والمعتمدة بمصر',
-  heroBadge: 'فحص 180 نقطة معتمد • فابريكا بالكامل',
-  heroTitleP1: 'قمة التميز في',
-  heroTitleP2: 'عالم السيارات الفاخرة بمصر',
+  // Tagline
+  tagline: 'The Pinnacle of Automotive Distinction in Egypt',
+  taglineAr: 'الصفوة في تجارة واقتناء السيارات الفاخرة والمعتمدة بمصر',
+  // Hero Badge
+  heroBadge: '180-Point Certified Master Inspection Passed',
+  heroBadgeAr: 'فحص 180 نقطة معتمد • فابريكا بالكامل',
+  // Hero Titles
+  heroTitleP1: 'The Pinnacle of',
+  heroTitleP1Ar: 'قمة التميز في',
+  heroTitleP2: 'Automotive Distinction in Egypt',
+  heroTitleP2Ar: 'عالم السيارات الفاخرة بمصر',
+  // Hero Subtitle
   heroSubtitle:
-    "وجهتك الأولى لأرقى وأندر السيارات الفاخرة وكسر الزيرو في مصر. فابريكا بالكامل، فحص معتمد من 180 نقطة، تقسيط مباشر عبر كبرى البنوك، وتسليم فوري بدون قوائم انتظار.",
+    "Curators of Egypt's most distinguished luxury, performance, and executive motorcars. Master 180-point certification, direct banking finance, and same-day delivery.",
+  heroSubtitleAr:
+    'وجهتك الأولى لأرقى وأندر السيارات الفاخرة وكسر الزيرو في مصر. فابريكا بالكامل، فحص معتمد من 180 نقطة، تقسيط مباشر عبر كبرى البنوك، وتسليم فوري بدون قوائم انتظار.',
+  // Live Banner Specs
   specOutput: '190–585 HP',
-  specAccel: '0–100 في 4.5 ثوانٍ',
-  specSpeed: 'استلام فوري ونقل ملكية',
+  specOutputAr: '190–585 HP',
+  specAccel: '0–60 in 4.5s',
+  specAccelAr: '0–100 في 4.5 ثوانٍ',
+  specSpeed: 'Instant Delivery',
+  specSpeedAr: 'استلام فوري ونقل ملكية',
+  // Contact
   phone: '+201020008899',
   phoneDisplay: '+20 (10) 2000-8899',
   whatsappNumber: '201020008899',
   email: 'concierge@carin-egypt.com',
-  address: 'فرع التجمع الخامس: التسعين الشمالي | فرع زايد: وصلة دهشور',
-  city: 'القاهرة والشيخ زايد، مصر',
-  hours: 'يومياً: 11:00 صباحاً – 11:00 مساءً',
+  address: 'New Cairo: North 90th St | Sheikh Zayed: Dahshur Link',
+  addressAr: 'فرع التجمع الخامس: التسعين الشمالي | فرع زايد: وصلة دهشور',
+  city: 'Cairo & Sheikh Zayed, Egypt',
+  cityAr: 'القاهرة والشيخ زايد، مصر',
+  hours: 'Daily: 11:00 AM – 11:00 PM',
+  hoursAr: 'يومياً: 11:00 صباحاً – 11:00 مساءً',
   currency: 'EGP',
-  currencySymbol: 'ج.م',
-  bannerAnnouncement: '✨ تسليم فوري لسيارات 2024 كسر زيرو وفابريكا بالكامل مع برامج تقسيط CIB وContact',
+  currencySymbol: 'EGP',
+  currencySymbolAr: 'ج.م',
+  bannerAnnouncement: '✨ Immediate delivery for certified 2024 zero-km luxury inventory with CIB & Contact financing',
+  bannerAnnouncementAr: '✨ تسليم فوري لسيارات 2024 كسر زيرو وفابريكا بالكامل مع برامج تقسيط CIB وContact',
   showBanner: true,
+};
+
+const sanitizeCmsContent = (saved) => {
+  if (!saved) return initialCmsContent;
+  const isArabicOnlyP1 = /[\u0600-\u06FF]/.test(saved.heroTitleP1 || '');
+  return {
+    ...initialCmsContent,
+    ...saved,
+    heroTitleP1: isArabicOnlyP1 ? initialCmsContent.heroTitleP1 : (saved.heroTitleP1 || initialCmsContent.heroTitleP1),
+    heroTitleP1Ar: isArabicOnlyP1 ? saved.heroTitleP1 : (saved.heroTitleP1Ar || initialCmsContent.heroTitleP1Ar),
+    heroTitleP2: /[\u0600-\u06FF]/.test(saved.heroTitleP2 || '') ? initialCmsContent.heroTitleP2 : (saved.heroTitleP2 || initialCmsContent.heroTitleP2),
+    heroTitleP2Ar: /[\u0600-\u06FF]/.test(saved.heroTitleP2 || '') ? saved.heroTitleP2 : (saved.heroTitleP2Ar || initialCmsContent.heroTitleP2Ar),
+    heroSubtitle: /[\u0600-\u06FF]/.test(saved.heroSubtitle || '') ? initialCmsContent.heroSubtitle : (saved.heroSubtitle || initialCmsContent.heroSubtitle),
+    heroSubtitleAr: /[\u0600-\u06FF]/.test(saved.heroSubtitle || '') ? saved.heroSubtitle : (saved.heroSubtitleAr || initialCmsContent.heroSubtitleAr),
+    heroBadge: /[\u0600-\u06FF]/.test(saved.heroBadge || '') ? initialCmsContent.heroBadge : (saved.heroBadge || initialCmsContent.heroBadge),
+    heroBadgeAr: /[\u0600-\u06FF]/.test(saved.heroBadge || '') ? saved.heroBadge : (saved.heroBadgeAr || initialCmsContent.heroBadgeAr),
+    tagline: /[\u0600-\u06FF]/.test(saved.tagline || '') ? initialCmsContent.tagline : (saved.tagline || initialCmsContent.tagline),
+    taglineAr: /[\u0600-\u06FF]/.test(saved.tagline || '') ? saved.tagline : (saved.taglineAr || initialCmsContent.taglineAr),
+    specAccel: /[\u0600-\u06FF]/.test(saved.specAccel || '') ? initialCmsContent.specAccel : (saved.specAccel || initialCmsContent.specAccel),
+    specAccelAr: /[\u0600-\u06FF]/.test(saved.specAccel || '') ? saved.specAccel : (saved.specAccelAr || initialCmsContent.specAccelAr),
+    specSpeed: /[\u0600-\u06FF]/.test(saved.specSpeed || '') ? initialCmsContent.specSpeed : (saved.specSpeed || initialCmsContent.specSpeed),
+    specSpeedAr: /[\u0600-\u06FF]/.test(saved.specSpeed || '') ? saved.specSpeed : (saved.specSpeedAr || initialCmsContent.specSpeedAr),
+  };
 };
 
 export const StoreProvider = ({ children }) => {
@@ -338,7 +381,7 @@ export const StoreProvider = ({ children }) => {
   const [cmsContent, setCmsContent] = useState(() => {
     try {
       const saved = localStorage.getItem('autohaus_cms_content');
-      return saved ? JSON.parse(saved) : initialCmsContent;
+      return saved ? sanitizeCmsContent(JSON.parse(saved)) : initialCmsContent;
     } catch {
       return initialCmsContent;
     }

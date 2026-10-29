@@ -192,7 +192,7 @@ export const AdminLogin = ({ onLoginSuccess, onNavigatePublic }) => {
               boxShadow: '0 4px 20px rgba(194, 139, 20, 0.5)',
             }}
           >
-            A
+            {isArabic ? 'ك' : 'C'}
           </div>
 
           <div
@@ -226,7 +226,7 @@ export const AdminLogin = ({ onLoginSuccess, onNavigatePublic }) => {
               letterSpacing: '0.02em',
             }}
           >
-            {cmsContent.brandName || 'AUTOHAUS'} Admin
+            {isArabic ? (cmsContent.brandNameAr || 'كار إن') : (cmsContent.brandName || 'CAR IN')} {isArabic ? 'لوحة الإدارة' : 'Admin'}
           </h2>
           <p
             style={{
@@ -503,7 +503,7 @@ export const AdminLogin = ({ onLoginSuccess, onNavigatePublic }) => {
 
       {/* Footer Copyright */}
       <div style={{ fontSize: '0.78rem', color: '#64748B', textAlign: 'center' }}>
-        &copy; {new Date().getFullYear()} {cmsContent.brandName || 'AUTOHAUS'}. Authorized Dealership Personnel Only.
+        &copy; {new Date().getFullYear()} {isArabic ? (cmsContent.brandNameAr || 'كار إن') : (cmsContent.brandName || 'CAR IN')}. {isArabic ? 'مخصص فقط للموظفين المصرح لهم.' : 'Authorized Dealership Personnel Only.'}
       </div>
     </div>
   );

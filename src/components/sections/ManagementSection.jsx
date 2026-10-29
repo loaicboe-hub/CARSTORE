@@ -11,24 +11,29 @@ export const ManagementSection = () => {
 
   useEffect(() => {
     let isMounted = true;
+    setTeam(t.management.team);
     async function loadTeam() {
-      const liveData = await getManagementTeam();
-      if (isMounted && liveData && liveData.length > 0) {
-        const formatted = liveData.map((item) => ({
-          id: item.id,
-          name: isArabic && item.name_ar ? item.name_ar : item.name_en,
-          role: isArabic && item.role_ar ? item.role_ar : item.role_en,
-          bio: isArabic && item.bio_ar ? item.bio_ar : item.bio_en,
-          credential: isArabic && item.credential_ar ? item.credential_ar : item.credential_en,
-        }));
-        setTeam(formatted);
+      try {
+        const liveData = await getManagementTeam();
+        if (isMounted && liveData && liveData.length > 0) {
+          const formatted = liveData.map((item) => ({
+            id: item.id,
+            name: isArabic && item.name_ar ? item.name_ar : (item.name_en || item.name),
+            role: isArabic && item.role_ar ? item.role_ar : (item.role_en || item.role),
+            bio: isArabic && item.bio_ar ? item.bio_ar : (item.bio_en || item.bio),
+            credential: isArabic && item.credential_ar ? item.credential_ar : (item.credential_en || item.credential),
+          }));
+          setTeam(formatted);
+        }
+      } catch {
+        // Fallback to dictionary
       }
     }
     loadTeam();
     return () => {
       isMounted = false;
     };
-  }, [isArabic]);
+  }, [isArabic, t]);
 
   return (
     <section id="management" className="management-section" aria-labelledby="mgmt-heading">
