@@ -8,27 +8,38 @@ export const HeroSection = () => {
   const { t, isArabic } = useLanguage();
   const { cmsContent } = useStore();
 
+  const hasAr = (str) => /[\u0600-\u06FF]/.test(str || '');
+
+  // Strictly enforce language separation:
+  // English mode: strictly pure English (no Arabic characters under any condition)
+  // Arabic mode: strictly pure Arabic
   const titleP1 = isArabic
-    ? (cmsContent.heroTitleP1Ar || t.hero.titleP1)
-    : (cmsContent.heroTitleP1 && !/[\u0600-\u06FF]/.test(cmsContent.heroTitleP1) ? cmsContent.heroTitleP1 : t.hero.titleP1);
+    ? (cmsContent.heroTitleP1Ar || t.hero.titleP1 || 'قمة التميز في')
+    : (!hasAr(cmsContent.heroTitleP1) ? (cmsContent.heroTitleP1 || t.hero.titleP1) : t.hero.titleP1);
+
   const titleP2 = isArabic
-    ? (cmsContent.heroTitleP2Ar || t.hero.titleP2)
-    : (cmsContent.heroTitleP2 && !/[\u0600-\u06FF]/.test(cmsContent.heroTitleP2) ? cmsContent.heroTitleP2 : t.hero.titleP2);
+    ? (cmsContent.heroTitleP2Ar || t.hero.titleP2 || 'عالم السيارات الفاخرة بمصر')
+    : (!hasAr(cmsContent.heroTitleP2) ? (cmsContent.heroTitleP2 || t.hero.titleP2) : t.hero.titleP2);
+
   const subtitle = isArabic
-    ? (cmsContent.heroSubtitleAr || t.brand.heroSubtitle)
-    : (cmsContent.heroSubtitle && !/[\u0600-\u06FF]/.test(cmsContent.heroSubtitle) ? cmsContent.heroSubtitle : t.brand.heroSubtitle);
+    ? (cmsContent.heroSubtitleAr || t.brand.heroSubtitle || 'وجهتك الأولى لأرقى وأندر السيارات الفاخرة وكسر الزيرو في مصر. فابريكا بالكامل، فحص معتمد من 180 نقطة، تقسيط مباشر عبر كبرى البنوك، وتسليم فوري بدون قوائم انتظار.')
+    : (!hasAr(cmsContent.heroSubtitle) ? (cmsContent.heroSubtitle || t.brand.heroSubtitle) : t.brand.heroSubtitle);
+
   const heroBadge = isArabic
-    ? (cmsContent.heroBadgeAr || t.hero.badge)
-    : (cmsContent.heroBadge && !/[\u0600-\u06FF]/.test(cmsContent.heroBadge) ? cmsContent.heroBadge : t.hero.badge);
+    ? (cmsContent.heroBadgeAr || t.hero.badge || 'فحص 180 نقطة معتمد • فابريكا بالكامل')
+    : (!hasAr(cmsContent.heroBadge) ? (cmsContent.heroBadge || t.hero.badge) : t.hero.badge);
+
   const specOutput = isArabic
-    ? (cmsContent.specOutputAr || '190–585 HP')
-    : (cmsContent.specOutput || '656 HP');
+    ? (cmsContent.specOutputAr || '190–585 حصان')
+    : (!hasAr(cmsContent.specOutput) ? (cmsContent.specOutput || '190–585 HP') : '190–585 HP');
+
   const specAccel = isArabic
     ? (cmsContent.specAccelAr || '0–100 في 4.5 ثوانٍ')
-    : (cmsContent.specAccel && !/[\u0600-\u06FF]/.test(cmsContent.specAccel) ? cmsContent.specAccel : '3.4s');
+    : (!hasAr(cmsContent.specAccel) ? (cmsContent.specAccel || '0–60 in 4.5s') : '0–60 in 4.5s');
+
   const specSpeed = isArabic
     ? (cmsContent.specSpeedAr || 'استلام فوري')
-    : (cmsContent.specSpeed && !/[\u0600-\u06FF]/.test(cmsContent.specSpeed) ? cmsContent.specSpeed : '202 MPH');
+    : (!hasAr(cmsContent.specSpeed) ? (cmsContent.specSpeed || 'Instant Delivery') : 'Instant Delivery');
 
   return (
     <section className="hero-section" id="hero">

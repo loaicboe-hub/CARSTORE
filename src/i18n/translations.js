@@ -12,19 +12,19 @@ export const translations = {
     brand: {
       name: 'CAR',
       nameSuffix: 'IN',
-      tagline: 'The Pinnacle of Automotive Distinction',
+      tagline: 'The Pinnacle of Automotive Distinction in Egypt',
       heroSubtitle:
-        "Curators of the world's most distinguished luxury, performance, and executive automobiles. Experience unmatched precision in buying, selling, leasing, and bespoke exchanges.",
-      hours: 'Mon – Sat: 9:00 AM – 7:30 PM | Sun: By Appointment Only',
-      city: 'New York, NY 10021',
-      address: '740 Park Avenue, Automotive District, Suite 100',
+        "Curators of Egypt's most distinguished luxury, performance, and executive motorcars. Master 180-point certification, direct banking finance, and same-day delivery.",
+      hours: 'Daily: 11:00 AM – 11:00 PM',
+      city: 'Cairo & Sheikh Zayed, Egypt',
+      address: 'New Cairo: North 90th St | Sheikh Zayed: Dahshur Link',
     },
 
     stats: [
-      { value: '950+', label: 'Vehicles Delivered', description: 'To discerning drivers nationwide' },
-      { value: '180-Pt', label: 'Master Inspection', description: 'Rigorous mechanical & cosmetic certification' },
-      { value: '99.4%', label: 'Client Satisfaction', description: 'Verified bespoke concierge experience' },
-      { value: '15+', label: 'Years of Heritage', description: 'Excellence in high-end automotive trade' },
+      { value: '1,200+', label: 'Vehicles Delivered', description: 'To discerning clients across Cairo, Alexandria & Governorates' },
+      { value: '180-Pt', label: 'Master Inspection', description: 'Certified micron paint scale & engine diagnostics' },
+      { value: '100%', label: 'Immaculate Provenance', description: 'Highest acquisition standards without any remarks' },
+      { value: '1 Hour', label: 'Immediate Registration', description: 'Complete official notary & traffic paperwork finalized' },
     ],
 
     nav: {
@@ -39,14 +39,14 @@ export const translations = {
     },
 
     hero: {
-      badge: 'Excellence in Luxury & Certified Performance',
+      badge: '180-Point Certified Master Inspection Passed',
       titleP1: 'The Pinnacle of',
-      titleP2: 'Automotive Distinction',
+      titleP2: 'Automotive Distinction in Egypt',
       exploreBtn: 'Explore Inventory',
       appraisalBtn: 'Request Free Appraisal',
-      liveSpecOutput: 'Twin-Turbo V8',
+      liveSpecOutput: 'Engine Output',
       liveSpecAccel: '0–60 MPH',
-      liveSpecSpeed: 'Top Track Speed',
+      liveSpecSpeed: 'Showroom Delivery',
     },
 
     services: {
@@ -407,9 +407,9 @@ export const translations = {
       titleP2: 'عالم السيارات الفاخرة بمصر',
       exploreBtn: 'استكشف المعروض المتاح',
       appraisalBtn: 'طلب تقييم فوري لسيارتك',
-      liveSpecOutput: '190–585 HP',
-      liveSpecAccel: 'فابريكا 100%',
-      liveSpecSpeed: 'استلام فوري',
+      liveSpecOutput: 'قوة المحرك',
+      liveSpecAccel: '0–100 كم/س',
+      liveSpecSpeed: 'التسليم الفوري',
     },
 
     services: {

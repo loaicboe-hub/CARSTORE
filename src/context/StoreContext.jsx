@@ -226,8 +226,11 @@ const initialInquiries = [
 // Initial CMS Editable Content (Bilingual EN & AR)
 const initialCmsContent = {
   brandName: 'CAR',
+  brandNameAr: 'كار',
   brandSuffix: 'IN',
+  brandSuffixAr: 'إن',
   legalName: 'CAR IN Luxury Automotive Egypt S.A.E',
+  legalNameAr: 'مجموعة كار إن للسيارات الفاخرة ش.م.م',
   // Tagline
   tagline: 'The Pinnacle of Automotive Distinction in Egypt',
   taglineAr: 'الصفوة في تجارة واقتناء السيارات الفاخرة والمعتمدة بمصر',
@@ -246,11 +249,11 @@ const initialCmsContent = {
     'وجهتك الأولى لأرقى وأندر السيارات الفاخرة وكسر الزيرو في مصر. فابريكا بالكامل، فحص معتمد من 180 نقطة، تقسيط مباشر عبر كبرى البنوك، وتسليم فوري بدون قوائم انتظار.',
   // Live Banner Specs
   specOutput: '190–585 HP',
-  specOutputAr: '190–585 HP',
+  specOutputAr: '190–585 حصان',
   specAccel: '0–60 in 4.5s',
   specAccelAr: '0–100 في 4.5 ثوانٍ',
   specSpeed: 'Instant Delivery',
-  specSpeedAr: 'استلام فوري ونقل ملكية',
+  specSpeedAr: 'استلام فوري',
   // Contact
   phone: '+201020008899',
   phoneDisplay: '+20 (10) 2000-8899',
@@ -272,24 +275,42 @@ const initialCmsContent = {
 
 const sanitizeCmsContent = (saved) => {
   if (!saved) return initialCmsContent;
-  const isArabicOnlyP1 = /[\u0600-\u06FF]/.test(saved.heroTitleP1 || '');
+  const hasAr = (str) => /[\u0600-\u06FF]/.test(str || '');
+
   return {
     ...initialCmsContent,
     ...saved,
-    heroTitleP1: isArabicOnlyP1 ? initialCmsContent.heroTitleP1 : (saved.heroTitleP1 || initialCmsContent.heroTitleP1),
-    heroTitleP1Ar: isArabicOnlyP1 ? saved.heroTitleP1 : (saved.heroTitleP1Ar || initialCmsContent.heroTitleP1Ar),
-    heroTitleP2: /[\u0600-\u06FF]/.test(saved.heroTitleP2 || '') ? initialCmsContent.heroTitleP2 : (saved.heroTitleP2 || initialCmsContent.heroTitleP2),
-    heroTitleP2Ar: /[\u0600-\u06FF]/.test(saved.heroTitleP2 || '') ? saved.heroTitleP2 : (saved.heroTitleP2Ar || initialCmsContent.heroTitleP2Ar),
-    heroSubtitle: /[\u0600-\u06FF]/.test(saved.heroSubtitle || '') ? initialCmsContent.heroSubtitle : (saved.heroSubtitle || initialCmsContent.heroSubtitle),
-    heroSubtitleAr: /[\u0600-\u06FF]/.test(saved.heroSubtitle || '') ? saved.heroSubtitle : (saved.heroSubtitleAr || initialCmsContent.heroSubtitleAr),
-    heroBadge: /[\u0600-\u06FF]/.test(saved.heroBadge || '') ? initialCmsContent.heroBadge : (saved.heroBadge || initialCmsContent.heroBadge),
-    heroBadgeAr: /[\u0600-\u06FF]/.test(saved.heroBadge || '') ? saved.heroBadge : (saved.heroBadgeAr || initialCmsContent.heroBadgeAr),
-    tagline: /[\u0600-\u06FF]/.test(saved.tagline || '') ? initialCmsContent.tagline : (saved.tagline || initialCmsContent.tagline),
-    taglineAr: /[\u0600-\u06FF]/.test(saved.tagline || '') ? saved.tagline : (saved.taglineAr || initialCmsContent.taglineAr),
-    specAccel: /[\u0600-\u06FF]/.test(saved.specAccel || '') ? initialCmsContent.specAccel : (saved.specAccel || initialCmsContent.specAccel),
-    specAccelAr: /[\u0600-\u06FF]/.test(saved.specAccel || '') ? saved.specAccel : (saved.specAccelAr || initialCmsContent.specAccelAr),
-    specSpeed: /[\u0600-\u06FF]/.test(saved.specSpeed || '') ? initialCmsContent.specSpeed : (saved.specSpeed || initialCmsContent.specSpeed),
-    specSpeedAr: /[\u0600-\u06FF]/.test(saved.specSpeed || '') ? saved.specSpeed : (saved.specSpeedAr || initialCmsContent.specSpeedAr),
+    // English fields: strictly purge any Arabic text
+    brandName: hasAr(saved.brandName) ? initialCmsContent.brandName : (saved.brandName || initialCmsContent.brandName),
+    brandSuffix: hasAr(saved.brandSuffix) ? initialCmsContent.brandSuffix : (saved.brandSuffix || initialCmsContent.brandSuffix),
+    legalName: hasAr(saved.legalName) ? initialCmsContent.legalName : (saved.legalName || initialCmsContent.legalName),
+    tagline: hasAr(saved.tagline) ? initialCmsContent.tagline : (saved.tagline || initialCmsContent.tagline),
+    heroBadge: hasAr(saved.heroBadge) ? initialCmsContent.heroBadge : (saved.heroBadge || initialCmsContent.heroBadge),
+    heroTitleP1: hasAr(saved.heroTitleP1) ? initialCmsContent.heroTitleP1 : (saved.heroTitleP1 || initialCmsContent.heroTitleP1),
+    heroTitleP2: hasAr(saved.heroTitleP2) ? initialCmsContent.heroTitleP2 : (saved.heroTitleP2 || initialCmsContent.heroTitleP2),
+    heroSubtitle: hasAr(saved.heroSubtitle) ? initialCmsContent.heroSubtitle : (saved.heroSubtitle || initialCmsContent.heroSubtitle),
+    specOutput: hasAr(saved.specOutput) ? initialCmsContent.specOutput : (saved.specOutput || initialCmsContent.specOutput),
+    specAccel: hasAr(saved.specAccel) ? initialCmsContent.specAccel : (saved.specAccel || initialCmsContent.specAccel),
+    specSpeed: hasAr(saved.specSpeed) ? initialCmsContent.specSpeed : (saved.specSpeed || initialCmsContent.specSpeed),
+    address: hasAr(saved.address) ? initialCmsContent.address : (saved.address || initialCmsContent.address),
+    city: hasAr(saved.city) ? initialCmsContent.city : (saved.city || initialCmsContent.city),
+    hours: hasAr(saved.hours) ? initialCmsContent.hours : (saved.hours || initialCmsContent.hours),
+
+    // Arabic fields: preserve or fallback to initial Arabic values
+    brandNameAr: saved.brandNameAr || (hasAr(saved.brandName) ? saved.brandName : initialCmsContent.brandNameAr),
+    brandSuffixAr: saved.brandSuffixAr || (hasAr(saved.brandSuffix) ? saved.brandSuffix : initialCmsContent.brandSuffixAr),
+    legalNameAr: saved.legalNameAr || (hasAr(saved.legalName) ? saved.legalName : initialCmsContent.legalNameAr),
+    taglineAr: saved.taglineAr || (hasAr(saved.tagline) ? saved.tagline : initialCmsContent.taglineAr),
+    heroBadgeAr: saved.heroBadgeAr || (hasAr(saved.heroBadge) ? saved.heroBadge : initialCmsContent.heroBadgeAr),
+    heroTitleP1Ar: saved.heroTitleP1Ar || (hasAr(saved.heroTitleP1) ? saved.heroTitleP1 : initialCmsContent.heroTitleP1Ar),
+    heroTitleP2Ar: saved.heroTitleP2Ar || (hasAr(saved.heroTitleP2) ? saved.heroTitleP2 : initialCmsContent.heroTitleP2Ar),
+    heroSubtitleAr: saved.heroSubtitleAr || (hasAr(saved.heroSubtitle) ? saved.heroSubtitle : initialCmsContent.heroSubtitleAr),
+    specOutputAr: saved.specOutputAr || (hasAr(saved.specOutput) ? saved.specOutput : initialCmsContent.specOutputAr),
+    specAccelAr: saved.specAccelAr || (hasAr(saved.specAccel) ? saved.specAccel : initialCmsContent.specAccelAr),
+    specSpeedAr: saved.specSpeedAr || (hasAr(saved.specSpeed) ? saved.specSpeed : initialCmsContent.specSpeedAr),
+    addressAr: saved.addressAr || (hasAr(saved.address) ? saved.address : initialCmsContent.addressAr),
+    cityAr: saved.cityAr || (hasAr(saved.city) ? saved.city : initialCmsContent.cityAr),
+    hoursAr: saved.hoursAr || (hasAr(saved.hours) ? saved.hours : initialCmsContent.hoursAr),
   };
 };
 
@@ -380,7 +401,8 @@ export const StoreProvider = ({ children }) => {
   // 7. CMS Content Store
   const [cmsContent, setCmsContent] = useState(() => {
     try {
-      const saved = localStorage.getItem('autohaus_cms_content');
+      localStorage.removeItem('autohaus_cms_content'); // Purge legacy Arabic-contaminated cache
+      const saved = localStorage.getItem('carin_cms_content_v2');
       return saved ? sanitizeCmsContent(JSON.parse(saved)) : initialCmsContent;
     } catch {
       return initialCmsContent;
@@ -466,7 +488,7 @@ export const StoreProvider = ({ children }) => {
 
   useEffect(() => {
     try {
-      localStorage.setItem('autohaus_cms_content', JSON.stringify(cmsContent));
+      localStorage.setItem('carin_cms_content_v2', JSON.stringify(cmsContent));
     } catch (e) {
       console.warn('Storage quota note:', e);
     }
@@ -693,6 +715,7 @@ export const StoreProvider = ({ children }) => {
     localStorage.removeItem('autohaus_exchange_requests');
     localStorage.removeItem('autohaus_inquiries');
     localStorage.removeItem('autohaus_cms_content');
+    localStorage.removeItem('carin_cms_content_v2');
     localStorage.removeItem('autohaus_settings');
 
     setVehicles(vehiclesData);
