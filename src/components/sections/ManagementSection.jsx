@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { getManagementTeam } from '../../services/api';
 import Badge from '../common/Badge';
-import Button from '../common/Button';
-import { ShieldCheck, Award, Lock, ArrowUpRight, UserCheck } from 'lucide-react';
+import { ShieldCheck, Award, UserCheck } from 'lucide-react';
 
-export const ManagementSection = ({ onOpenPortal }) => {
+export const ManagementSection = () => {
   const { t, isArabic } = useLanguage();
   const mgmt = t.management;
   const [team, setTeam] = useState(mgmt.team);
@@ -69,33 +68,6 @@ export const ManagementSection = ({ onOpenPortal }) => {
               </div>
             </article>
           ))}
-        </div>
-
-        {/* Authorized Dealership Portal Banner */}
-        <div className="dealer-portal-banner">
-          <div className="inspection-banner-content">
-            <Badge variant="gold" size="sm" icon={<Lock size={12} />}>
-              {mgmt.portalBadge}
-            </Badge>
-            <h3 className="inspection-banner-title" style={{ marginTop: '10px' }}>
-              {mgmt.portalTitle}
-            </h3>
-            <p className="inspection-banner-desc">
-              {mgmt.portalDesc}
-            </p>
-          </div>
-
-          <div className="inspection-banner-action">
-            <Button
-              variant="primary"
-              size="lg"
-              onClick={onOpenPortal}
-              iconLeft={<Lock size={16} />}
-              iconRight={<ArrowUpRight size={16} className="rtl-flip" />}
-            >
-              {mgmt.portalBtn}
-            </Button>
-          </div>
         </div>
       </div>
     </section>
