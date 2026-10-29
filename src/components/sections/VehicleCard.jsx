@@ -2,9 +2,9 @@ import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import Badge from '../common/Badge';
 import Button from '../common/Button';
-import { Gauge, Zap, Activity, Navigation, ArrowUpRight } from 'lucide-react';
+import { Gauge, Zap, Activity, Navigation, ArrowUpRight, Eye } from 'lucide-react';
 
-export const VehicleCard = ({ vehicle, onInquire }) => {
+export const VehicleCard = ({ vehicle, onInquire, onViewDetails }) => {
   const { t, isArabic } = useLanguage();
 
   const title = isArabic && vehicle.titleAr ? vehicle.titleAr : vehicle.title;
@@ -18,10 +18,28 @@ export const VehicleCard = ({ vehicle, onInquire }) => {
   const mileage = isArabic && vehicle.mileageAr ? vehicle.mileageAr : vehicle.mileage;
   const monthly = isArabic && vehicle.monthlyEstimateAr ? vehicle.monthlyEstimateAr : `Est. ${vehicle.monthlyEstimate}`;
 
+  const handleOpenDetails = () => {
+    if (onViewDetails) {
+      onViewDetails(vehicle);
+    }
+  };
+
   return (
     <article className="vehicle-card" id={`vehicle-${vehicle.id}`}>
       {/* Vehicle Media Header */}
-      <div className="vehicle-image-container">
+      <div
+        className="vehicle-image-container clickable"
+        onClick={handleOpenDetails}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleOpenDetails();
+          }
+        }}
+        aria-label={`${isArabic ? 'عرض تفاصيل' : 'View specs for'} ${title}`}
+      >
         <img
           src={vehicle.image}
           alt={`${vehicle.year} ${title}`}
@@ -35,6 +53,11 @@ export const VehicleCard = ({ vehicle, onInquire }) => {
         <div className="vehicle-status-overlay">
           <Badge variant="emerald">{status}</Badge>
         </div>
+
+        <div className="vehicle-image-hover-hint">
+          <Eye size={16} />
+          <span>{t.inventory.quickViewBtn || (isArabic ? 'المواصفات والألبوم' : 'View Specs')}</span>
+        </div>
       </div>
 
       {/* Vehicle Details Body */}
@@ -45,13 +68,19 @@ export const VehicleCard = ({ vehicle, onInquire }) => {
           <span>{categoryLabel}</span>
         </div>
 
-        <h3 className="vehicle-title">{title}</h3>
+        <h3
+          className="vehicle-title clickable-title"
+          onClick={handleOpenDetails}
+          title={title}
+        >
+          {title}
+        </h3>
         <p className="vehicle-subtitle" title={subtitle}>
           {subtitle}
         </p>
 
         {/* 4-Item Mini Specs Grid */}
-        <div className="specs-mini-grid">
+        <div className="specs-mini-grid" onClick={handleOpenDetails} style={{ cursor: 'pointer' }} title={isArabic ? 'انقر لعرض المواصفات الكاملة' : 'Click for complete technical dossier'}>
           <div className="spec-mini-item">
             <Gauge size={16} className="spec-mini-icon" />
             <span className="spec-mini-val">{power}</span>
@@ -84,14 +113,26 @@ export const VehicleCard = ({ vehicle, onInquire }) => {
             <span className="vehicle-monthly">{monthly}</span>
           </div>
 
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => onInquire(vehicle)}
-            iconRight={<ArrowUpRight size={15} className="rtl-flip" />}
-          >
-            {t.inventory.inquireBtn}
-          </Button>
+          <div className="vehicle-card-actions">
+            <button
+              type="button"
+              className="btn-quick-view-action"
+              onClick={handleOpenDetails}
+              title={t.inventory.quickViewBtn || (isArabic ? 'عرض المواصفات والألبوم' : 'View Specs & Gallery')}
+            >
+              <Eye size={15} />
+              <span>{isArabic ? 'التفاصيل' : 'Specs'}</span>
+            </button>
+
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => onInquire(vehicle)}
+              iconRight={<ArrowUpRight size={15} className="rtl-flip" />}
+            >
+              {t.inventory.inquireBtn}
+            </Button>
+          </div>
         </div>
       </div>
     </article>
@@ -99,3 +140,4 @@ export const VehicleCard = ({ vehicle, onInquire }) => {
 };
 
 export default VehicleCard;
+
