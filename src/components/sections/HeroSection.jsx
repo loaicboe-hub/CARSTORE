@@ -26,8 +26,8 @@ export const HeroSection = () => {
           <div className="hero-banner-image-wrap">
             {/* The Featured Luxury Supercar Image */}
             <img
-              src="/images/hero_car.jpg"
-              alt={isArabic ? 'أستون مارتن فانتاج كوبيه V8 في صالة العرض' : 'Aston Martin Vantage V8 Coupe in Obsidian Black'}
+              src="/images/defender_110.jpg"
+              alt={isArabic ? 'لاند روفر ديفندر 110 P400 SE في صالة عرض الشيخ زايد' : 'Land Rover Defender 110 P400 SE in Cairo Showroom'}
               loading="eager"
               className="hero-banner-img"
             />

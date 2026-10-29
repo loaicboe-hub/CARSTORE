@@ -161,7 +161,7 @@ export const SubmitListingView = ({ onNavigate, editingListing, onSaveSuccess })
         brand: brand.trim() || makeModel.split(' ')[0],
         year: Number(year),
         price: Number(price),
-        currency: 'USD',
+        currency: 'EGP',
         mileage: mileage.trim() || '0 km',
         transmission,
         fuelType,
@@ -418,21 +418,21 @@ export const SubmitListingView = ({ onNavigate, editingListing, onSaveSuccess })
             {/* Asking Price */}
             <div>
               <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#CBD5E1', marginBottom: '6px' }}>
-                {isArabic ? 'السعر المطلوب ($ USD)' : 'Asking Price ($ USD)'} *
+                {isArabic ? 'السعر المطلوب (ج.م EGP)' : 'Asking Price (EGP)'} *
               </label>
               <div style={{ position: 'relative' }}>
                 <input
                   type="number"
                   min="1000"
-                  step="500"
+                  step="5000"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  placeholder="e.g. 285000"
+                  placeholder="e.g. 3450000"
                   required
                   style={{
                     width: '100%',
                     height: '42px',
-                    padding: isArabic ? '0 38px 0 14px' : '0 14px 0 38px',
+                    padding: isArabic ? '0 50px 0 14px' : '0 14px 0 50px',
                     background: 'rgba(255, 255, 255, 0.05)',
                     border: '1px solid rgba(255, 255, 255, 0.14)',
                     borderRadius: '8px',
@@ -451,9 +451,11 @@ export const SubmitListingView = ({ onNavigate, editingListing, onSaveSuccess })
                     color: 'var(--accent-gold, #C28B14)',
                     pointerEvents: 'none',
                     display: 'flex',
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
                   }}
                 >
-                  <DollarSign size={17} />
+                  {isArabic ? 'ج.م' : 'EGP'}
                 </div>
               </div>
             </div>
@@ -647,7 +649,7 @@ export const SubmitListingView = ({ onNavigate, editingListing, onSaveSuccess })
                 type="text"
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
-                placeholder="e.g. Dubai, Riyadh, Los Angeles"
+                placeholder={isArabic ? 'مثال: التجمع الخامس، الشيخ زايد، الإسكندرية' : 'e.g. New Cairo, Sheikh Zayed, Alexandria'}
                 style={{
                   width: '100%',
                   height: '42px',

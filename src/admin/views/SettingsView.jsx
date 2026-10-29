@@ -30,7 +30,7 @@ export const SettingsView = () => {
   const [adminUser, setAdminUser] = useState(settings.adminUsername || 'admin');
   const [adminPass, setAdminPass] = useState(settings.adminPassword || 'admin123');
   const [showAdminPass, setShowAdminPass] = useState(false);
-  const [currency, setCurrency] = useState(cmsContent.currency || 'USD');
+  const [currency, setCurrency] = useState(cmsContent.currency || 'EGP');
   const [savedMsg, setSavedMsg] = useState('');
 
   const handleSaveSecurity = (e) => {

@@ -2,7 +2,7 @@ import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import Badge from '../common/Badge';
 import Button from '../common/Button';
-import { Gauge, Zap, Activity, Navigation, ArrowUpRight, Eye } from 'lucide-react';
+import { Gauge, Zap, Activity, Navigation, ArrowUpRight, Eye, ShieldCheck, MapPin, Sparkles } from 'lucide-react';
 
 export const VehicleCard = ({ vehicle, onInquire, onViewDetails }) => {
   const { t, isArabic } = useLanguage();
@@ -13,10 +13,12 @@ export const VehicleCard = ({ vehicle, onInquire, onViewDetails }) => {
   const badge = isArabic && vehicle.badgeAr ? vehicle.badgeAr : vehicle.badge;
   const status = isArabic && vehicle.statusAr ? vehicle.statusAr : vehicle.status;
   const power = isArabic && vehicle.powerAr ? vehicle.powerAr : vehicle.power;
-  const accel = isArabic && vehicle.accelerationAr ? vehicle.accelerationAr : vehicle.acceleration.replace('0-60 in ', '');
+  const accel = isArabic && vehicle.accelerationAr ? vehicle.accelerationAr : vehicle.acceleration;
   const fuel = isArabic && vehicle.fuelAr ? vehicle.fuelAr : vehicle.fuel.split(' ')[0];
   const mileage = isArabic && vehicle.mileageAr ? vehicle.mileageAr : vehicle.mileage;
-  const monthly = isArabic && vehicle.monthlyEstimateAr ? vehicle.monthlyEstimateAr : `Est. ${vehicle.monthlyEstimate}`;
+  const monthly = isArabic && vehicle.monthlyEstimateAr ? vehicle.monthlyEstimateAr : `قسط: ${vehicle.monthlyEstimate}`;
+  const trafficDept = isArabic ? (vehicle.trafficDept || 'مرور التجمع') : (vehicle.trafficDeptEn || 'Cairo Traffic');
+  const licenseVal = isArabic ? (vehicle.licenseValidity || 'رخصة سارية') : (vehicle.licenseValidityEn || 'Valid License');
 
   const handleOpenDetails = () => {
     if (onViewDetails) {
@@ -47,16 +49,16 @@ export const VehicleCard = ({ vehicle, onInquire, onViewDetails }) => {
         />
 
         <div className="vehicle-badge-overlay">
-          <Badge variant="gold">{badge}</Badge>
+          <Badge variant="emerald" icon={<Sparkles size={12} />}>{badge || (isArabic ? 'فابريكا شركة' : 'Factory')}</Badge>
         </div>
 
         <div className="vehicle-status-overlay">
-          <Badge variant="emerald">{status}</Badge>
+          <Badge variant="gold">{status || (isArabic ? 'استلام فوري' : 'Instant')}</Badge>
         </div>
 
         <div className="vehicle-image-hover-hint">
           <Eye size={16} />
-          <span>{t.inventory.quickViewBtn || (isArabic ? 'المواصفات والألبوم' : 'View Specs')}</span>
+          <span>{isArabic ? 'رادار الفابريكا والمواصفات' : 'View Fabrika & Specs'}</span>
         </div>
       </div>
 
@@ -79,8 +81,21 @@ export const VehicleCard = ({ vehicle, onInquire, onViewDetails }) => {
           {subtitle}
         </p>
 
+        {/* Traffic & Ownership Pill Tag for Egypt */}
+        <div className="vehicle-egypt-meta" onClick={handleOpenDetails}>
+          <div className="egypt-meta-item">
+            <MapPin size={13} className="egypt-meta-icon" />
+            <span>{trafficDept}</span>
+          </div>
+          <span className="egypt-meta-dot">•</span>
+          <div className="egypt-meta-item">
+            <ShieldCheck size={13} className="egypt-meta-icon green" />
+            <span>{licenseVal}</span>
+          </div>
+        </div>
+
         {/* 4-Item Mini Specs Grid */}
-        <div className="specs-mini-grid" onClick={handleOpenDetails} style={{ cursor: 'pointer' }} title={isArabic ? 'انقر لعرض المواصفات الكاملة' : 'Click for complete technical dossier'}>
+        <div className="specs-mini-grid" onClick={handleOpenDetails} style={{ cursor: 'pointer' }} title={isArabic ? 'انقر لعرض المواصفات ورادار الفابريكا' : 'Click for complete technical dossier'}>
           <div className="spec-mini-item">
             <Gauge size={16} className="spec-mini-icon" />
             <span className="spec-mini-val">{power}</span>
@@ -116,12 +131,12 @@ export const VehicleCard = ({ vehicle, onInquire, onViewDetails }) => {
           <div className="vehicle-card-actions">
             <button
               type="button"
-              className="btn-quick-view-action"
+              className="btn-quick-view-action egypt-action"
               onClick={handleOpenDetails}
-              title={t.inventory.quickViewBtn || (isArabic ? 'عرض المواصفات والألبوم' : 'View Specs & Gallery')}
+              title={isArabic ? 'عرض رادار الفابريكا والألبوم' : 'View Fabrika & Specs'}
             >
-              <Eye size={15} />
-              <span>{isArabic ? 'التفاصيل' : 'Specs'}</span>
+              <Sparkles size={14} color="#10B981" />
+              <span>{isArabic ? 'الفابريكا' : 'Fabrika'}</span>
             </button>
 
             <Button
@@ -130,7 +145,7 @@ export const VehicleCard = ({ vehicle, onInquire, onViewDetails }) => {
               onClick={() => onInquire(vehicle)}
               iconRight={<ArrowUpRight size={15} className="rtl-flip" />}
             >
-              {t.inventory.inquireBtn}
+              {isArabic ? 'حجز / معاينة' : 'Inquire'}
             </Button>
           </div>
         </div>
@@ -140,4 +155,3 @@ export const VehicleCard = ({ vehicle, onInquire, onViewDetails }) => {
 };
 
 export default VehicleCard;
-

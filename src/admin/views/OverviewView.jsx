@@ -88,7 +88,7 @@ export const OverviewView = ({ onNavigate }) => {
             <span className="admin-stat-label">Showroom Fleet</span>
             <span className="admin-stat-val">{vehicles.length}</span>
             <span className="admin-stat-hint">
-              Valuation: ${Math.round(totalInventoryValue / 1000).toLocaleString()}k
+              Valuation: {(totalInventoryValue / 1000000).toFixed(1)}M EGP
             </span>
           </div>
           <div className="admin-stat-icon-wrap gold">

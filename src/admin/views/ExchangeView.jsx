@@ -152,24 +152,24 @@ export const ExchangeView = () => {
                     <td>
                       <div style={{ fontWeight: 600 }}>{ex.currentCar}</div>
                       <div style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)' }}>
-                        {ex.currentCarMileage} • Valuation: ${(Number(ex.currentCarValue) || 0).toLocaleString()}
+                        {ex.currentCarMileage} • Valuation: {(Number(ex.currentCarValue) || 0).toLocaleString()} EGP
                       </div>
                     </td>
                     <td>
                       <div style={{ fontWeight: 600 }}>{ex.desiredCarTitle}</div>
                       <div style={{ fontSize: '0.78rem', color: 'var(--admin-accent-gold)' }}>
-                        Price: ${(Number(ex.desiredCarPrice) || 0).toLocaleString()}
+                        Price: {(Number(ex.desiredCarPrice) || 0).toLocaleString()} EGP
                       </div>
                     </td>
                     <td>
                       <div>
                         {Number(ex.equityDifference) >= 0 ? (
                           <strong style={{ color: 'var(--admin-text-main)' }}>
-                            +${(Number(ex.equityDifference) || 0).toLocaleString()} (Client Pays)
+                            +{(Number(ex.equityDifference) || 0).toLocaleString()} EGP (Client Pays)
                           </strong>
                         ) : (
                           <strong style={{ color: 'var(--admin-emerald)' }}>
-                            ${Math.abs(Number(ex.equityDifference)).toLocaleString()} (Cashback)
+                            {Math.abs(Number(ex.equityDifference)).toLocaleString()} EGP (Cashback)
                           </strong>
                         )}
                       </div>
@@ -290,7 +290,7 @@ export const ExchangeView = () => {
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Trade-In Valuation Estimate ($ USD)</label>
+                    <label className="admin-label">Trade-In Valuation Estimate (EGP / ج.م)</label>
                     <input
                       type="number"
                       className="admin-input"
@@ -311,7 +311,7 @@ export const ExchangeView = () => {
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Target Car Price ($ USD)</label>
+                    <label className="admin-label">Target Car Price (EGP / ج.م)</label>
                     <input
                       type="number"
                       className="admin-input"

@@ -451,7 +451,7 @@ export const DashboardOverview = ({ onNavigate }) => {
                       {item.makeModel}
                     </div>
                     <div style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--accent-gold, #C28B14)', marginBottom: '10px' }}>
-                      ${Number(item.price).toLocaleString()}
+                      {Number(item.price).toLocaleString()} {isArabic ? 'ج.م' : 'EGP'}
                     </div>
                     <div style={{ fontSize: '0.78rem', color: '#94A3B8', display: 'flex', gap: '12px', marginBottom: '14px' }}>
                       <span>{item.year}</span>

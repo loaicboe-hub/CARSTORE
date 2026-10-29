@@ -63,7 +63,7 @@ router.post('/listings', (req, res) => {
       brand,
       year,
       price,
-      currency = 'USD',
+      currency = 'EGP',
       mileage,
       transmission,
       fuelType,

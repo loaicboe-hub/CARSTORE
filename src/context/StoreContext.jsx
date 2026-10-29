@@ -5,103 +5,110 @@ import { getVehicles } from '../services/api';
 
 const StoreContext = createContext(null);
 
-// Initial Sell / Consignment Requests
+// Initial Sell / Consignment Requests (Egyptian Market Context)
 const initialSellRequests = [
   {
     id: 'sell-101',
-    customerName: 'Marcus Vance',
-    phone: '+1 (555) 234-8901',
-    email: 'm.vance@capital.com',
-    vehicleTitle: '2023 Porsche Cayenne Turbo GT',
+    customerName: 'م. شريف فهمي',
+    phone: '+20 10 1122 3344',
+    email: 'sherif.fahmy@develop.eg',
+    vehicleTitle: '2023 Mercedes-Benz C200 AMG',
     year: 2023,
-    mileage: '8,400 mi',
-    condition: 'Excellent / One-Owner',
-    askingPrice: 175000,
-    estimatedValuation: 168000,
+    mileage: '18,500 كم',
+    condition: 'فابريكا بالكامل / صيانات بالتوكيل',
+    askingPrice: 3200000,
+    estimatedValuation: 3100000,
+    currency: 'EGP',
     status: 'under_review', // 'new', 'under_review', 'offer_sent', 'approved', 'rejected'
     date: '2026-10-28',
-    notes: 'Clean CarFax, full PPF wrap, ceramic brakes in mint condition.',
+    notes: 'فابريكا 100% بالكامل، أول يد بدون توكيلات، رخصة سارية سنتين مرور التجمع الخامس.',
   },
   {
     id: 'sell-102',
-    customerName: 'Sarah Jenkins',
-    phone: '+1 (555) 789-1234',
-    email: 'sarah.j@estate.org',
-    vehicleTitle: '2022 Ferrari F8 Tributo',
+    customerName: 'د. أحمد عبد المنعم',
+    phone: '+20 12 8899 7766',
+    email: 'ahmed.monem@cairo-clinic.com',
+    vehicleTitle: '2022 BMW 520i Luxury Line',
     year: 2022,
-    mileage: '3,200 mi',
-    condition: 'Concours / Collector Grade',
-    askingPrice: 310000,
-    estimatedValuation: 295000,
+    mileage: '28,000 كم',
+    condition: 'ممتازة / صيانة بافاريا المعتمدة',
+    askingPrice: 3500000,
+    estimatedValuation: 3400000,
+    currency: 'EGP',
     status: 'offer_sent',
     date: '2026-10-27',
-    notes: 'Rosso Corsa over Cuoio leather. Carbon racing seats.',
+    notes: 'رخصة سارية مرور الشيخ زايد، دهان إكصدام أمامي نظافة فقط وباقي السيارة فابريكا 100%.',
   },
   {
     id: 'sell-103',
-    customerName: 'Tariq Al-Faisal',
-    phone: '+966 50 123 4567',
-    email: 'tariq@alfaisal.sa',
-    vehicleTitle: '2024 Mercedes-AMG GT 63 S E-Performance',
+    customerName: 'كريم الجوهري',
+    phone: '+20 11 9876 5432',
+    email: 'karim.gohary@venture.eg',
+    vehicleTitle: '2024 Kia Sportage GT-Line 1.6T',
     year: 2024,
-    mileage: '1,800 mi',
-    condition: 'Like New / Showroom',
-    askingPrice: 205000,
-    estimatedValuation: 198000,
+    mileage: '6,200 كم',
+    condition: 'كسر زيرو فابريكا 100%',
+    askingPrice: 2050000,
+    estimatedValuation: 2000000,
+    currency: 'EGP',
     status: 'new',
     date: '2026-10-29',
-    notes: 'Full titanium exhaust option. Looking for immediate cash buyout.',
+    notes: 'أول يد بدون توكيلات، رخصة سارية مرور المعادي، طلب شراء نقدي فوري بالصالة.',
   },
 ];
 
-// Initial Rental Fleet
+// Initial Rental Fleet (VIP Compound Rentals & Executive Delegations)
 const initialRentalFleet = [
   {
     id: 'rent-01',
-    title: 'Rolls-Royce Ghost Black Badge',
-    category: 'Ultra-Luxury Sedan',
-    dailyRate: 1850,
-    weeklyRate: 11500,
-    deposit: 5000,
+    title: 'Mercedes-Benz S 450 Maybach Trim',
+    category: 'سيدان رئاسية وتنفيذية',
+    dailyRate: 18000,
+    weeklyRate: 110000,
+    deposit: 30000,
+    currency: 'EGP',
     status: 'available', // 'available', 'rented', 'maintenance'
-    image: '/images/hero_car.jpg',
-    fuel: 'Twin-Turbo V12',
-    seats: 5,
+    image: '/images/c180_amg.jpg',
+    fuel: 'Twin-Turbo V6 (367 HP)',
+    seats: 4,
   },
   {
     id: 'rent-02',
-    title: 'Lamborghini Urus Performante',
-    category: 'Super SUV',
-    dailyRate: 1450,
-    weeklyRate: 9200,
-    deposit: 4000,
-    status: 'rented',
-    image: '/images/audi_rsq8.jpg',
-    fuel: 'Twin-Turbo V8 (657 HP)',
+    title: 'Land Rover Defender 110 P400 SE',
+    category: 'دفع رباعي فاخرة للمواكب والمناسبات',
+    dailyRate: 15000,
+    weeklyRate: 90000,
+    deposit: 25000,
+    currency: 'EGP',
+    status: 'available',
+    image: '/images/defender_110.jpg',
+    fuel: '3.0L i6 Turbo MHEV (400 HP)',
     seats: 5,
   },
   {
     id: 'rent-03',
-    title: 'Porsche 911 GT3 RS',
-    category: 'Track Weapon Coupe',
-    dailyRate: 1650,
-    weeklyRate: 10500,
-    deposit: 6000,
-    status: 'available',
-    image: '/images/porsche_gt3.jpg',
-    fuel: 'Naturally Aspirated Flat-6',
-    seats: 2,
+    title: 'Porsche Cayenne Coupe GT Style',
+    category: 'سوبر SUV رياضية فاخرة',
+    dailyRate: 16500,
+    weeklyRate: 98000,
+    deposit: 25000,
+    currency: 'EGP',
+    status: 'rented',
+    image: '/images/cayenne_coupe.jpg',
+    fuel: '3.0L Twin-Turbo V6 (348 HP)',
+    seats: 5,
   },
   {
     id: 'rent-04',
-    title: 'Mercedes-AMG G 63 Magno Edition',
-    category: 'Luxury SUV',
-    dailyRate: 1250,
-    weeklyRate: 7800,
-    deposit: 3500,
+    title: 'Mercedes-AMG G 63 Night Package',
+    category: 'أيقونة الدفع الرباعي الخارقة',
+    dailyRate: 25000,
+    weeklyRate: 150000,
+    deposit: 40000,
+    currency: 'EGP',
     status: 'available',
     image: '/images/amg_g63.jpg',
-    fuel: 'Handcrafted V8 Biturbo',
+    fuel: 'Handcrafted V8 Biturbo (577 HP)',
     seats: 5,
   },
 ];
@@ -110,29 +117,31 @@ const initialRentalFleet = [
 const initialRentalInquiries = [
   {
     id: 'rinq-201',
-    customerName: 'Alexander Hayes',
-    phone: '+1 (555) 432-1098',
-    email: 'hayes@globalventures.com',
-    vehicleTitle: 'Rolls-Royce Ghost Black Badge',
+    customerName: 'أ. حازم ممدوح',
+    phone: '+20 10 9988 7766',
+    email: 'hazem.m@events-cairo.com',
+    vehicleTitle: 'Mercedes-Benz S 450 Maybach Trim',
     startDate: '2026-11-05',
     endDate: '2026-11-08',
     days: 3,
-    totalEstimated: 5550,
+    totalEstimated: 54000,
+    currency: 'EGP',
     status: 'confirmed', // 'pending', 'confirmed', 'completed', 'cancelled'
-    notes: 'Airport VIP tarmac delivery requested at JFK private terminal.',
+    notes: 'موكب زفاف فاخر في فندق فورسيزونز نايل بلازا مع سائق محترف.',
   },
   {
     id: 'rinq-202',
-    customerName: 'Layla Mansoor',
-    phone: '+971 50 987 6543',
-    email: 'layla.m@luxurytravel.ae',
-    vehicleTitle: 'Porsche 911 GT3 RS',
+    customerName: 'م. ليلي النجار',
+    phone: '+20 12 3344 5566',
+    email: 'layla@elnaggar-holdings.eg',
+    vehicleTitle: 'Land Rover Defender 110 P400 SE',
     startDate: '2026-11-12',
     endDate: '2026-11-15',
     days: 3,
-    totalEstimated: 4950,
+    totalEstimated: 45000,
+    currency: 'EGP',
     status: 'pending',
-    notes: 'Track day insurance coverage discussion required.',
+    notes: 'استقبال وفد استثماري بمطار القاهرة الدولي والتوصيل لكمبوند بالم هيلز.',
   },
 ];
 
@@ -140,35 +149,37 @@ const initialRentalInquiries = [
 const initialExchangeRequests = [
   {
     id: 'exch-301',
-    customerName: 'David Sterling',
-    phone: '+1 (555) 345-6789',
-    email: 'david@sterlingholdings.com',
-    currentCar: '2022 BMW M8 Competition Gran Coupe',
-    currentCarMileage: '12,500 mi',
-    currentCarValue: 98000,
+    customerName: 'م. طارق الشربيني',
+    phone: '+20 10 2000 8899',
+    email: 'sherbini@dunes-eg.com',
+    currentCar: '2022 Skoda Octavia A8 RS',
+    currentCarMileage: '24,000 كم',
+    currentCarValue: 1850000,
     desiredCarId: 'veh-001',
-    desiredCarTitle: 'Aston Martin Vantage V8 Coupe',
-    desiredCarPrice: 198500,
-    equityDifference: 100500,
+    desiredCarTitle: '2024 Mercedes-Benz C180 AMG Line',
+    desiredCarPrice: 3450000,
+    equityDifference: 1600000,
+    currency: 'EGP',
     status: 'inspection_scheduled', // 'pending', 'inspection_scheduled', 'offer_made', 'completed', 'declined'
     date: '2026-10-28',
-    notes: 'Client ready to pay cash difference upon physical inspection of Vantage.',
+    notes: 'جاهز لدفع الفرق كاش أو تمويل بنكي CIB بعد فحص الفابريكا في الصالة.',
   },
   {
     id: 'exch-302',
-    customerName: 'Nasser Al-Ghamdi',
-    phone: '+966 55 876 5432',
-    email: 'nasser@ghamdi.sa',
-    currentCar: '2023 Range Rover SV Autobiography',
-    currentCarMileage: '6,200 mi',
-    currentCarValue: 185000,
-    desiredCarId: 'veh-003',
-    desiredCarTitle: 'Mercedes-AMG G 63 SUV',
-    desiredCarPrice: 218000,
-    equityDifference: 33000,
+    customerName: 'د. مروان الشافعي',
+    phone: '+20 11 5566 7788',
+    email: 'marwan@elshafei-med.eg',
+    currentCar: '2023 Kia Sportage GT-Line',
+    currentCarMileage: '12,000 كم',
+    currentCarValue: 1950000,
+    desiredCarId: 'veh-002',
+    desiredCarTitle: '2023 BMW 520i M-Sport Package',
+    desiredCarPrice: 4200000,
+    equityDifference: 2250000,
+    currency: 'EGP',
     status: 'pending',
     date: '2026-10-29',
-    notes: 'Trade-in value requested online. Enclosed carrier required.',
+    notes: 'طلب معاينة على باب الكومباوند في سوديك ويست الشيخ زايد.',
   },
 ];
 
@@ -176,37 +187,37 @@ const initialExchangeRequests = [
 const initialInquiries = [
   {
     id: 'inq-401',
-    fullName: 'Christian Bale',
-    phone: '+1 (555) 890-1234',
-    email: 'c.bale@manhattan.com',
+    fullName: 'م. وائل البنا',
+    phone: '+20 10 6677 8899',
+    email: 'wael.banna@construction.eg',
     channel: 'whatsapp',
     type: 'purchase',
-    vehicleTitle: 'Aston Martin Vantage V8 Coupe',
-    message: 'Interested in arranging a private viewing and confidential wire transfer terms.',
+    vehicleTitle: '2024 Mercedes-Benz C180 AMG Line',
+    message: 'استفسار عن إمكانية التقسيط المباشر عبر بنك CIB ومدة استخراج كارت بنك التوكيل.',
     status: 'new', // 'new', 'contacted', 'in_progress', 'closed'
     date: '2026-10-29 08:30',
   },
   {
     id: 'inq-402',
-    fullName: 'Fatima Al-Zahra',
-    phone: '+971 52 345 6789',
-    email: 'fatima@alzahra.ae',
+    fullName: 'فريدة المنياوي',
+    phone: '+20 12 4455 6677',
+    email: 'farida.m@lifestyle.eg',
     channel: 'phone',
-    type: 'rental',
-    vehicleTitle: 'Lamborghini Urus Performante',
-    message: 'Weekly rental inquiry for upcoming Formula 1 VIP weekend.',
+    type: 'testdrive',
+    vehicleTitle: '2024 Porsche Cayenne Coupe',
+    message: 'طلب حجز معاينة VIP وتجربة قيادة داخل كمبوند سوان ليك التجمع الأول.',
     status: 'contacted',
     date: '2026-10-28 16:15',
   },
   {
     id: 'inq-403',
-    fullName: 'Robert De Vries',
-    phone: '+31 6 12345678',
-    email: 'r.devries@amsterdam-art.nl',
+    fullName: 'أحمد رسلان',
+    phone: '+20 10 3344 9911',
+    email: 'raslan@tradex-eg.com',
     channel: 'email',
     type: 'tradein',
-    vehicleTitle: 'Porsche 911 GT3 (992)',
-    message: 'Seeking official appraisal for EU export and trade-in against GT3 RS.',
+    vehicleTitle: '2024 Land Rover Defender 110',
+    message: 'استفسار عن استبدال سيارتي بورش ماكان 2022 ودفع الفرق وتقييم فابريكا بالمعرض.',
     status: 'in_progress',
     date: '2026-10-27 11:20',
   },
@@ -214,28 +225,28 @@ const initialInquiries = [
 
 // Initial CMS Editable Content
 const initialCmsContent = {
-  brandName: 'AUTOHAUS',
-  brandSuffix: 'CAR IN',
-  legalName: 'AUTOHAUS & CAR IN Luxury Automotive Group Ltd.',
-  tagline: 'The Pinnacle of Automotive Distinction',
-  heroBadge: 'Excellence in Luxury & Certified Performance',
-  heroTitleP1: 'The Pinnacle of',
-  heroTitleP2: 'Automotive Distinction',
+  brandName: 'CAR',
+  brandSuffix: 'IN',
+  legalName: 'CAR IN Luxury Automotive Egypt S.A.E',
+  tagline: 'الصفوة في تجارة واقتناء السيارات الفاخرة والمعتمدة بمصر',
+  heroBadge: 'فحص 180 نقطة معتمد • فابريكا بالكامل',
+  heroTitleP1: 'قمة التميز في',
+  heroTitleP2: 'عالم السيارات الفاخرة بمصر',
   heroSubtitle:
-    "Curators of the world's most distinguished luxury, performance, and executive automobiles. Experience unmatched precision in buying, selling, leasing, and bespoke exchanges.",
-  specOutput: 'Twin-Turbo V8',
-  specAccel: '0–60 in 3.2s',
-  specSpeed: 'Top Track Speed 200+ MPH',
-  phone: '+1 (800) 835-6231',
-  phoneDisplay: '+1 (800) AUTOHAUS',
-  whatsappNumber: '18008356231',
-  email: 'concierge@autohaus-carin.com',
-  address: '740 Park Avenue, Automotive District, Suite 100',
-  city: 'New York, NY 10021',
-  hours: 'Mon – Sat: 9:00 AM – 7:30 PM | Sun: By Appointment Only',
-  currency: 'USD',
-  currencySymbol: '$',
-  bannerAnnouncement: '✨ Exclusive Private Showcase: 2025 Allocation Registrations Now Open',
+    "وجهتك الأولى لأرقى وأندر السيارات الفاخرة وكسر الزيرو في مصر. فابريكا بالكامل، فحص معتمد من 180 نقطة، تقسيط مباشر عبر كبرى البنوك، وتسليم فوري بدون قوائم انتظار.",
+  specOutput: '190–585 HP',
+  specAccel: '0–100 في 4.5 ثوانٍ',
+  specSpeed: 'استلام فوري ونقل ملكية',
+  phone: '+201020008899',
+  phoneDisplay: '+20 (10) 2000-8899',
+  whatsappNumber: '201020008899',
+  email: 'concierge@carin-egypt.com',
+  address: 'فرع التجمع الخامس: التسعين الشمالي | فرع زايد: وصلة دهشور',
+  city: 'القاهرة والشيخ زايد، مصر',
+  hours: 'يومياً: 11:00 صباحاً – 11:00 مساءً',
+  currency: 'EGP',
+  currencySymbol: 'ج.م',
+  bannerAnnouncement: '✨ تسليم فوري لسيارات 2024 كسر زيرو وفابريكا بالكامل مع برامج تقسيط CIB وContact',
   showBanner: true,
 };
 
@@ -244,7 +255,14 @@ export const StoreProvider = ({ children }) => {
   const [vehicles, setVehicles] = useState(() => {
     try {
       const saved = localStorage.getItem('autohaus_vehicles');
-      return saved ? JSON.parse(saved) : vehiclesData;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Ensure data is up to date with Egyptian market EGP inventory
+        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].currency === 'EGP') {
+          return parsed;
+        }
+      }
+      return vehiclesData;
     } catch {
       return vehiclesData;
     }
@@ -254,7 +272,11 @@ export const StoreProvider = ({ children }) => {
   const [sellRequests, setSellRequests] = useState(() => {
     try {
       const saved = localStorage.getItem('autohaus_sell_requests');
-      return saved ? JSON.parse(saved) : initialSellRequests;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].currency === 'EGP') return parsed;
+      }
+      return initialSellRequests;
     } catch {
       return initialSellRequests;
     }
@@ -264,7 +286,11 @@ export const StoreProvider = ({ children }) => {
   const [rentalFleet, setRentalFleet] = useState(() => {
     try {
       const saved = localStorage.getItem('autohaus_rental_fleet');
-      return saved ? JSON.parse(saved) : initialRentalFleet;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].currency === 'EGP') return parsed;
+      }
+      return initialRentalFleet;
     } catch {
       return initialRentalFleet;
     }
@@ -274,7 +300,11 @@ export const StoreProvider = ({ children }) => {
   const [rentalInquiries, setRentalInquiries] = useState(() => {
     try {
       const saved = localStorage.getItem('autohaus_rental_inquiries');
-      return saved ? JSON.parse(saved) : initialRentalInquiries;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].currency === 'EGP') return parsed;
+      }
+      return initialRentalInquiries;
     } catch {
       return initialRentalInquiries;
     }
@@ -284,7 +314,11 @@ export const StoreProvider = ({ children }) => {
   const [exchangeRequests, setExchangeRequests] = useState(() => {
     try {
       const saved = localStorage.getItem('autohaus_exchange_requests');
-      return saved ? JSON.parse(saved) : initialExchangeRequests;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].currency === 'EGP') return parsed;
+      }
+      return initialExchangeRequests;
     } catch {
       return initialExchangeRequests;
     }
@@ -433,9 +467,10 @@ export const StoreProvider = ({ children }) => {
     const vehicleObj = {
       ...newVehicle,
       id,
-      priceFormatted: `$${priceNum.toLocaleString()}`,
-      monthlyEstimate: `$${Math.round(priceNum * 0.013).toLocaleString()} / mo`,
-      monthlyEstimateAr: `${Math.round(priceNum * 0.013).toLocaleString()} دولار / شهرياً`,
+      currency: 'EGP',
+      priceFormatted: `${priceNum.toLocaleString()} ج.م`,
+      monthlyEstimate: `${Math.round(priceNum * 0.022).toLocaleString()} EGP / mo`,
+      monthlyEstimateAr: `${Math.round(priceNum * 0.022).toLocaleString()} ج.م / شهرياً`,
       image: newVehicle.image || '/images/hero_car.jpg',
       status: newVehicle.status || 'Available',
       statusAr: newVehicle.statusAr || 'متوفرة للتسليم',
@@ -452,8 +487,9 @@ export const StoreProvider = ({ children }) => {
           return {
             ...v,
             ...updatedFields,
-            priceFormatted: `$${priceNum.toLocaleString()}`,
-            monthlyEstimate: `$${Math.round(priceNum * 0.013).toLocaleString()} / mo`,
+            currency: 'EGP',
+            priceFormatted: `${priceNum.toLocaleString()} ج.م`,
+            monthlyEstimate: `${Math.round(priceNum * 0.022).toLocaleString()} EGP / mo`,
           };
         }
         return v;

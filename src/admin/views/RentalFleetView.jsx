@@ -167,11 +167,11 @@ export const RentalFleetView = () => {
                       <td>{car.category}</td>
                       <td>
                         <strong style={{ color: 'var(--admin-accent-gold)' }}>
-                          ${car.dailyRate} / day
+                          {(Number(car.dailyRate) || 0).toLocaleString()} EGP / day
                         </strong>
                       </td>
-                      <td>${car.weeklyRate} / week</td>
-                      <td>${car.deposit}</td>
+                      <td>{(Number(car.weeklyRate) || 0).toLocaleString()} EGP / week</td>
+                      <td>{(Number(car.deposit) || 0).toLocaleString()} EGP</td>
                       <td>
                         <select
                           className="admin-select"
@@ -259,7 +259,7 @@ export const RentalFleetView = () => {
                       <td>
                         <div>{inq.days} Days</div>
                         <div style={{ fontWeight: 700, color: 'var(--admin-accent-gold)' }}>
-                          ${(inq.totalEstimated || 0).toLocaleString()}
+                          {(inq.totalEstimated || 0).toLocaleString()} EGP
                         </div>
                       </td>
                       <td>
@@ -342,7 +342,7 @@ export const RentalFleetView = () => {
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Daily Rental Rate ($ USD) *</label>
+                    <label className="admin-label">Daily Rental Rate (EGP / ج.م) *</label>
                     <input
                       type="number"
                       className="admin-input"
@@ -353,7 +353,7 @@ export const RentalFleetView = () => {
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Weekly Rate ($ USD)</label>
+                    <label className="admin-label">Weekly Rate (EGP / ج.م)</label>
                     <input
                       type="number"
                       className="admin-input"
@@ -363,7 +363,7 @@ export const RentalFleetView = () => {
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Security Deposit ($ USD)</label>
+                    <label className="admin-label">Security Deposit (EGP / ج.م)</label>
                     <input
                       type="number"
                       className="admin-input"

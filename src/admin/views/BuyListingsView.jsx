@@ -24,7 +24,7 @@ export const BuyListingsView = ({ onNavigate }) => {
   const totalBuyValue = buyListings.reduce((sum, v) => sum + (Number(v.price) || 0), 0);
 
   const handlePriceUpdate = (id, currentPrice) => {
-    const newPriceStr = window.prompt('Enter new listing price ($ USD):', currentPrice);
+    const newPriceStr = window.prompt('Enter new listing price (EGP / ج.م):', currentPrice);
     if (newPriceStr && !isNaN(Number(newPriceStr))) {
       updateVehicle(id, { price: Number(newPriceStr) });
     }
@@ -148,7 +148,7 @@ export const BuyListingsView = ({ onNavigate }) => {
                     </td>
                     <td>
                       <strong style={{ color: 'var(--admin-accent-gold)', fontSize: '1rem' }}>
-                        {car.priceFormatted || `$${Number(car.price).toLocaleString()}`}
+                        {car.priceFormatted || `${Number(car.price).toLocaleString()} ج.م`}
                       </strong>
                     </td>
                     <td>

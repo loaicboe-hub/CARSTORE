@@ -238,7 +238,7 @@ export const VehiclesView = () => {
                     <td>{vehicle.year}</td>
                     <td>
                       <strong style={{ color: 'var(--admin-accent-gold)' }}>
-                        {vehicle.priceFormatted || `$${Number(vehicle.price).toLocaleString()}`}
+                        {vehicle.priceFormatted || `${Number(vehicle.price).toLocaleString()} ج.م`}
                       </strong>
                     </td>
                     <td>{vehicle.mileage}</td>
@@ -398,7 +398,7 @@ export const VehiclesView = () => {
 
                   {/* Price */}
                   <div className="admin-form-group">
-                    <label className="admin-label">Listing Price (USD) *</label>
+                    <label className="admin-label">Listing Price (EGP / ج.م) *</label>
                     <input
                       type="number"
                       className="admin-input"

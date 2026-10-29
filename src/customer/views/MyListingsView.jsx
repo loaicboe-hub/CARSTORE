@@ -388,7 +388,7 @@ export const MyListingsView = ({ onNavigate, onEditListing }) => {
                   </div>
 
                   <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--accent-gold, #C28B14)', marginBottom: '8px' }}>
-                    ${Number(item.price).toLocaleString()}
+                    {Number(item.price).toLocaleString()} {isArabic ? 'ج.م' : 'EGP'}
                   </div>
 
                   <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', fontSize: '0.82rem', color: '#94A3B8' }}>

@@ -669,7 +669,7 @@ export const UserManagementView = () => {
                                 <div>
                                   <div style={{ fontWeight: 700, fontSize: '0.95rem' }}>{item.makeModel}</div>
                                   <div style={{ fontSize: '0.88rem', color: 'var(--admin-accent-gold)', fontWeight: 700 }}>
-                                    ${Number(item.price).toLocaleString()}
+                                    {Number(item.price).toLocaleString()} EGP
                                   </div>
                                   <div style={{ fontSize: '0.78rem', color: 'var(--admin-text-muted)' }}>
                                     {item.year} • {item.mileage} • {item.city}

@@ -36,9 +36,9 @@ export function normalizeVehicle(row) {
         ? 'سيدان تنفيذية'
         : 'كهربائية وهجينة',
     price: numPrice,
-    priceFormatted: `$${numPrice.toLocaleString()}`,
-    monthlyEstimate: `$${monthlyNum.toLocaleString()} / mo`,
-    monthlyEstimateAr: `${monthlyNum.toLocaleString()} دولار / شهرياً`,
+    priceFormatted: `${numPrice.toLocaleString()} ج.م`,
+    monthlyEstimate: `${monthlyNum.toLocaleString()} EGP / mo`,
+    monthlyEstimateAr: `${monthlyNum.toLocaleString()} ج.م / شهرياً`,
     mileage: row.mileage,
     mileageAr: row.mileage,
     power: row.engine_en ? row.engine_en.split(' ')[0] : 'High HP',

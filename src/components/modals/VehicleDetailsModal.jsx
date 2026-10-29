@@ -21,7 +21,14 @@ import {
   Calculator,
   Layers,
   ArrowUpRight,
-  Car
+  Car,
+  FileCheck,
+  MapPin,
+  Sparkles,
+  CreditCard,
+  Building2,
+  Eye,
+  Truck
 } from 'lucide-react';
 
 export const VehicleDetailsModal = ({
@@ -31,13 +38,14 @@ export const VehicleDetailsModal = ({
   onInquire
 }) => {
   const { t, isArabic } = useLanguage();
-  const [activeTab, setActiveTab] = useState('specs'); // 'specs' | 'gallery' | 'finance'
+  const [activeTab, setActiveTab] = useState('specs'); // 'specs' | 'fabrika' | 'traffic' | 'finance' | 'gallery'
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [copied, setCopied] = useState(false);
 
-  // Financing calculator states
-  const [downPaymentPercent, setDownPaymentPercent] = useState(20);
-  const [loanTermMonths, setLoanTermMonths] = useState(48);
+  // Egyptian Financing calculator states
+  const [downPaymentPercent, setDownPaymentPercent] = useState(25);
+  const [loanTermMonths, setLoanTermMonths] = useState(60);
+  const [selectedFinancier, setSelectedFinancier] = useState('contact'); // 'contact' | 'cib' | 'valu' | 'drive'
 
   // Close on Escape key and cycle images with arrow keys
   useEffect(() => {
@@ -81,17 +89,34 @@ export const VehicleDetailsModal = ({
   const status = isArabic && vehicle.statusAr ? vehicle.statusAr : vehicle.status;
   const power = isArabic && vehicle.powerAr ? vehicle.powerAr : vehicle.power;
   const accel = isArabic && vehicle.accelerationAr ? vehicle.accelerationAr : vehicle.acceleration;
-  const topSpeed = isArabic && vehicle.topSpeedAr ? vehicle.topSpeedAr : (vehicle.topSpeed || '190 mph (305 km/h)');
+  const topSpeed = isArabic && vehicle.topSpeedAr ? vehicle.topSpeedAr : (vehicle.topSpeed || '230 كم/س');
   const transmission = isArabic && vehicle.transmissionAr ? vehicle.transmissionAr : vehicle.transmission;
-  const drivetrain = isArabic && vehicle.drivetrainAr ? vehicle.drivetrainAr : (vehicle.drivetrain || 'All-Wheel Drive (AWD)');
+  const drivetrain = isArabic && vehicle.drivetrainAr ? vehicle.drivetrainAr : (vehicle.drivetrain || 'دفع خلفي RWD');
   const fuel = isArabic && vehicle.fuelAr ? vehicle.fuelAr : vehicle.fuel;
   const mileage = isArabic && vehicle.mileageAr ? vehicle.mileageAr : vehicle.mileage;
   const extColor = vehicle.exteriorColor || (isArabic ? 'حسب المواصفات' : 'As Specified');
-  const intColor = vehicle.interiorColor || (isArabic ? 'جلد طبيعي فاخر' : 'Luxury Nappa Leather');
-  const vin = vehicle.vin || 'AUTOHAUS-VIP-CERTIFIED';
+  const intColor = vehicle.interiorColor || (isArabic ? 'جلد طبيعي فاخر' : 'Luxury Leather');
+  const vin = vehicle.vin || 'EGY-CERTIFIED-AUTO-2024';
   const features = (isArabic && vehicle.featuresAr && vehicle.featuresAr.length > 0)
     ? vehicle.featuresAr
     : (vehicle.features || []);
+
+  // Egyptian Specific Data
+  const trafficDept = isArabic ? (vehicle.trafficDept || 'مرور التجمع الخامس') : (vehicle.trafficDeptEn || 'New Cairo Traffic');
+  const licenseValidity = isArabic ? (vehicle.licenseValidity || 'رخصة سارية سنتين') : (vehicle.licenseValidityEn || 'Valid 2 Years');
+  const ownership = isArabic ? (vehicle.ownership || 'أول يد من الزيرو - صفر توكيلات') : (vehicle.ownershipEn || '1st Owner - Zero Powers of Attorney');
+  const agencyMaintenance = vehicle.agencyMaintenance || (isArabic ? 'صيانات دورية منتظمة بالتوكيل الرسمي' : 'Official Dealership Service Records');
+  const fabrikaRadar = vehicle.fabrikaRadar || {
+    status: 'فابريكا شركة بالكامل 100%',
+    statusEn: '100% Original Factory Paint',
+    micronAvg: '95 - 110 µm',
+    hood: { label: 'الكبوت', val: '102 µm', status: 'factory' },
+    roof: { label: 'السقف', val: '95 µm', status: 'factory' },
+    trunk: { label: 'الشنطة', val: '108 µm', status: 'factory' },
+    rightSide: { label: 'الجانب الأيمن', val: '104 µm', status: 'factory' },
+    leftSide: { label: 'الجانب الأيسر', val: '100 µm', status: 'factory' },
+    chassis: { label: 'الشاسيه والقوايم', val: 'عظم شركة سليم 100%', status: 'factory' },
+  };
 
   // Image navigation
   const handlePrevImage = () => {
@@ -102,15 +127,23 @@ export const VehicleDetailsModal = ({
     setActiveImageIndex((prev) => (prev === gallery.length - 1 ? 0 : prev + 1));
   };
 
-  // Financing calculation
+  // Financing calculation (Egyptian Market APR ~16.5% flat/decreasing equivalent)
   const carPrice = typeof vehicle.price === 'number'
     ? vehicle.price
-    : parseInt(String(vehicle.price || '').replace(/[^0-9]/g, ''), 10) || 150000;
+    : parseInt(String(vehicle.price || '').replace(/[^0-9]/g, ''), 10) || 3000000;
 
   const downPaymentAmount = Math.round((carPrice * downPaymentPercent) / 100);
   const loanPrincipal = Math.max(0, carPrice - downPaymentAmount);
-  const annualInterestRate = 0.0649; // 6.49% APR
-  const monthlyRate = annualInterestRate / 12;
+  
+  // Financier interest rates in Egypt
+  const financierRates = {
+    contact: 0.145, // Contact Cars ~ 14.5%
+    cib: 0.155,     // CIB Auto ~ 15.5%
+    valu: 0.160,    // ValU ~ 16.0%
+    drive: 0.150,   // Drive Capital ~ 15.0%
+  };
+  const chosenRate = financierRates[selectedFinancier] || 0.15;
+  const monthlyRate = chosenRate / 12;
   const estimatedMonthlyPayment = loanPrincipal > 0
     ? Math.round(
         (loanPrincipal * (monthlyRate * Math.pow(1 + monthlyRate, loanTermMonths))) /
@@ -118,11 +151,11 @@ export const VehicleDetailsModal = ({
       )
     : 0;
 
-  // Build WhatsApp URL
-  const buildWhatsAppUrl = () => {
+  // Build WhatsApp URL with Egyptian phone number
+  const buildWhatsAppUrl = (customNote = '') => {
     const text = isArabic
-      ? `مرحباً كونسيرج ${brandConfig.name}، أود الاستفسار وحجز موعد معاينة خاصة للسيارة:\n*${title}* (${vehicle.year})\nالسعر: ${vehicle.priceFormatted || `$${carPrice.toLocaleString()}`}\nرقم الهيكل (VIN): ${vin}`
-      : `Hello ${brandConfig.name} Concierge, I would like to inquire about and arrange a private VIP viewing for:\n*${title}* (${vehicle.year})\nPrice: ${vehicle.priceFormatted || `$${carPrice.toLocaleString()}`}\nVIN: ${vin}`;
+      ? `مرحباً كونسيرج CAR IN مصر، أود الاستفسار وحجز موعد لمعاينة السيارة:\n*${title}* (موديل ${vehicle.year})\nالسعر: ${vehicle.priceFormatted || `${carPrice.toLocaleString()} ج.م`}\nالمرور: ${trafficDept} (${licenseValidity})\nرقم الهيكل: ${vin}${customNote ? `\nطلب إضافي: ${customNote}` : ''}`
+      : `Hello CAR IN Egypt Concierge, I would like to inquire about and arrange a viewing for:\n*${title}* (${vehicle.year})\nPrice: ${vehicle.priceFormatted || `${carPrice.toLocaleString()} EGP`}\nTraffic: ${trafficDept} (${licenseValidity})\nVIN: ${vin}${customNote ? `\nNote: ${customNote}` : ''}`;
     return `https://wa.me/${brandConfig.contact.whatsappNumber}?text=${encodeURIComponent(text)}`;
   };
 
@@ -152,7 +185,7 @@ export const VehicleDetailsModal = ({
           type="button"
           className="modal-close-btn"
           onClick={onClose}
-          aria-label={t.vehicleModal.close}
+          aria-label={isArabic ? 'إغلاق' : 'Close'}
         >
           <X size={20} />
         </button>
@@ -160,10 +193,16 @@ export const VehicleDetailsModal = ({
         {/* Modal Header */}
         <div className="veh-modal-header">
           <div className="veh-modal-header-badges">
-            <Badge variant="gold" icon={<ShieldCheck size={14} />}>
-              {t.vehicleModal.certifiedBadge}
+            <Badge variant="emerald" icon={<ShieldCheck size={14} />}>
+              {isArabic ? 'فابريكا شركة بالكامل 100%' : '100% Factory Paint Certified'}
             </Badge>
-            {badge && <Badge variant="subtle">{badge}</Badge>}
+            <Badge variant="gold">
+              {isArabic ? 'أول يد - صفر توكيلات' : '1st Owner - Zero Powers of Attorney'}
+            </Badge>
+            <Badge variant="subtle">
+              <MapPin size={12} style={{ display: 'inline', marginRight: 4 }} />
+              {trafficDept}
+            </Badge>
             {status && <Badge variant="emerald">{status}</Badge>}
           </div>
 
@@ -182,12 +221,12 @@ export const VehicleDetailsModal = ({
 
             <div className="veh-modal-price-box">
               <span className="veh-modal-price" dir="ltr">
-                {vehicle.priceFormatted || `$${carPrice.toLocaleString()}`}
+                {vehicle.priceFormatted || `${carPrice.toLocaleString()} ج.م`}
               </span>
               <span className="veh-modal-monthly">
-                {isArabic && vehicle.monthlyEstimateAr
-                  ? vehicle.monthlyEstimateAr
-                  : (vehicle.monthlyEstimate ? `Est. ${vehicle.monthlyEstimate}` : `Est. $${estimatedMonthlyPayment}/mo`)}
+                {isArabic
+                  ? `تقسيط يبدأ من ${estimatedMonthlyPayment.toLocaleString()} ج.م / شهرياً`
+                  : `Installments from ${estimatedMonthlyPayment.toLocaleString()} EGP / mo`}
               </span>
             </div>
           </div>
@@ -245,7 +284,7 @@ export const VehicleDetailsModal = ({
           )}
         </div>
 
-        {/* Navigation Tabs */}
+        {/* Navigation Tabs - Tailored for Egyptian Market */}
         <div className="veh-modal-tabs">
           <button
             type="button"
@@ -253,29 +292,66 @@ export const VehicleDetailsModal = ({
             onClick={() => setActiveTab('specs')}
           >
             <Gauge size={16} />
-            <span>{t.vehicleModal.overviewTab}</span>
+            <span>{isArabic ? 'المواصفات الفنية' : 'Specifications'}</span>
           </button>
+          
+          <button
+            type="button"
+            className={`veh-tab-btn ${activeTab === 'fabrika' ? 'active' : ''}`}
+            onClick={() => setActiveTab('fabrika')}
+            style={{ color: activeTab === 'fabrika' ? '#10B981' : undefined }}
+          >
+            <Sparkles size={16} />
+            <span>{isArabic ? '🔍 رادار الفابريكا والبودي' : 'Fabrika Paint Radar'}</span>
+          </button>
+
+          <button
+            type="button"
+            className={`veh-tab-btn ${activeTab === 'traffic' ? 'active' : ''}`}
+            onClick={() => setActiveTab('traffic')}
+          >
+            <FileCheck size={16} />
+            <span>{isArabic ? '🏛️ المرور والتوكيلات' : 'Traffic & Licensing'}</span>
+          </button>
+
+          <button
+            type="button"
+            className={`veh-tab-btn ${activeTab === 'finance' ? 'active' : ''}`}
+            onClick={() => setActiveTab('finance')}
+          >
+            <CreditCard size={16} />
+            <span>{isArabic ? '💳 تقسيط البنوك المصرية' : 'Bank Installments (EGP)'}</span>
+          </button>
+
           <button
             type="button"
             className={`veh-tab-btn ${activeTab === 'gallery' ? 'active' : ''}`}
             onClick={() => setActiveTab('gallery')}
           >
             <Layers size={16} />
-            <span>{t.vehicleModal.galleryTab} ({gallery.length})</span>
-          </button>
-          <button
-            type="button"
-            className={`veh-tab-btn ${activeTab === 'finance' ? 'active' : ''}`}
-            onClick={() => setActiveTab('finance')}
-          >
-            <Calculator size={16} />
-            <span>{t.vehicleModal.financeTab}</span>
+            <span>{isArabic ? 'ألبوم الصور' : 'HD Gallery'} ({gallery.length})</span>
           </button>
         </div>
 
-        {/* Tab 1: Full Mechanical & Technical Specs */}
+        {/* Tab 1: Full Mechanical Specs */}
         {activeTab === 'specs' && (
           <div className="veh-tab-content veh-specs-content">
+            {/* Waitlist vs Instant Delivery Banner */}
+            {vehicle.waitlistComparison && (
+              <div className="egypt-waitlist-box">
+                <div className="waitlist-card agency">
+                  <span className="waitlist-tag">{isArabic ? 'حجز التوكيل الرسمي' : 'Official Agency Waitlist'}</span>
+                  <div className="waitlist-price">{vehicle.waitlistComparison.agencyPrice}</div>
+                  <p className="waitlist-desc">{vehicle.waitlistComparison.agencyWait}</p>
+                </div>
+                <div className="waitlist-card instant">
+                  <span className="waitlist-tag gold">{isArabic ? 'استلام فوري بمعرضنا اليوم' : 'Instant Showroom Delivery'}</span>
+                  <div className="waitlist-price gold">{vehicle.priceFormatted}</div>
+                  <p className="waitlist-desc">{vehicle.waitlistComparison.instantSaving}</p>
+                </div>
+              </div>
+            )}
+
             {/* Specs Grid */}
             <div className="veh-full-specs-grid">
               <div className="veh-spec-card">
@@ -283,7 +359,7 @@ export const VehicleDetailsModal = ({
                   <Activity size={18} />
                 </div>
                 <div>
-                  <span className="veh-spec-label">{t.vehicleModal.specs.engine}</span>
+                  <span className="veh-spec-label">{isArabic ? 'المحرك والقوة' : 'Engine'}</span>
                   <span className="veh-spec-value">{fuel}</span>
                 </div>
               </div>
@@ -293,7 +369,7 @@ export const VehicleDetailsModal = ({
                   <Gauge size={18} />
                 </div>
                 <div>
-                  <span className="veh-spec-label">{t.vehicleModal.specs.horsepower}</span>
+                  <span className="veh-spec-label">{isArabic ? 'القوة الحصانية' : 'Horsepower'}</span>
                   <span className="veh-spec-value">{power}</span>
                 </div>
               </div>
@@ -303,7 +379,7 @@ export const VehicleDetailsModal = ({
                   <Zap size={18} />
                 </div>
                 <div>
-                  <span className="veh-spec-label">{t.vehicleModal.specs.acceleration}</span>
+                  <span className="veh-spec-label">{isArabic ? 'التسارع من 0 إلى 100' : '0–100 km/h'}</span>
                   <span className="veh-spec-value">{accel}</span>
                 </div>
               </div>
@@ -313,7 +389,7 @@ export const VehicleDetailsModal = ({
                   <Compass size={18} />
                 </div>
                 <div>
-                  <span className="veh-spec-label">{t.vehicleModal.specs.topSpeed}</span>
+                  <span className="veh-spec-label">{isArabic ? 'السرعة القصوى' : 'Top Speed'}</span>
                   <span className="veh-spec-value">{topSpeed}</span>
                 </div>
               </div>
@@ -323,7 +399,7 @@ export const VehicleDetailsModal = ({
                   <Navigation size={18} />
                 </div>
                 <div>
-                  <span className="veh-spec-label">{t.vehicleModal.specs.transmission}</span>
+                  <span className="veh-spec-label">{isArabic ? 'ناقل الحركة' : 'Transmission'}</span>
                   <span className="veh-spec-value">{transmission}</span>
                 </div>
               </div>
@@ -333,7 +409,7 @@ export const VehicleDetailsModal = ({
                   <Car size={18} />
                 </div>
                 <div>
-                  <span className="veh-spec-label">{t.vehicleModal.specs.drivetrain}</span>
+                  <span className="veh-spec-label">{isArabic ? 'نظام الدفع' : 'Drivetrain'}</span>
                   <span className="veh-spec-value">{drivetrain}</span>
                 </div>
               </div>
@@ -343,7 +419,7 @@ export const VehicleDetailsModal = ({
                   <Navigation size={18} />
                 </div>
                 <div>
-                  <span className="veh-spec-label">{t.vehicleModal.specs.mileage}</span>
+                  <span className="veh-spec-label">{isArabic ? 'العداد الشرعي' : 'Odometer'}</span>
                   <span className="veh-spec-value">{mileage}</span>
                 </div>
               </div>
@@ -353,8 +429,8 @@ export const VehicleDetailsModal = ({
                   <Calendar size={18} />
                 </div>
                 <div>
-                  <span className="veh-spec-label">{t.vehicleModal.specs.warranty}</span>
-                  <span className="veh-spec-value">{t.vehicleModal.warrantyVal}</span>
+                  <span className="veh-spec-label">{isArabic ? 'سريان الرخصة' : 'License'}</span>
+                  <span className="veh-spec-value">{licenseValidity}</span>
                 </div>
               </div>
 
@@ -363,7 +439,7 @@ export const VehicleDetailsModal = ({
                   <Layers size={18} />
                 </div>
                 <div>
-                  <span className="veh-spec-label">{t.vehicleModal.specs.exterior}</span>
+                  <span className="veh-spec-label">{isArabic ? 'اللون الخارجي' : 'Exterior'}</span>
                   <span className="veh-spec-value">{extColor}</span>
                 </div>
               </div>
@@ -373,42 +449,16 @@ export const VehicleDetailsModal = ({
                   <Key size={18} />
                 </div>
                 <div>
-                  <span className="veh-spec-label">{t.vehicleModal.specs.vin}</span>
+                  <span className="veh-spec-label">{isArabic ? 'رقم الهيكل (VIN)' : 'Chassis VIN'}</span>
                   <span className="veh-spec-value" style={{ fontFamily: 'monospace', fontSize: '0.825rem' }}>{vin}</span>
                 </div>
-              </div>
-            </div>
-
-            {/* 180-Point Certified Inspection Checklist */}
-            <div className="veh-inspection-dossier">
-              <div className="veh-inspection-header">
-                <div className="veh-inspection-badge">
-                  <ShieldCheck size={20} />
-                </div>
-                <div>
-                  <h4 className="veh-inspection-title">{t.vehicleModal.inspectionTitle}</h4>
-                  <p className="veh-inspection-subtitle">
-                    {isArabic
-                      ? 'تم تدقيق واجتياز جميع المحاور الميكانيكية والإلكترونية والهيكلية بواسطة فنيين معتمدين دولياً.'
-                      : 'All mechanical, chassis, electronic, and safety audit checkpoints passed with 100% compliance.'}
-                  </p>
-                </div>
-              </div>
-
-              <div className="veh-inspection-points-grid">
-                {t.vehicleModal.inspectionPoints.map((point, pIdx) => (
-                  <div key={pIdx} className="veh-inspection-point-item">
-                    <CheckCircle2 size={16} className="veh-point-check" />
-                    <span>{point}</span>
-                  </div>
-                ))}
               </div>
             </div>
 
             {/* Bespoke Equipment & Features */}
             {features.length > 0 && (
               <div className="veh-features-block">
-                <h4 className="veh-features-title">{t.vehicleModal.keyFeaturesTitle}</h4>
+                <h4 className="veh-features-title">{isArabic ? 'المواصفات والتجهيزات الحصرية' : 'Key Equipment'}</h4>
                 <div className="veh-features-grid">
                   {features.map((feat, fIdx) => (
                     <div key={fIdx} className="veh-feature-item">
@@ -422,46 +472,255 @@ export const VehicleDetailsModal = ({
           </div>
         )}
 
-        {/* Tab 2: Full Photo Gallery Grid */}
-        {activeTab === 'gallery' && (
-          <div className="veh-tab-content veh-gallery-tab-content">
-            <div className="veh-gallery-mosaic">
-              {gallery.map((imgSrc, gIdx) => (
-                <div
-                  key={gIdx}
-                  className="veh-gallery-tile"
-                  onClick={() => setActiveImageIndex(gIdx)}
-                >
-                  <img src={imgSrc} alt={`${title} photo ${gIdx + 1}`} loading="lazy" />
-                  <div className="veh-gallery-tile-overlay">
-                    <span>{isArabic ? 'عرض بالكامل' : 'View Full Image'}</span>
+        {/* Tab 2: CRAZY DISRUPTIVE FEATURE - Interactive 3D/Visual Fabrika Paint Radar */}
+        {activeTab === 'fabrika' && (
+          <div className="veh-tab-content veh-fabrika-tab-content">
+            <div className="fabrika-radar-card">
+              <div className="fabrika-radar-header">
+                <div className="fabrika-badge-big">
+                  <CheckCircle2 size={28} />
+                </div>
+                <div>
+                  <h3>{isArabic ? 'رادار الفابريكا وسماكة الدهان بالمايكرون' : 'Fabrika Paint Thickness Radar'}</h3>
+                  <p>
+                    {isArabic
+                      ? 'تم فحص جميع أجزاء الهيكل بجهاز Micron الإلكتروني الرقمي لضمان خلو السيارة التام من أي رش أو معجون أو حوادث سابقة.'
+                      : 'All exterior body panels audited via digital coating micron gauge to guarantee 100% factory paint integrity.'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Paint Micron Visual Gauge Scale */}
+              <div className="micron-scale-bar-wrap">
+                <div className="micron-scale-labels">
+                  <span>0 µm</span>
+                  <span className="micron-sweet-spot">🟢 نطاق فابريكا المصنع (85 - 130 µm)</span>
+                  <span>200+ µm (رش أو معجون)</span>
+                </div>
+                <div className="micron-scale-track">
+                  <div className="micron-green-zone" />
+                </div>
+              </div>
+
+              {/* Interactive Body Panels Grid */}
+              <div className="fabrika-panels-grid">
+                <div className="fabrika-panel-card">
+                  <div className="panel-status-icon ok">
+                    <CheckCircle2 size={18} />
+                  </div>
+                  <div className="panel-info">
+                    <span className="panel-name">{fabrikaRadar.hood.label}</span>
+                    <strong className="panel-micron">{fabrikaRadar.hood.val}</strong>
+                  </div>
+                  <span className="panel-badge ok">{isArabic ? 'فابريكا شركة' : 'Factory'}</span>
+                </div>
+
+                <div className="fabrika-panel-card">
+                  <div className="panel-status-icon ok">
+                    <CheckCircle2 size={18} />
+                  </div>
+                  <div className="panel-info">
+                    <span className="panel-name">{fabrikaRadar.roof.label}</span>
+                    <strong className="panel-micron">{fabrikaRadar.roof.val}</strong>
+                  </div>
+                  <span className="panel-badge ok">{isArabic ? 'فابريكا شركة' : 'Factory'}</span>
+                </div>
+
+                <div className="fabrika-panel-card">
+                  <div className="panel-status-icon ok">
+                    <CheckCircle2 size={18} />
+                  </div>
+                  <div className="panel-info">
+                    <span className="panel-name">{fabrikaRadar.trunk.label}</span>
+                    <strong className="panel-micron">{fabrikaRadar.trunk.val}</strong>
+                  </div>
+                  <span className="panel-badge ok">{isArabic ? 'فابريكا شركة' : 'Factory'}</span>
+                </div>
+
+                <div className="fabrika-panel-card">
+                  <div className="panel-status-icon ok">
+                    <CheckCircle2 size={18} />
+                  </div>
+                  <div className="panel-info">
+                    <span className="panel-name">{fabrikaRadar.rightSide.label}</span>
+                    <strong className="panel-micron">{fabrikaRadar.rightSide.val}</strong>
+                  </div>
+                  <span className="panel-badge ok">{isArabic ? 'فابريكا شركة' : 'Factory'}</span>
+                </div>
+
+                <div className="fabrika-panel-card">
+                  <div className="panel-status-icon ok">
+                    <CheckCircle2 size={18} />
+                  </div>
+                  <div className="panel-info">
+                    <span className="panel-name">{fabrikaRadar.leftSide.label}</span>
+                    <strong className="panel-micron">{fabrikaRadar.leftSide.val}</strong>
+                  </div>
+                  <span className="panel-badge ok">{isArabic ? 'فابريكا شركة' : 'Factory'}</span>
+                </div>
+
+                <div className="fabrika-panel-card highlight">
+                  <div className="panel-status-icon ok">
+                    <ShieldCheck size={20} />
+                  </div>
+                  <div className="panel-info">
+                    <span className="panel-name">{fabrikaRadar.chassis.label}</span>
+                    <strong className="panel-micron">{fabrikaRadar.chassis.val}</strong>
+                  </div>
+                  <span className="panel-badge ok">{isArabic ? 'عظم شركة سليم' : 'Intact'}</span>
+                </div>
+              </div>
+
+              {/* Certified Inspection Dossier Checkpoints */}
+              <div className="fabrika-inspection-footer">
+                <div className="fif-header">
+                  <ShieldCheck size={18} className="fif-icon" />
+                  <h4>{isArabic ? 'تقرير تدقيق الحالة لدى مراكز الفحص المعتمدة في مصر' : 'Certified Inspection Dossier'}</h4>
+                </div>
+                <div className="fif-points">
+                  <div className="fif-point">
+                    <Check size={14} color="#10B981" />
+                    <span>{isArabic ? 'فحص كمبيوتر المحرك وناقل الحركة وخلوه من الأعطال المخزنة' : 'Zero stored ECU trouble codes'}</span>
+                  </div>
+                  <div className="fif-point">
+                    <Check size={14} color="#10B981" />
+                    <span>{isArabic ? 'مطابقة قراءة العداد إلكترونياً مع سجل صيانة التوكيل' : 'Odometer verified with agency database'}</span>
+                  </div>
+                  <div className="fif-point">
+                    <Check size={14} color="#10B981" />
+                    <span>{isArabic ? 'سلامة الإيرباجات والشاسيه الداخلي بنسبة 100%' : 'All original factory airbags active'}</span>
+                  </div>
+                  <div className="fif-point">
+                    <Check size={14} color="#10B981" />
+                    <span>{isArabic ? 'حالة العفشة ونظام التعليق والمساعدين 95% فما فوق' : 'Suspension and steering 95%+ condition'}</span>
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
           </div>
         )}
 
-        {/* Tab 3: Interactive Financing Estimator */}
+        {/* Tab 3: Traffic & Legal Ownership Pedigree */}
+        {activeTab === 'traffic' && (
+          <div className="veh-tab-content veh-traffic-tab-content">
+            <div className="traffic-dossier-card">
+              <div className="traffic-dossier-header">
+                <Building2 size={24} className="traffic-icon" />
+                <div>
+                  <h3>{isArabic ? 'ملف المرور والترخيص والتوكيلات الرسمي' : 'Traffic, Licensing & Ownership Records'}</h3>
+                  <p>{isArabic ? 'جميع الأوراق والشهادات الرسمية جاهزة لنقل الملكية الفوري دون أي تأخير.' : 'All documentation cleared for same-day official transfer.'}</p>
+                </div>
+              </div>
+
+              <div className="traffic-info-grid">
+                <div className="traffic-item">
+                  <span className="traffic-lbl">{isArabic ? 'وحدة المرور التابعة لها' : 'Traffic Department'}</span>
+                  <strong className="traffic-val">{trafficDept}</strong>
+                </div>
+
+                <div className="traffic-item">
+                  <span className="traffic-lbl">{isArabic ? 'مدة سريان الرخصة' : 'License Expiry'}</span>
+                  <strong className="traffic-val">{licenseValidity}</strong>
+                </div>
+
+                <div className="traffic-item">
+                  <span className="traffic-lbl">{isArabic ? 'سجل الملكية والتوكيلات' : 'Powers of Attorney'}</span>
+                  <strong className="traffic-val gold">{ownership}</strong>
+                </div>
+
+                <div className="traffic-item">
+                  <span className="traffic-lbl">{isArabic ? 'شهادة براءة الذمة (المخالفات)' : 'Traffic Violations Clearance'}</span>
+                  <strong className="traffic-val green">{isArabic ? 'مستخرجة حديثاً (صفر مخالفات)' : 'Cleared (0 Violations)'}</strong>
+                </div>
+
+                <div className="traffic-item">
+                  <span className="traffic-lbl">{isArabic ? 'سجل صيانات التوكيل' : 'Agency Records'}</span>
+                  <strong className="traffic-val">{agencyMaintenance}</strong>
+                </div>
+
+                <div className="traffic-item">
+                  <span className="traffic-lbl">{isArabic ? 'خدمة كونسيرج المرور VIP' : 'VIP Traffic Concierge'}</span>
+                  <strong className="traffic-val">{isArabic ? 'نقل الملكية والتسجيل بدون حضورك' : 'White-Glove License Delivery'}</strong>
+                </div>
+              </div>
+
+              {/* Traffic Concierge Banner */}
+              <div className="traffic-concierge-banner">
+                <div className="tcb-icon">
+                  <Truck size={24} />
+                </div>
+                <div>
+                  <h4>{isArabic ? 'خدمة "خلصني في المرور" الحصرية' : 'VIP Traffic Concierge Service'}</h4>
+                  <p>
+                    {isArabic
+                      ? 'نوفر لك مندوباً معتمداً لإنهاء إجراءات الشهر العقاري، والفحص الفني، ودفع الضريبة ونقل القيد، واستلام اللوحات ورخصتك الجديدة لحد باب بيتك في التجمع أو زايد.'
+                      : 'Our representative handles full ownership transfer, notary contract, traffic fees, and plate issuance without you stepping foot inside the traffic department.'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 4: Egyptian Banks & Financing Calculator (EGP) */}
         {activeTab === 'finance' && (
           <div className="veh-tab-content veh-finance-tab-content">
             <div className="veh-finance-card">
               <div className="veh-finance-intro">
-                <h4>{t.vehicleModal.finance.title}</h4>
-                <p>{t.vehicleModal.finance.subtitle}</p>
+                <h4>{isArabic ? 'حاسبة تقسيط البنوك وشركات التمويل المصرية' : 'Egyptian Auto Finance & Bank Estimator'}</h4>
+                <p>
+                  {isArabic
+                    ? 'احسب قسطك الشهري الفعلي بالجنيه المصري واختر جهة التمويل المعتمدة بموافقة سريعة بالبطاقة الشخصية فقط.'
+                    : 'Calculate real monthly payments in EGP across top Egyptian automotive finance institutions.'}
+                </p>
+              </div>
+
+              {/* Financier Selector */}
+              <div className="financier-selector-wrap">
+                <span className="financier-lbl">{isArabic ? 'جهة التمويل المعتمدة:' : 'Select Financier:'}</span>
+                <div className="financier-buttons">
+                  <button
+                    type="button"
+                    className={`financier-btn ${selectedFinancier === 'contact' ? 'active' : ''}`}
+                    onClick={() => setSelectedFinancier('contact')}
+                  >
+                    Contact Cars (كونتكت)
+                  </button>
+                  <button
+                    type="button"
+                    className={`financier-btn ${selectedFinancier === 'cib' ? 'active' : ''}`}
+                    onClick={() => setSelectedFinancier('cib')}
+                  >
+                    CIB (البنك التجاري الدولي)
+                  </button>
+                  <button
+                    type="button"
+                    className={`financier-btn ${selectedFinancier === 'valu' ? 'active' : ''}`}
+                    onClick={() => setSelectedFinancier('valu')}
+                  >
+                    ValU (فاليو سيارات)
+                  </button>
+                  <button
+                    type="button"
+                    className={`financier-btn ${selectedFinancier === 'drive' ? 'active' : ''}`}
+                    onClick={() => setSelectedFinancier('drive')}
+                  >
+                    Drive (درايف للتمويل)
+                  </button>
+                </div>
               </div>
 
               <div className="veh-finance-controls">
                 {/* Down payment control */}
                 <div className="veh-calc-group">
                   <div className="veh-calc-header">
-                    <label>{t.vehicleModal.finance.downPayment}</label>
+                    <label>{isArabic ? 'الدفعة الأولى (المقدم)' : 'Down Payment'}</label>
                     <span className="veh-calc-val">
-                      {downPaymentPercent}% (${downPaymentAmount.toLocaleString()})
+                      {downPaymentPercent}% ({downPaymentAmount.toLocaleString()} ج.م)
                     </span>
                   </div>
                   <div className="veh-pct-buttons">
-                    {[10, 20, 30, 50].map((pct) => (
+                    {[10, 20, 25, 30, 50].map((pct) => (
                       <button
                         key={pct}
                         type="button"
@@ -486,20 +745,20 @@ export const VehicleDetailsModal = ({
                 {/* Term control */}
                 <div className="veh-calc-group">
                   <div className="veh-calc-header">
-                    <label>{t.vehicleModal.finance.term}</label>
+                    <label>{isArabic ? 'مدة سداد التمويل' : 'Loan Term'}</label>
                     <span className="veh-calc-val">
-                      {loanTermMonths} {t.vehicleModal.finance.months}
+                      {loanTermMonths / 12} {isArabic ? 'سنوات' : 'years'} ({loanTermMonths} {isArabic ? 'شهر' : 'months'})
                     </span>
                   </div>
                   <div className="veh-pct-buttons">
-                    {[36, 48, 60, 72].map((term) => (
+                    {[24, 36, 48, 60, 72].map((term) => (
                       <button
                         key={term}
                         type="button"
                         className={`veh-pct-btn ${loanTermMonths === term ? 'active' : ''}`}
                         onClick={() => setLoanTermMonths(term)}
                       >
-                        {term} {t.vehicleModal.finance.months}
+                        {term / 12} {isArabic ? 'سنين' : 'yrs'}
                       </button>
                     ))}
                   </div>
@@ -509,29 +768,53 @@ export const VehicleDetailsModal = ({
               {/* Live Payment Summary Box */}
               <div className="veh-finance-result-box">
                 <div className="veh-result-row">
-                  <span>{t.vehicleModal.finance.vehiclePrice}:</span>
-                  <strong dir="ltr">${carPrice.toLocaleString()}</strong>
+                  <span>{isArabic ? 'سعر السيارة النقدي:' : 'Vehicle Cash Price:'}</span>
+                  <strong dir="ltr">{carPrice.toLocaleString()} ج.م</strong>
                 </div>
                 <div className="veh-result-row">
-                  <span>{t.vehicleModal.finance.downPayment}:</span>
-                  <strong dir="ltr">-${downPaymentAmount.toLocaleString()}</strong>
+                  <span>{isArabic ? 'قيمة الدفعة الأولى (المقدم):' : 'Down Payment Amount:'}</span>
+                  <strong dir="ltr">-{downPaymentAmount.toLocaleString()} ج.م</strong>
                 </div>
                 <div className="veh-result-row">
-                  <span>{isArabic ? 'المبلغ الممول الصافي:' : 'Net Financed Principal:'}</span>
-                  <strong dir="ltr">${loanPrincipal.toLocaleString()}</strong>
+                  <span>{isArabic ? 'المبلغ الممول الصافي:' : 'Financed Balance:'}</span>
+                  <strong dir="ltr">{loanPrincipal.toLocaleString()} ج.م</strong>
                 </div>
                 <div className="veh-result-divider" />
                 <div className="veh-result-total">
                   <div>
-                    <span className="veh-total-label">{t.vehicleModal.finance.estimatedPayment}</span>
-                    <p className="veh-finance-disclaimer">{t.vehicleModal.finance.disclaimer}</p>
+                    <span className="veh-total-label">{isArabic ? 'القسط الشهري التقديري' : 'Estimated Monthly Payment'}</span>
+                    <p className="veh-finance-disclaimer">
+                      {isArabic
+                        ? 'حساب استرشادي بمعدل فائدة البنوك المصرية الحالي. الموافقة البنكية تصدر خلال 24 ساعة بصورة بطاقة الرقم القومي.'
+                        : 'Calculated using current Egyptian banking rates. Fast 24-hr pre-approval with national ID.'}
+                    </p>
                   </div>
                   <div className="veh-total-amount" dir="ltr">
-                    ${estimatedMonthlyPayment.toLocaleString()}
-                    <span className="veh-per-mo"> / mo</span>
+                    {estimatedMonthlyPayment.toLocaleString()}
+                    <span className="veh-per-mo"> ج.م / شهر</span>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 5: Full Photo Gallery Grid */}
+        {activeTab === 'gallery' && (
+          <div className="veh-tab-content veh-gallery-tab-content">
+            <div className="veh-gallery-mosaic">
+              {gallery.map((imgSrc, gIdx) => (
+                <div
+                  key={gIdx}
+                  className="veh-gallery-tile"
+                  onClick={() => setActiveImageIndex(gIdx)}
+                >
+                  <img src={imgSrc} alt={`${title} photo ${gIdx + 1}`} loading="lazy" />
+                  <div className="veh-gallery-tile-overlay">
+                    <span>{isArabic ? 'عرض بجودة كاملة' : 'View Full Image'}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -543,11 +826,23 @@ export const VehicleDetailsModal = ({
               type="button"
               className="veh-share-btn"
               onClick={handleCopyLink}
-              title={t.vehicleModal.shareVehicle}
+              title={isArabic ? 'مشاركة رابط السيارة' : 'Share vehicle'}
             >
               {copied ? <Check size={16} color="#10B981" /> : <Share2 size={16} />}
-              <span>{copied ? t.vehicleModal.copied : t.vehicleModal.shareVehicle}</span>
+              <span>{copied ? (isArabic ? 'تم نسخ الرابط' : 'Link copied') : (isArabic ? 'مشاركة' : 'Share')}</span>
             </button>
+
+            {/* VIP Gated Compound Test Drive Button */}
+            <a
+              href={buildWhatsAppUrl(isArabic ? 'طلب معاينة السيارة في مكان إقامتي (الشيخ زايد / التجمع الخامس)' : 'Request Private Gated Compound Test Drive in Zayed/Tagamoa')}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="veh-compound-drive-btn"
+              title={isArabic ? 'معاينة السيارة بونش VIP لحد باب فيلتك بالكومباوند' : 'VIP Gated Delivery to your home'}
+            >
+              <Truck size={15} />
+              <span>{isArabic ? 'معاينة على باب الكومباوند' : 'Gated Test Drive'}</span>
+            </a>
           </div>
 
           <div className="veh-modal-actions-right">
@@ -557,7 +852,7 @@ export const VehicleDetailsModal = ({
               rel="noopener noreferrer"
               className="veh-whatsapp-btn"
             >
-              <span>{t.vehicleModal.whatsappInquire}</span>
+              <span>{isArabic ? 'استفسار واتساب فوري' : 'Inquire on WhatsApp'}</span>
             </a>
 
             <Button
@@ -569,7 +864,7 @@ export const VehicleDetailsModal = ({
               }}
               iconRight={<ArrowUpRight size={17} className="rtl-flip" />}
             >
-              {t.vehicleModal.inquireNow}
+              {isArabic ? 'حجز ومعاينة بالمعرض' : 'Book Viewing'}
             </Button>
           </div>
         </div>

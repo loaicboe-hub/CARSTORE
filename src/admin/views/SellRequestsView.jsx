@@ -65,7 +65,7 @@ export const SellRequestsView = () => {
   };
 
   const handleUpdateValuation = (id, currentValuation) => {
-    const newVal = window.prompt('Enter new valuation appraisal ($ USD):', currentValuation);
+    const newVal = window.prompt('Enter new valuation appraisal (EGP / ج.م):', currentValuation);
     if (newVal && !isNaN(Number(newVal))) {
       updateSellRequestStatus(id, undefined, Number(newVal));
     }
@@ -166,10 +166,10 @@ export const SellRequestsView = () => {
                     <td>
                       <div style={{ fontSize: '0.88rem' }}>
                         Asking:{' '}
-                        <strong>${(Number(req.askingPrice) || 0).toLocaleString()}</strong>
+                        <strong>{(Number(req.askingPrice) || 0).toLocaleString()} EGP</strong>
                       </div>
                       <div style={{ fontSize: '0.85rem', color: 'var(--admin-emerald)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <span>Appraisal: ${(Number(req.estimatedValuation) || 0).toLocaleString()}</span>
+                        <span>Appraisal: {(Number(req.estimatedValuation) || 0).toLocaleString()} EGP</span>
                         <button
                           type="button"
                           onClick={() => handleUpdateValuation(req.id, req.estimatedValuation)}
@@ -306,7 +306,7 @@ export const SellRequestsView = () => {
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Seller Asking Price ($ USD)</label>
+                    <label className="admin-label">Seller Asking Price (EGP / ج.م)</label>
                     <input
                       type="number"
                       className="admin-input"
@@ -316,7 +316,7 @@ export const SellRequestsView = () => {
                   </div>
 
                   <div className="admin-form-group">
-                    <label className="admin-label">Underwriting Appraisal Value ($ USD)</label>
+                    <label className="admin-label">Underwriting Appraisal Value (EGP / ج.م)</label>
                     <input
                       type="number"
                       className="admin-input"
