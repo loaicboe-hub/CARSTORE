@@ -1,12 +1,14 @@
 import React from 'react';
 import { brandConfig } from '../../config/brandConfig';
 import { useLanguage } from '../../context/LanguageContext';
+import { useStore } from '../../context/StoreContext';
 import Button from '../common/Button';
 import Badge from '../common/Badge';
 import { Phone, Mail, MapPin, MessageSquare, ArrowUpRight, Sparkles } from 'lucide-react';
 
 export const CtaSection = ({ onOpenConsultation }) => {
   const { t } = useLanguage();
+  const { cmsContent } = useStore();
 
   return (
     <section className="cta-section">
@@ -50,8 +52,8 @@ export const CtaSection = ({ onOpenConsultation }) => {
           <div className="cta-contact-row">
             <div className="cta-contact-item">
               <Phone size={18} />
-              <a href={`tel:${brandConfig.contact.phone.replace(/[^0-9+]/g, '')}`} style={{ color: 'var(--text-primary)' }} dir="ltr">
-                {brandConfig.contact.phoneDisplay}
+              <a href={`tel:${(cmsContent?.phone || brandConfig.contact.phone).replace(/[^0-9+]/g, '')}`} style={{ color: 'var(--text-primary)' }} dir="ltr">
+                {cmsContent?.phoneDisplay || brandConfig.contact.phoneDisplay}
               </a>
             </div>
 

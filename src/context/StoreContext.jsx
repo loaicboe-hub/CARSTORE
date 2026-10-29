@@ -255,9 +255,9 @@ const initialCmsContent = {
   specSpeed: 'Instant Delivery',
   specSpeedAr: 'استلام فوري',
   // Contact
-  phone: '+201020008899',
-  phoneDisplay: '+20 (10) 2000-8899',
-  whatsappNumber: '201020008899',
+  phone: '+201004491026',
+  phoneDisplay: '+20 100 449 1026',
+  whatsappNumber: '201004491026',
   email: 'concierge@carin-egypt.com',
   address: 'New Cairo: North 90th St | Sheikh Zayed: Dahshur Link',
   addressAr: 'فرع التجمع الخامس: التسعين الشمالي | فرع زايد: وصلة دهشور',
@@ -280,6 +280,11 @@ const sanitizeCmsContent = (saved) => {
   return {
     ...initialCmsContent,
     ...saved,
+    // Phone numbers: override legacy default numbers
+    phone: (!saved.phone || saved.phone === '+201020008899') ? initialCmsContent.phone : saved.phone,
+    phoneDisplay: (!saved.phoneDisplay || saved.phoneDisplay === '+20 (10) 2000-8899') ? initialCmsContent.phoneDisplay : saved.phoneDisplay,
+    whatsappNumber: (!saved.whatsappNumber || saved.whatsappNumber === '201020008899') ? initialCmsContent.whatsappNumber : saved.whatsappNumber,
+
     // English fields: strictly purge any Arabic text
     brandName: hasAr(saved.brandName) ? initialCmsContent.brandName : (saved.brandName || initialCmsContent.brandName),
     brandSuffix: hasAr(saved.brandSuffix) ? initialCmsContent.brandSuffix : (saved.brandSuffix || initialCmsContent.brandSuffix),

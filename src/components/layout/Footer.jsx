@@ -140,8 +140,8 @@ export const Footer = ({ onOpenAdmin }) => {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Phone size={16} color="var(--accent-gold)" />
-                <a href={`tel:${brandConfig.contact.phone.replace(/[^0-9+]/g, '')}`} style={{ color: 'var(--text-primary)' }} dir="ltr">
-                  {brandConfig.contact.phoneDisplay}
+                <a href={`tel:${(cmsContent?.phone || brandConfig.contact.phone).replace(/[^0-9+]/g, '')}`} style={{ color: 'var(--text-primary)' }} dir="ltr">
+                  {cmsContent?.phoneDisplay || brandConfig.contact.phoneDisplay}
                 </a>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

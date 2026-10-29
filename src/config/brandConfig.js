@@ -16,14 +16,14 @@ export const brandConfig = {
   currencySymbol: "ج.م",
 
   contact: {
-    phone: "+201020008899",
-    phoneDisplay: "+20 (10) 2000-8899",
+    phone: "+201004491026",
+    phoneDisplay: "+20 100 449 1026",
     email: "concierge@carin-egypt.com",
     address: "فرع التجمع الخامس: شارع التسعين الشمالي | فرع زايد: وصلة دهشور",
     city: "القاهرة الجديدة والشيخ زايد، مصر",
     hours: "يومياً: 11:00 صباحاً – 11:00 مساءً (المعاينة طوال الأسبوع)",
-    whatsappNumber: "201020008899",
-    whatsappUrl: "https://wa.me/201020008899?text=مرحباً%20CAR%20IN%20أود%20الاستفسار%20عن%20سيارة%20معروضة",
+    whatsappNumber: "201004491026",
+    whatsappUrl: "https://wa.me/201004491026?text=مرحباً%20CAR%20IN%20أود%20الاستفسار%20عن%20سيارة%20معروضة",
   },
 
   stats: [
