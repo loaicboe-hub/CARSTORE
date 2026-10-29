@@ -1,17 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { vehiclesData, vehicleCategories } from '../../data/vehiclesData';
+import { getVehicles } from '../../services/api';
 import { useLanguage } from '../../context/LanguageContext';
 import SectionHeader from '../common/SectionHeader';
 import VehicleCard from './VehicleCard';
-import { Car } from 'lucide-react';
+import { Car, Loader2 } from 'lucide-react';
 
 export const VehicleShowcaseSection = ({ onInquireVehicle }) => {
   const [activeCategory, setActiveCategory] = useState('all');
+  const [vehicles, setVehicles] = useState(vehiclesData);
+  const [loading, setLoading] = useState(false);
   const { t, isArabic } = useLanguage();
 
-  const filteredVehicles = activeCategory === 'all'
-    ? vehiclesData
-    : vehiclesData.filter((veh) => veh.category === activeCategory);
+  useEffect(() => {
+    let isMounted = true;
+    async function loadLiveVehicles() {
+      setLoading(true);
+      const data = await getVehicles(activeCategory);
+      if (isMounted) {
+        if (data && data.length > 0) {
+          setVehicles(data);
+        } else if (data === null) {
+          // If PostgreSQL backend is not currently connected, filter local dataset
+          const filtered = activeCategory === 'all'
+            ? vehiclesData
+            : vehiclesData.filter((veh) => veh.category === activeCategory);
+          setVehicles(filtered);
+        } else {
+          setVehicles([]);
+        }
+        setLoading(false);
+      }
+    }
+
+    loadLiveVehicles();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [activeCategory]);
 
   return (
     <section className="inventory-section" id="inventory">
@@ -39,9 +66,16 @@ export const VehicleShowcaseSection = ({ onInquireVehicle }) => {
           ))}
         </div>
 
+        {/* Loading Indicator */}
+        {loading && (
+          <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--space-2xl) 0' }}>
+            <Loader2 className="animate-spin" size={32} style={{ color: 'var(--accent-gold)' }} />
+          </div>
+        )}
+
         {/* Vehicles Grid */}
         <div className="vehicles-grid">
-          {filteredVehicles.map((vehicle) => (
+          {vehicles.map((vehicle) => (
             <VehicleCard
               key={vehicle.id}
               vehicle={vehicle}
@@ -50,7 +84,7 @@ export const VehicleShowcaseSection = ({ onInquireVehicle }) => {
           ))}
         </div>
 
-        {filteredVehicles.length === 0 && (
+        {!loading && vehicles.length === 0 && (
           <div style={{ textAlign: 'center', padding: 'var(--space-3xl) var(--space-md)', color: 'var(--text-secondary)' }}>
             <Car size={48} style={{ opacity: 0.3, marginBottom: '12px' }} />
             <p>{t.inventory.empty}</p>

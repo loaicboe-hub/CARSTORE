@@ -5,6 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "server": "node server/server.js",
+    "server:dev": "node --watch server/server.js",
+    "db:setup": "node server/db/migrate.js",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview"

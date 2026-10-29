@@ -3,7 +3,8 @@ import { brandConfig } from '../../config/brandConfig';
 import { useLanguage } from '../../context/LanguageContext';
 import Button from '../common/Button';
 import Badge from '../common/Badge';
-import { X, CheckCircle, MessageSquare, Phone, Mail, ShieldCheck } from 'lucide-react';
+import { submitInquiry } from '../../services/api';
+import { X, CheckCircle, MessageSquare, Phone, Mail, ShieldCheck, Loader2 } from 'lucide-react';
 
 export const VehicleInquiryModal = ({ isOpen, onClose, selectedVehicle = null, defaultType = 'purchase' }) => {
   const { t, isArabic } = useLanguage();
@@ -18,6 +19,7 @@ export const VehicleInquiryModal = ({ isOpen, onClose, selectedVehicle = null, d
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (defaultType) {
@@ -38,9 +40,25 @@ export const VehicleInquiryModal = ({ isOpen, onClose, selectedVehicle = null, d
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsSubmitting(true);
+    try {
+      await submitInquiry({
+        full_name: formData.fullName,
+        phone: formData.phone,
+        email: formData.email,
+        channel: formData.contactMethod || 'whatsapp',
+        vehicle_id: selectedVehicle ? selectedVehicle.id : null,
+        inquiry_type: formData.inquiryType,
+        message: formData.message,
+      });
+    } catch (err) {
+      console.warn('Inquiry API note:', err.message);
+    } finally {
+      setIsSubmitting(false);
+      setSubmitted(true);
+    }
   };
 
   const handleResetAndClose = () => {

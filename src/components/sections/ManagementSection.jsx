@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
+import { getManagementTeam } from '../../services/api';
 import Badge from '../common/Badge';
 import Button from '../common/Button';
 import { ShieldCheck, Award, Lock, ArrowUpRight, UserCheck } from 'lucide-react';
@@ -7,6 +8,28 @@ import { ShieldCheck, Award, Lock, ArrowUpRight, UserCheck } from 'lucide-react'
 export const ManagementSection = ({ onOpenPortal }) => {
   const { t, isArabic } = useLanguage();
   const mgmt = t.management;
+  const [team, setTeam] = useState(mgmt.team);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadTeam() {
+      const liveData = await getManagementTeam();
+      if (isMounted && liveData && liveData.length > 0) {
+        const formatted = liveData.map((item) => ({
+          id: item.id,
+          name: isArabic && item.name_ar ? item.name_ar : item.name_en,
+          role: isArabic && item.role_ar ? item.role_ar : item.role_en,
+          bio: isArabic && item.bio_ar ? item.bio_ar : item.bio_en,
+          credential: isArabic && item.credential_ar ? item.credential_ar : item.credential_en,
+        }));
+        setTeam(formatted);
+      }
+    }
+    loadTeam();
+    return () => {
+      isMounted = false;
+    };
+  }, [isArabic]);
 
   return (
     <section id="management" className="management-section" aria-labelledby="mgmt-heading">
@@ -26,7 +49,7 @@ export const ManagementSection = ({ onOpenPortal }) => {
 
         {/* Executive Leadership Grid */}
         <div className="management-grid">
-          {mgmt.team.map((member) => (
+          {team.map((member) => (
             <article key={member.id} className="executive-card">
               <div className="executive-role-badge">
                 <Badge variant="neutral" size="sm" icon={<UserCheck size={12} />}>
