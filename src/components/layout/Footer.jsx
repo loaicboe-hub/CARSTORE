@@ -129,24 +129,32 @@ export const Footer = ({ onOpenAdmin }) => {
 
             <p className="footer-tagline">{t.brand.heroSubtitle}</p>
 
-            <div className="footer-contact-details" style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.875rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <MapPin size={16} color="var(--accent-gold)" />
-                <span>{t.brand.address}, {t.brand.city}</span>
+            <div className="footer-contact-details">
+              <div className="footer-contact-item">
+                <MapPin size={17} className="footer-contact-icon" />
+                <span className="footer-contact-text">{t.brand.address}, {t.brand.city}</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Clock size={16} color="var(--accent-gold)" />
-                <span>{t.brand.hours}</span>
+              <div className="footer-contact-item">
+                <Clock size={17} className="footer-contact-icon" />
+                <span className="footer-contact-text">{t.brand.hours}</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Phone size={16} color="var(--accent-gold)" />
-                <a href={`tel:${(cmsContent?.phone || brandConfig.contact.phone).replace(/[^0-9+]/g, '')}`} style={{ color: 'var(--text-primary)' }} dir="ltr">
+              <div className="footer-contact-item">
+                <Phone size={17} className="footer-contact-icon" />
+                <a
+                  href={`tel:${(cmsContent?.phone || brandConfig.contact.phone).replace(/[^0-9+]/g, '')}`}
+                  className="footer-contact-link"
+                  dir="ltr"
+                >
                   {cmsContent?.phoneDisplay || brandConfig.contact.phoneDisplay}
                 </a>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Mail size={16} color="var(--accent-gold)" />
-                <a href={`mailto:${brandConfig.contact.email}`} style={{ color: 'var(--text-primary)' }} dir="ltr">
+              <div className="footer-contact-item">
+                <Mail size={17} className="footer-contact-icon" />
+                <a
+                  href={`mailto:${brandConfig.contact.email}`}
+                  className="footer-contact-link"
+                  dir="ltr"
+                >
                   {brandConfig.contact.email}
                 </a>
               </div>
