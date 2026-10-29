@@ -11,7 +11,10 @@ dotenv.config();
 
 const { Pool } = pg;
 
-const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:postgrespassword@localhost:5432/carstore_db';
+const connectionString = process.env.DATABASE_URL ||
+  (process.env.DB_USER
+    ? `postgresql://${process.env.DB_USER}:${encodeURIComponent(process.env.DB_PASSWORD || '')}@${process.env.DB_HOST || '127.0.0.1'}:${process.env.DB_PORT || 5432}/${process.env.DB_NAME || 'carin_db'}`
+    : 'postgresql://postgres:postgrespassword@localhost:5432/carstore_db');
 
 // Check if SSL is required (common for cloud PostgreSQL like Neon, Supabase, Render)
 const isCloudPostgres = connectionString.includes('neon.tech') || 
