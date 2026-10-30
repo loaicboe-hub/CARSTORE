@@ -42,9 +42,9 @@ app.use(
 // CORS configuration
 app.use(cors());
 
-// Anti-DDoS Body Parsers with conservative payload sizes
-app.use(express.json({ limit: '2mb' }));
-app.use(express.urlencoded({ limit: '2mb', extended: true }));
+// Anti-DDoS Body Parsers with capacity for high-res vehicle photo uploads (base64)
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // Rate Limiting Protection (Anti-DDoS & Brute Force Defense)
 const globalApiLimiter = rateLimit({
