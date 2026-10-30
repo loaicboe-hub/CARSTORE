@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS inquiries (
   phone VARCHAR(100) NOT NULL,
   email VARCHAR(255) NOT NULL,
   channel VARCHAR(50) DEFAULT 'whatsapp', -- 'whatsapp', 'phone', 'email'
-  vehicle_id VARCHAR(64) REFERENCES vehicles(id) ON DELETE SET NULL,
+  vehicle_id VARCHAR(64), -- flexible reference to dealership or customer-listed vehicle
   inquiry_type VARCHAR(50) NOT NULL, -- 'purchase', 'tradein', 'rental', 'testdrive'
   message TEXT,
   status VARCHAR(50) DEFAULT 'pending', -- 'pending', 'contacted', 'closed'
