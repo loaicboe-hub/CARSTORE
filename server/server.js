@@ -87,6 +87,13 @@ const uploadLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+const adminLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 300, // Generous capacity for active administrative dashboard operations
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 // Apply global rate limiter to all API endpoints
 app.use('/api', globalApiLimiter);
 
@@ -116,7 +123,7 @@ app.get('/api/health', async (req, res) => {
 // Mount API Routes with specialized security limiters
 app.use('/api/auth', authLimiter, authRouter);
 app.use('/api/account', accountRouter);
-app.use('/api/admin', authLimiter, adminUsersRouter);
+app.use('/api/admin', adminLimiter, adminUsersRouter);
 app.use('/api/upload', uploadLimiter, uploadRouter);
 app.use('/api/vehicles', vehiclesRouter);
 app.use('/api/testimonials', testimonialsRouter);
