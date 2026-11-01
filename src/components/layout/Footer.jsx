@@ -4,57 +4,12 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useStore } from '../../context/StoreContext';
 import { Phone, Mail, MapPin, Clock, ArrowUp, Lock } from 'lucide-react';
 
-// Crisp SVG social icons for automotive brand footer
-const InstagramIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-  </svg>
-);
-
-const YoutubeIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
-    <polygon points="10 15 15 12 10 9 10 15" fill="currentColor" />
-  </svg>
-);
-
-const LinkedinIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-    <rect width="4" height="12" x="2" y="9" />
-    <circle cx="4" cy="4" r="2" />
-  </svg>
-);
-
-const TwitterIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
-    <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
-  </svg>
-);
-
 export const Footer = ({ onOpenAdmin }) => {
   const { t, isArabic } = useLanguage();
   const { cmsContent } = useStore();
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const getSocialIcon = (name) => {
-    switch (name.toLowerCase()) {
-      case 'instagram':
-        return <InstagramIcon />;
-      case 'youtube':
-        return <YoutubeIcon />;
-      case 'linkedin':
-        return <LinkedinIcon />;
-      case 'x':
-      default:
-        return <TwitterIcon />;
-    }
   };
 
   const currentYear = new Date().getFullYear();
@@ -131,49 +86,47 @@ export const Footer = ({ onOpenAdmin }) => {
 
             <div className="footer-contact-details">
               <div className="footer-contact-item">
-                <MapPin size={17} className="footer-contact-icon" />
+                <MapPin size={18} className="footer-contact-icon" />
                 <span className="footer-contact-text">{t.brand.address}, {t.brand.city}</span>
               </div>
               <div className="footer-contact-item">
-                <Clock size={17} className="footer-contact-icon" />
+                <Clock size={18} className="footer-contact-icon" />
                 <span className="footer-contact-text">{t.brand.hours}</span>
               </div>
-              <div className="footer-contact-item">
-                <Phone size={17} className="footer-contact-icon" />
+              <div className="footer-contact-item footer-phone-item">
+                <Phone size={20} className="footer-contact-icon footer-phone-icon" />
                 <a
                   href={`tel:${(cmsContent?.phone || brandConfig.contact.phone).replace(/[^0-9+]/g, '')}`}
-                  className="footer-contact-link"
+                  className="footer-contact-link footer-phone-link"
+                  style={{
+                    color: '#FFFFFF',
+                    fontSize: '1.25rem',
+                    fontWeight: 700,
+                    letterSpacing: '0.04em',
+                    textDecoration: 'none',
+                    display: 'inline-block',
+                  }}
                   dir="ltr"
                 >
                   {cmsContent?.phoneDisplay || brandConfig.contact.phoneDisplay}
                 </a>
               </div>
               <div className="footer-contact-item">
-                <Mail size={17} className="footer-contact-icon" />
+                <Mail size={18} className="footer-contact-icon" />
                 <a
                   href={`mailto:${brandConfig.contact.email}`}
-                  className="footer-contact-link"
+                  className="footer-contact-link footer-email-link"
+                  style={{
+                    color: '#E2E8F0',
+                    fontSize: '0.95rem',
+                    fontWeight: 500,
+                    textDecoration: 'none',
+                  }}
                   dir="ltr"
                 >
                   {brandConfig.contact.email}
                 </a>
               </div>
-            </div>
-
-            {/* Social Links */}
-            <div className="footer-social-links">
-              {brandConfig.socialLinks.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="footer-social-btn"
-                  aria-label={`Visit our ${social.name} page`}
-                >
-                  {getSocialIcon(social.name)}
-                </a>
-              ))}
             </div>
           </div>
 
