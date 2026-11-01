@@ -75,12 +75,6 @@ export const AdminLogin = ({ onLoginSuccess, onNavigatePublic }) => {
     }, 400);
   };
 
-  const fillDemoCredentials = () => {
-    setUsername(expectedUsername);
-    setPassword(expectedPassword);
-    setErrorMessage('');
-  };
-
   return (
     <div
       style={{
@@ -409,21 +403,6 @@ export const AdminLogin = ({ onLoginSuccess, onNavigatePublic }) => {
               />
               <span>{isArabic ? 'تذكر الجلسة' : 'Keep me signed in'}</span>
             </label>
-
-            <button
-              type="button"
-              onClick={fillDemoCredentials}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'var(--accent-gold, #C28B14)',
-                fontSize: '0.78rem',
-                cursor: 'pointer',
-                textDecoration: 'underline',
-              }}
-            >
-              {isArabic ? 'ملء بيانات تجريبية' : 'Fill Demo Login'}
-            </button>
           </div>
 
           {/* Submit Button */}
@@ -459,27 +438,6 @@ export const AdminLogin = ({ onLoginSuccess, onNavigatePublic }) => {
             )}
           </button>
         </form>
-
-        {/* Demo Credentials Quick Box */}
-        <div
-          style={{
-            marginTop: '24px',
-            padding: '12px 14px',
-            background: 'rgba(255, 255, 255, 0.03)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            borderRadius: '8px',
-            fontSize: '0.78rem',
-            color: '#94A3B8',
-            textAlign: 'center',
-          }}
-        >
-          <div>{isArabic ? 'بيانات الدخول الافتراضية للتجربة:' : 'Default Demo Credentials:'}</div>
-          <div style={{ marginTop: '4px', color: '#E2E8F0', fontWeight: 600 }}>
-            <span>Username: <code style={{ color: 'var(--accent-gold)' }}>admin</code></span>
-            <span style={{ margin: '0 8px' }}>•</span>
-            <span>Password: <code style={{ color: 'var(--accent-gold)' }}>admin123</code></span>
-          </div>
-        </div>
       </div>
 
       {/* Footer Copyright */}

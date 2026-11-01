@@ -47,12 +47,6 @@ export const LoginView = ({ onNavigate }) => {
     }
   };
 
-  const handleDemoLogin = () => {
-    setEmail('client@carrinn.com');
-    setPassword('client123');
-    setErrorMsg('');
-  };
-
   return (
     <div
       style={{
@@ -376,21 +370,6 @@ export const LoginView = ({ onNavigate }) => {
               />
               <span>{isArabic ? 'تذكرني' : 'Remember me'}</span>
             </label>
-
-            <button
-              type="button"
-              onClick={handleDemoLogin}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'var(--accent-gold, #C28B14)',
-                fontSize: '0.78rem',
-                cursor: 'pointer',
-                textDecoration: 'underline',
-              }}
-            >
-              {isArabic ? 'تجربة حساب عميل' : 'Demo Customer Login'}
-            </button>
           </div>
 
           {/* Submit */}
