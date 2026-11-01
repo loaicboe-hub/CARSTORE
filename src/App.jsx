@@ -21,6 +21,7 @@ import DashboardOverview from './customer/views/DashboardOverview';
 import MyListingsView from './customer/views/MyListingsView';
 import SubmitListingView from './customer/views/SubmitListingView';
 import ProfileView from './customer/views/ProfileView';
+import WhatsAppFloatingButton from './components/common/WhatsAppFloatingButton';
 
 const LandingPageContent = ({ onOpenAdmin }) => {
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
@@ -95,6 +96,9 @@ const LandingPageContent = ({ onOpenAdmin }) => {
 
       {/* Footer with Bilingual Links & Copyright */}
       <Footer onOpenAdmin={onOpenAdmin} />
+
+      {/* WhatsApp Floating Instant Chat Button */}
+      <WhatsAppFloatingButton />
 
       {/* Interactive Concierge & Vehicle Reservation Modal */}
       <VehicleInquiryModal

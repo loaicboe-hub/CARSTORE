@@ -3,6 +3,7 @@ import { brandConfig } from '../../config/brandConfig';
 import { useLanguage } from '../../context/LanguageContext';
 import { useStore } from '../../context/StoreContext';
 import { Phone, Mail, MapPin, Clock, ArrowUp, Lock } from 'lucide-react';
+import { WhatsAppIcon } from '../common/WhatsAppFloatingButton';
 
 export const Footer = ({ onOpenAdmin }) => {
   const { t, isArabic } = useLanguage();
@@ -106,6 +107,21 @@ export const Footer = ({ onOpenAdmin }) => {
                   dir="ltr"
                 >
                   {cmsContent?.phoneDisplay || brandConfig.contact.phoneDisplay}
+                </a>
+              </div>
+              <div className="footer-contact-item footer-whatsapp-item">
+                <a
+                  href={`https://wa.me/201004491026?text=${encodeURIComponent(isArabic ? 'مرحباً كونسيرج CAR IN، أود الاستفسار عن السيارات المتاحة بالمعرض' : 'Hello CAR IN Concierge, I would like to inquire about available vehicles')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-whatsapp-link"
+                  dir="ltr"
+                  title={isArabic ? 'محادثة فورية عبر واتساب (+20 100 449 1026)' : 'Chat on WhatsApp (+20 100 449 1026)'}
+                  aria-label="Chat on WhatsApp"
+                >
+                  <WhatsAppIcon size={20} />
+                  <span>+20 100 449 1026</span>
+                  <span className="footer-wa-tag">{isArabic ? 'واتساب' : 'WhatsApp'}</span>
                 </a>
               </div>
               <div className="footer-contact-item">

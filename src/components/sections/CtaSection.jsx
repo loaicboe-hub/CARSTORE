@@ -4,7 +4,8 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useStore } from '../../context/StoreContext';
 import Button from '../common/Button';
 import Badge from '../common/Badge';
-import { Phone, Mail, MapPin, MessageSquare, ArrowUpRight, Sparkles } from 'lucide-react';
+import { Phone, Mail, MapPin, ArrowUpRight, Sparkles } from 'lucide-react';
+import { WhatsAppIcon } from '../common/WhatsAppFloatingButton';
 
 export const CtaSection = ({ onOpenConsultation }) => {
   const { t } = useLanguage();
@@ -42,7 +43,7 @@ export const CtaSection = ({ onOpenConsultation }) => {
               rel="noopener noreferrer"
               variant="secondary"
               size="lg"
-              icon={<MessageSquare size={18} />}
+              icon={<WhatsAppIcon size={19} style={{ color: '#25D366' }} />}
             >
               {t.cta.whatsappBtn}
             </Button>

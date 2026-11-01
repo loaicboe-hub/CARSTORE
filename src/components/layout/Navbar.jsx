@@ -6,6 +6,7 @@ import { useStore } from '../../context/StoreContext';
 import { useAuth } from '../../context/AuthContext';
 import Button from '../common/Button';
 import { Menu, X, ArrowUpRight, Globe, User } from 'lucide-react';
+import { WhatsAppIcon } from '../common/WhatsAppFloatingButton';
 
 export const Navbar = ({ onOpenInquiry, onOpenAdmin }) => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -119,6 +120,19 @@ export const Navbar = ({ onOpenInquiry, onOpenAdmin }) => {
             <span>{user ? user.name.split(' ')[0] : isArabic ? 'دخول' : 'Sign In'}</span>
           </button>
 
+          {/* Quick WhatsApp Action */}
+          <a
+            href={`https://wa.me/201004491026?text=${encodeURIComponent(isArabic ? 'مرحباً كونسيرج CAR IN، أود الاستفسار عن السيارات المتاحة بالمعرض' : 'Hello CAR IN Concierge, I would like to inquire about available vehicles')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-whatsapp-link"
+            title={isArabic ? 'محادثة فورية عبر واتساب (+20 100 449 1026)' : 'Chat on WhatsApp (+20 100 449 1026)'}
+            aria-label="Chat on WhatsApp"
+          >
+            <WhatsAppIcon size={16} />
+            <span className="nav-whatsapp-label">{isArabic ? 'واتساب' : 'WhatsApp'}</span>
+          </a>
+
           {/* Mobile Menu Hamburger Toggle */}
           <button
             type="button"
@@ -180,6 +194,25 @@ export const Navbar = ({ onOpenInquiry, onOpenAdmin }) => {
             <Globe size={16} />
             <span>{t.switchLabel}</span>
           </button>
+
+          {/* Mobile Direct WhatsApp Button */}
+          <a
+            href={`https://wa.me/201004491026?text=${encodeURIComponent(isArabic ? 'مرحباً كونسيرج CAR IN، أود الاستفسار عن السيارات المتاحة بالمعرض' : 'Hello CAR IN Concierge, I would like to inquire about available vehicles')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-whatsapp-link"
+            style={{
+              width: '100%',
+              justifyContent: 'center',
+              padding: '11px',
+              fontSize: '0.92rem',
+              borderRadius: '8px',
+            }}
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <WhatsAppIcon size={18} />
+            <span>{isArabic ? 'تواصل عبر واتساب (+20 100 449 1026)' : 'WhatsApp (+20 100 449 1026)'}</span>
+          </a>
 
           {onOpenInquiry && (
             <Button
