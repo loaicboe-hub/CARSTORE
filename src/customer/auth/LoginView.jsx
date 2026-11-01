@@ -151,25 +151,6 @@ export const LoginView = ({ onNavigate }) => {
         <div style={{ textAlign: 'center', marginBottom: '26px' }}>
           <div
             style={{
-              width: '50px',
-              height: '50px',
-              borderRadius: '12px',
-              background: 'linear-gradient(135deg, #ECC880 0%, #D8A54B 100%)',
-              color: '#070B11',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '1.5rem',
-              fontWeight: 900,
-              margin: '0 auto 12px auto',
-              boxShadow: '0 4px 18px rgba(194, 139, 20, 0.45)',
-            }}
-          >
-            {isArabic ? 'ك' : 'C'}
-          </div>
-
-          <div
-            style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',

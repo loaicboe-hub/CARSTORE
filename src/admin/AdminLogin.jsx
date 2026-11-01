@@ -174,27 +174,8 @@ export const AdminLogin = ({ onLoginSuccess, onNavigatePublic }) => {
           position: 'relative',
         }}
       >
-        {/* Brand Emblem */}
+        {/* Brand Header */}
         <div style={{ textAlign: 'center', marginBottom: '28px' }}>
-          <div
-            style={{
-              width: '54px',
-              height: '54px',
-              borderRadius: '12px',
-              background: 'linear-gradient(135deg, #ECC880 0%, #D8A54B 100%)',
-              color: '#070B11',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '1.6rem',
-              fontWeight: 900,
-              margin: '0 auto 14px auto',
-              boxShadow: '0 4px 20px rgba(194, 139, 20, 0.5)',
-            }}
-          >
-            {isArabic ? 'ك' : 'C'}
-          </div>
-
           <div
             style={{
               display: 'inline-flex',

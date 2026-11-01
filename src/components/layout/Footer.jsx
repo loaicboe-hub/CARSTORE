@@ -73,9 +73,6 @@ export const Footer = ({ onOpenAdmin }) => {
           {/* Brand & Showroom Info */}
           <div className="footer-brand-col">
             <div className="brand-logo">
-              <div className="brand-emblem" aria-hidden="true">
-                {isArabic ? 'ك' : 'C'}
-              </div>
               <span>
                 {t.brand.name}
                 <span className="suffix">{t.brand.nameSuffix}</span>

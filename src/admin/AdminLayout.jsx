@@ -87,7 +87,6 @@ export const AdminLayout = ({ onNavigatePublic, onLogout }) => {
         {/* Brand Monogram Header */}
         <div className="admin-sidebar-brand">
           <div className="admin-brand-link">
-            <div className="admin-brand-emblem">{isArabic ? 'ك' : 'C'}</div>
             <div className="admin-brand-text">
               CAR<span style={{ color: 'var(--admin-accent-gold, #C28B14)' }}>IN</span>
               <span className="admin-subtag">{isArabic ? 'الجناح الإداري' : 'Executive Suite'}</span>

@@ -62,9 +62,6 @@ export const Navbar = ({ onOpenInquiry, onOpenAdmin }) => {
           onClick={(e) => handleLinkClick(e, '#hero')}
           aria-label={`${t.brand.name} ${t.brand.nameSuffix} Homepage`}
         >
-          <div className="brand-emblem" aria-hidden="true">
-            {isArabic ? 'ك' : 'C'}
-          </div>
           <span>
             {t.brand.name}
             <span className="suffix">{t.brand.nameSuffix}</span>

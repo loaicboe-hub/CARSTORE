@@ -78,22 +78,6 @@ export const CustomerLayout = ({ activeTab, onNavigate, children }) => {
                 padding: 0,
               }}
             >
-              <div
-                style={{
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: '10px',
-                  background: 'linear-gradient(135deg, #ECC880 0%, #D8A54B 100%)',
-                  color: '#070B11',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 900,
-                  fontSize: '1.2rem',
-                }}
-              >
-                {isArabic ? 'ك' : 'C'}
-              </div>
               <div style={{ textAlign: isArabic ? 'right' : 'left' }}>
                 <div style={{ fontWeight: 800, fontSize: '1.1rem', letterSpacing: '0.04em' }}>
                   CAR<span style={{ color: 'var(--accent-gold, #C28B14)' }}>IN</span>
