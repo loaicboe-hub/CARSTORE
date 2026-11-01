@@ -5,13 +5,12 @@
  */
 
 export const navigationConfig = {
-  // Main header navigation items: 1-Buy, 2-Sell, 3-Exchange, 4-Rent, 5-Management, plus Contact
+  // Main header navigation items: 1-Buy, 2-Sell, 3-Exchange, 4-Rent, plus Contact
   navItems: [
     { label: "Buy", labelAr: "شراء", href: "#inventory", id: "nav-buy" },
     { label: "Sell", labelAr: "بيع", href: "#service-sell", id: "nav-sell" },
     { label: "Exchange", labelAr: "استبدال", href: "#service-exchange", id: "nav-exchange" },
     { label: "Rent", labelAr: "تأجير", href: "#service-rent", id: "nav-rent" },
-    { label: "Management", labelAr: "الإدارة", href: "#management", id: "nav-management" },
     { label: "Contact", labelAr: "تواصل معنا", href: "#contact", id: "nav-contact" },
   ],
 

@@ -49,7 +49,6 @@ export const Navbar = ({ onOpenInquiry, onOpenAdmin }) => {
     { label: t.nav.sell, href: '#service-sell', id: 'nav-sell' },
     { label: t.nav.exchange, href: '#service-exchange', id: 'nav-exchange' },
     { label: t.nav.rent, href: '#service-rent', id: 'nav-rent' },
-    { label: t.nav.management, href: '#management', id: 'nav-management' },
     { label: t.nav.contact, href: '#contact', id: 'nav-contact' },
   ];
 

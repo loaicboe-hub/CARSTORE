@@ -7,11 +7,9 @@ import HeroSection from './components/sections/HeroSection';
 import ServicesSection from './components/sections/ServicesSection';
 import VehicleShowcaseSection from './components/sections/VehicleShowcaseSection';
 import WhyChooseUsSection from './components/sections/WhyChooseUsSection';
-import ManagementSection from './components/sections/ManagementSection';
 import TestimonialsSection from './components/sections/TestimonialsSection';
 import CtaSection from './components/sections/CtaSection';
 import VehicleInquiryModal from './components/modals/VehicleInquiryModal';
-import ManagementModal from './components/modals/ManagementModal';
 import AdminLayout from './admin/AdminLayout';
 import AdminLogin from './admin/AdminLogin';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -26,7 +24,6 @@ import ProfileView from './customer/views/ProfileView';
 
 const LandingPageContent = ({ onOpenAdmin }) => {
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
-  const [isManagementModalOpen, setIsManagementModalOpen] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [inquiryType, setInquiryType] = useState('purchase');
 
@@ -90,8 +87,6 @@ const LandingPageContent = ({ onOpenAdmin }) => {
         <VehicleShowcaseSection onInquireVehicle={handleInquireVehicle} />
 
         <WhyChooseUsSection onContactInspection={handleOpenConsultation} />
-        
-        <ManagementSection onOpenPortal={() => setIsManagementModalOpen(true)} />
 
         <TestimonialsSection />
 
@@ -107,13 +102,6 @@ const LandingPageContent = ({ onOpenAdmin }) => {
         onClose={() => setIsInquiryModalOpen(false)}
         selectedVehicle={selectedVehicle}
         defaultType={inquiryType}
-      />
-
-      {/* Authorized Dealership Management Portal Modal */}
-      <ManagementModal
-        isOpen={isManagementModalOpen}
-        onClose={() => setIsManagementModalOpen(false)}
-        onOpenAdmin={onOpenAdmin}
       />
     </div>
   );
